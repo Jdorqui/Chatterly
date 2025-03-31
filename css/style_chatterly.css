@@ -1,0 +1,28 @@
+#options_button 
+{
+    transition: background 0.3s ease-in-out;
+    width: 40px; 
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px; 
+}
+
+#options_button:hover 
+{
+    background: #37383f;
+}
+
+#options_icon 
+{
+    transition: transform 0.5s ease-in-out;
+    width: 20px;
+    height: 20px;
+}
+
+#options_button:hover #options_icon 
+{
+    transform: rotate(180deg);
+}

@@ -1,0 +1,151 @@
+#chatcontainer 
+{
+    user-select: text !important;
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    min-width: 200px;
+    background-color: #313338;
+    position: relative;
+}
+
+.chat-header 
+{
+    background-color: #313338;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 10;
+}
+
+.chat-header-content 
+{
+    background-color: #313338;
+    width: 100%;
+    height: 60px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.friend-photo 
+{
+    margin-left: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.friend-name 
+{
+    margin-left: 10px;
+    color: white;
+    font-size: 18px;
+}
+
+.chat-messages 
+{
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
+    height: calc(100vh - 160px);
+    margin-top: 62px;
+}
+
+.chat-input 
+{
+    padding: 10px;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+}
+
+.message-input 
+{
+    border-color: #383a40 !important;
+    background-color: #383a40 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    height: 45px !important;
+    padding-left: 10px !important;
+    position: relative !important;
+    color: white !important;
+    padding-right: 100px !important;
+}
+
+.upload-icon 
+{
+    width: 35px;
+    position: absolute;
+    right: 5px;
+    top: 15px;
+    height: 35px;
+    cursor: pointer;
+    padding: 0 15px;
+    border: none;
+}
+
+.hidden-file-input 
+{
+    display: none;
+}
+
+.emoji-icon 
+{
+    width: 40px;
+    position: absolute;
+    right: 43px;
+    top: 12px;
+    height: 40px;
+    cursor: pointer;
+    padding: 0 15px;
+    border: none;
+}
+
+.send-button 
+{
+    width: 100px;
+    position: absolute;
+    right: 800%;
+    top: 15px;
+    height: 20px;
+    background-color: #5865F2;
+    cursor: pointer;
+    padding: 0 15px;
+    border: none;
+    color: white;
+}
+
+.emoji-container 
+{
+    position: relative;
+}
+
+.emoji-div 
+{
+    display: none;
+    position: absolute;
+    right: 10px;
+    bottom: 60px;
+    width: 350px;
+    max-height: 400px;
+    overflow-y: auto;
+    background: #2b2d31;
+    border-color: #383a3f;
+    border-style: solid;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.emoji-list 
+{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

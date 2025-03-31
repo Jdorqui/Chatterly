@@ -1,0 +1,217 @@
+@font-face 
+{
+    font-family: 'newfont';
+    src: url('../assets/fonts/ggsansMedium.ttf') format('truetype');
+}
+
+html
+{
+    font-family: 'newfont', sans-serif;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+body 
+{
+    background-image: url('../assets/imgs/bg.png');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: #2a223d;
+    color: #e4e4e4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+h1 
+{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+label 
+{
+    font-weight: normal;
+    margin-bottom: 5px;
+}
+
+input[type = "text"], input[type = "password"], input[type = "date"], input[type = "submit"], input[type = "email"]
+{
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #1e1e1e;
+    border-radius: 6px;
+    background-color: #1e1e1e;
+    color: #e4e4e4;
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+}
+
+input:focus 
+{
+    outline: none;
+}
+
+button 
+{
+    width: 100%;
+    padding: 15px;
+    background-color: #5865f2;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-family: 'newfont', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover 
+{
+    background-color: #6d58a8;
+    transform: scale(1.02);
+}
+
+button.active 
+{
+    background-color: #404249;
+    color: #ffffff;
+}
+
+
+#login, #form-container
+{
+    background-color: #34343c;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    max-width: 400px;
+    width: 100%;
+    display: none;
+}
+
+#ms1
+{
+    margin: 0;
+    padding-bottom: 10px;
+    font-weight: bold;
+    font-size: 30px;
+    text-align: center;
+}
+
+#ms2
+{
+    margin: 0;
+    padding-bottom: 20px;
+    color: #adadad;
+    font-size: 20px;
+    text-align: center;
+}
+
+#login.active, #form-container.active 
+{
+    display: block;
+}
+
+#link
+{
+    color: #00aafc;
+    text-decoration: none;
+    position: relative;
+}
+
+#link::after
+{
+    content: '';
+    position: absolute;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: #6d58a8;
+    visibility: hidden;
+    transform: translateX(-50%) scaleX(0);
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+}
+
+#link:hover::after
+{
+    visibility: visible;
+    transform: translateX(-50%) scaleX(1);
+}
+
+
+.input-group 
+{
+    display: flex;
+    margin-right: 26px;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.button-group 
+{
+    display: flex;
+    gap: 10px;               
+    justify-content: center; 
+}
+
+.button-group button 
+{
+    display: inline-block;
+}
+
+.panel_button
+{
+    background-color: #232428;
+}
+
+.panel_button:hover
+{
+    background-color: #35373c;
+}
+
+.menu
+{
+    position: absolute;
+    width: 100%;
+    max-width: 450px;
+    background-color: #34343c;
+    padding: 35px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, visibility 0.5s ease, transform 0.5s ease;
+}
+
+.menu.show 
+{
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+::-webkit-scrollbar
+{
+    width: 5px; 
+}
+
+::-webkit-scrollbar-track
+{
+    background-color: #2b2d31; 
+    border-radius: 15px; 
+}
+
+::-webkit-scrollbar-thumb
+{
+    background-color: #1a1b1e; 
+    border-radius: 15px; 
+}
