@@ -66,9 +66,29 @@
         <link rel="stylesheet" href="../css/style_options.css">
         <link rel="stylesheet" href="../css/style_chatterly.css">
         <link rel="stylesheet" href="../css/style_chat.css">
+        <link rel="stylesheet" href="../css/style_groups.css">
         <link rel="icon" href="../assets/imgs/logo_bg.ico">
     </head>
     <body>
+
+        <div id="container-group" style="display: none;">
+            <button id="group-exit"></button>
+            <div id="create-group">
+                <h1>Personaliza tu servidor</h1>
+                <a>Dale una personalidad propia a tu nuevo servidor con un nombre y un icono. Siempre puedes cambiarlo más tarde.</a>
+                <img id="selectImageGroup" src="../assets/imgs/uploadPhoto.png" onclick="uploadGroupImage()"><br>
+                <input type="file" id="file-input" style="display: none;">
+                <label id="nombreServidor-text">NOMBRE DEL SERVIDOR</label>
+                <input type="text" id="nombreServidor" placeholder="Nombre del servidor" required>
+                <p>Al crear un servidor, aceptas las <link><a id="link" href="../html/comunity.html">Directivas de la comunidad</a></link>  de Chatterly.</p>
+
+                <div id="button-container">
+                    <button id="btn-group1" onclick="openandclosecreategroup()">Atras</button>
+                    <button id="btn-group2" onclick="crearGrupo_Api()">Crear</button>
+                </div>
+            </div>
+        </div>
+        
         <div id="chatterly">
             <div style="display: flex; flex-direction: column; width: 100vw; height: 100vh;">
                 <div style="background-color: #1e1f22; color: white; padding: 5px; text-align: left; height: 20px;"> <!-- barra superior -->
@@ -79,7 +99,7 @@
                         <div>
                             <img id="message-logo" src="../assets/imgs/message_logo.png" alt="logo" onclick=""><br>
                             <div style="height: 2px; background-color: #393e42"></div><br>
-                            <img id="message" src="../assets/imgs/newServer_logo.png" alt="logo" onclick="" style="padding: 10px; width: 30px; height: 30px;"><br>
+                            <img id="message" src="../assets/imgs/newServer_logo.png" alt="logo" onclick="openandclosecreategroup()" style="padding: 10px; width: 30px; height: 30px;"><br>
                         </div>
                     </div>
                     <div style="background-color: #2b2d31; width: 11%; color: white; min-width: 200px;"> <!-- barra2 -->
@@ -417,13 +437,13 @@
                                 </div>
                             </div>
                             <div class="password_autentication" id="password_autentication">
-                                <p>Contraseña y autentificacion</p>
+                                <p style="font-size: 20px; font-weight: bold;">Contraseña y autentificacion</p>
                                 <button class="change_password" id="">Cambiar contraseña</button>
 
-                                <p id="text_disabled_account">SUSPENSION DE CUENTA</p>
-                                <p id="">Puedes recuperar la cuenta en cualquier momento despues de deshabilitarla.</p>
+                                <p id="text_disabled_account">Suspension de cuenta</p>
+                                <p id="text2_disabled_account">Puedes recuperar la cuenta en cualquier momento despues de deshabilitarla.</p>
 
-                                <div class="container">
+                                <div class="container_account">
                                     <button id="disabled_account">Deshabilitar cuenta</button>
                                     <button id="delete_acount">Eliminar cuenta</button>
                                 </div>
@@ -434,6 +454,7 @@
             </div>
         </div>
         <script defer src="../javascript/api.js"></script>
+        <script defer src="../javascript/group.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
         <script defer src="../javascript/js_chatterly.js"></script>
         <script>var id_usuario_actual = <?php echo $id_usuario_actual; ?>;</script> <!-- se guarda el id del usuario en una variable de javascript -->

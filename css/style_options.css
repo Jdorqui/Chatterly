@@ -30,7 +30,7 @@
 .sidebar 
 {
     background-color: #2b2d31;
-    width: 30%;
+    width: 54%;
     padding: 10px;
     color: white;
     display: flex;
@@ -63,13 +63,13 @@
 {
     background-color: #313338;
     width: 100%;
-    padding: 10px;
+    padding: 35px;
     color: white;
 }
 
 .profile-info 
 {
-    max-width: 900px;
+    max-width: 650px;
     align-items: center;
     background-color: #1e1f22;
     border-radius: 15px;
@@ -85,6 +85,16 @@
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     position: relative;
+}
+
+#selectImageGroup
+{
+    padding: 0 !important;
+    margin-top: 20px;
+    padding-left: 36% !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .upload-form 
@@ -162,6 +172,7 @@
 
 .password_autentication
 {
+    max-width: 650px;
     padding: 0px;
     display: none;
 }
@@ -196,9 +207,45 @@
     background-color: #6d6f78;
 }
 
+#text_disabled_account
+{
+    font-size: 19px;
+    margin-bottom: 5px;
+}
+
+#text2_disabled_account
+{
+    margin-top: 5px;
+}
+
+.container_account
+{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 5px;
+}
+
 .change_password
 {
-    width: 200px;
+    width: 170px;
     height: auto;
-    cursor: pointer;
+    padding: 10px 15px;
+}
+
+#disabled_account
+{
+    width: 170px;
+    height: auto;
+    background-color: #d22d39 !important;
+    padding: 10px 15px;
+}
+
+#delete_acount
+{
+    width: 140px;
+    height: auto;
+    padding: 10px 15px;
+    background-color: #2e2e33 !important;
+    color: #f37672 !important;
 }

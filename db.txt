@@ -11,35 +11,87 @@ USE chatterly;
 CREATE OR REPLACE TABLE usuarios (
     id_user INT PRIMARY KEY AUTO_INCREMENT,
     alias VARCHAR(50) NOT NULL,
-    username VARCHAR(50) NOT NULL UNIQUE, -- Campo único
+    username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    fecha_nacimiento DATE NOT NULL, -- Nuevo campo para fecha de nacimiento
-    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    fecha_nacimiento DATE NOT NULL,
+    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    terminos_aceptados TINYINT(1) NOT NULL DEFAULT 0,
+    en_linea TINYINT(1) DEFAULT 0
 );
-
-ALTER TABLE usuarios ADD COLUMN terminos_aceptados TINYINT(1) NOT NULL DEFAULT 0;
-ALTER TABLE usuarios ADD en_linea TINYINT(1) DEFAULT 0;
 
 -- 2. Tabla amigos
 CREATE OR REPLACE TABLE amigos (
     id_user1 INT,
     id_user2 INT,
     fecha_amistad TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    estado VARCHAR(20),  -- Puede ser 'pendiente', 'aceptado', 'bloqueado', etc.
+    estado VARCHAR(20),  -- 'pendiente', 'aceptado', 'bloqueado', etc.
     PRIMARY KEY (id_user1, id_user2),
     FOREIGN KEY (id_user1) REFERENCES usuarios(id_user),
     FOREIGN KEY (id_user2) REFERENCES usuarios(id_user)
 );
 
--- 3. Tabla mensajes
+-- 3. Tabla mensajes (privados entre usuarios)
 CREATE OR REPLACE TABLE mensajes (
     id_mensaje INT PRIMARY KEY AUTO_INCREMENT,
     id_emisor INT,
     id_receptor INT,
     contenido TEXT,
     fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    tipo VARCHAR(20),  -- Puede ser 'texto', 'foto', 'video', etc.
+    tipo VARCHAR(20),  -- 'texto', 'foto', 'video', etc.
     FOREIGN KEY (id_emisor) REFERENCES usuarios(id_user),
     FOREIGN KEY (id_receptor) REFERENCES usuarios(id_user)
+);
+
+-- 4. Tabla grupos (servidores estilo Discord)
+CREATE OR REPLACE TABLE grupos (
+    id_grupo INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    id_creador INT,
+    FOREIGN KEY (id_creador) REFERENCES usuarios(id_user)
+);
+
+-- 5. Tabla canales (texto o voz, pertenecen a un grupo)
+CREATE OR REPLACE TABLE canales (
+    id_canal INT PRIMARY KEY AUTO_INCREMENT,
+    id_grupo INT NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    tipo ENUM('texto', 'voz') NOT NULL DEFAULT 'texto',
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_grupo) REFERENCES grupos(id_grupo)
+);
+
+-- 6. Tabla miembros_de_grupo
+CREATE OR REPLACE TABLE miembros_de_grupo (
+    id_user INT,
+    id_grupo INT,
+    rol ENUM('admin', 'moderador', 'miembro') DEFAULT 'miembro',
+    fecha_union TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_user, id_grupo),
+    FOREIGN KEY (id_user) REFERENCES usuarios(id_user),
+    FOREIGN KEY (id_grupo) REFERENCES grupos(id_grupo)
+);
+
+-- 7. Tabla mensajes_de_canal (solo para canales de texto)
+CREATE OR REPLACE TABLE mensajes_de_canal (
+    id_mensaje INT PRIMARY KEY AUTO_INCREMENT,
+    id_canal INT NOT NULL,
+    id_emisor INT NOT NULL,
+    contenido TEXT,
+    fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    tipo VARCHAR(20),  -- 'texto', 'foto', 'video', etc.
+    FOREIGN KEY (id_canal) REFERENCES canales(id_canal),
+    FOREIGN KEY (id_emisor) REFERENCES usuarios(id_user)
+);
+
+-- 8. Tabla conexiones_voz (usuarios conectados en tiempo real a canales de voz)
+CREATE OR REPLACE TABLE conexiones_voz (
+    id_user INT,
+    id_canal INT,
+    conectado_desde TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_user, id_canal),
+    FOREIGN KEY (id_user) REFERENCES usuarios(id_user),
+    FOREIGN KEY (id_canal) REFERENCES canales(id_canal)
 );

@@ -13,6 +13,7 @@ function showoptionspanel()
 {
     optionsPanel.style.display = "block";
     normalPanel.style.display = "none";
+    document.getElementById('container-group').style.display = "none";
 }
 
 function closeoptionspanel()
@@ -20,6 +21,7 @@ function closeoptionspanel()
     normalPanel.style.display = "block";
     optionsPanel.style.display = "none";
     document.getElementById("profileinfo").style.display = "none";
+    document.getElementById('container-group').style.display = "none";
     document.getElementById("openonlinemenu").style.display = "none";
     document.getElementById("password_autentication").style.display = "none";
 }
@@ -35,6 +37,7 @@ function openaddfriendmenu()
     pendingMenu.hidden = true;
     document.getElementById("addfriendmenu").style.display = "block";
     document.getElementById("openonlinemenu").style.display = "none";
+    document.getElementById('container-group').style.display = "none";
     document.getElementById("allfriends").style.display = "none";
     closechat();
 }
@@ -44,6 +47,7 @@ function openpendingmenu()
     pendingMenu.hidden = false;
     document.getElementById("addfriendmenu").style.display = "none";
     document.getElementById("openonlinemenu").style.display = "none";
+    document.getElementById('container-group').style.display = "none";
     document.getElementById("allfriends").style.display = "none";
     closechat();
 }
@@ -54,6 +58,7 @@ function openonlinemenu()
     document.getElementById("openonlinemenu").style.display = "block";
     document.getElementById("addfriendmenu").style.display = "none";
     document.getElementById("profileinfo").style.display = "none";
+    document.getElementById('container-group').style.display = "none";
     document.getElementById("allfriends").style.display = "none";
     closechat();
 }
@@ -64,6 +69,7 @@ function openallfriends()
     document.getElementById("openonlinemenu").style.display = "none";
     document.getElementById("addfriendmenu").style.display = "none";
     document.getElementById("profileinfo").style.display = "none";
+    document.getElementById('container-group').style.display = "none";
     document.getElementById("allfriends").style.display = "block";
 }
 

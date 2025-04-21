@@ -57,3 +57,35 @@ async function numeroUsuario_Api(id_user)
     let data = await fetchData.json();
     return data.alias;
 }
+
+function crearGrupo_Api() {
+    const nombreGrupo = document.getElementById('nombreServidor').value;
+    const imagen = document.getElementById('file-input').files[0];
+
+    if (!nombreGrupo || !imagen) {
+        alert("Debes proporcionar un nombre y una imagen.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("nombre_grupo", nombreGrupo);
+    formData.append("imagen_grupo", imagen);
+
+    fetch('../php/create_group.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Grupo creado con éxito con ID " + data.group_id);
+            // Opcional: cerrar el modal, refrescar lista de grupos, etc.
+        } else {
+            alert("Error: " + data.error);
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Ocurrió un error al enviar la solicitud.");
+    });
+}
