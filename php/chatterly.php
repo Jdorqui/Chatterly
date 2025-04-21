@@ -102,7 +102,7 @@
                             <img id="message" src="../assets/imgs/newServer_logo.png" alt="logo" onclick="openandclosecreategroup()" style="padding: 10px; width: 30px; height: 30px;"><br>
                         </div>
                     </div>
-                    <div style="background-color: #2b2d31; width: 11%; color: white; min-width: 200px;"> <!-- barra2 -->
+                    <div style="background-color: #2b2d31; width: 14%; color: white; min-width: 200px;"> <!-- barra2 -->
                         <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
                             <div style="padding: 10px;">
                                 <button id="options-button" style="text-align: center; display: flex; align-items: center;" onclick="closechat();">
@@ -177,12 +177,12 @@
                                     }
 
                                      echo"
-                                     <button id='panel_button' class='panel_button' style='display: flex; align-items: center; gap: 10px; padding: 5px 10px; max-width: 100px; cursor: pointer;' onclick='showprofileinfo()'> 
+                                     <button id='panel_button' class='panel_button' style='display: flex; align-items: center; gap: 5px; padding: 5px 10px; max-width: 140px; cursor: pointer;' onclick='showprofileinfo()'> 
                                         <img id='profileImg2' src='$foto' alt='profile' style='border-radius: 50%; width: 30px; height: 30px;'> 
                                         <span style='color: white; font-size: 16px;'>$usuario</span>
                                     </button>";
                                 ?> 
-                                <div style="display: flex; gap: 10px; padding-left: 5%;"> <!-- icono -->
+                                <div style="display: flex; padding-right: 19px;"> <!-- icono -->
                                     <div id="options_button">
                                         <img src="../assets/imgs/options_icon.png" alt="options" id="options_icon" onclick="showoptionspanel()">
                                     </div>
@@ -195,7 +195,7 @@
                         <div style="background-color: #313338; display: flex; padding: 10px; align-items: center; color: white; gap: 10px;"> 
                             <img src="../assets/imgs/default_profile.png" alt="friends" style="padding: 10px; width: 24px; height: 24px;">
                             <span style="font-size: 16px;">Amigos</span>
-                            <div id="divisor" style="width: 2px; background-color: #393e42; height: 100%;"></div>
+                            <div style="width: 2px; background-color: #393e42; height: 100%;"></div>
                             <button class="friend-tab-button" style="width: 60px;" onclick="openonlinemenu()">En linea</button>
                             <button class="friend-tab-button" style="width: 50px;" onclick="openallfriends()">Todos</button>
                             <button class="friend-tab-button" onclick="openpendingmenu()">Pendiente</button>
@@ -205,7 +205,7 @@
                         <div id="openonlinemenu" style="display: column; padding: 30px; padding-top: 0;" hidden>
                                 <span>AMIGOS EN LINEA</span>
                                 <p>Estos son tus amigos que están en linea:</p>
-                                <div id="friend-list-container" style="display: background-color: #313338; padding: 10px;">
+                                <div id="friend-list-container" style="display: background-color: #313338;">
                                     <?php
                                         if (count($amigos_en_linea) > 0) 
                                         {
@@ -231,11 +231,11 @@
                                                 }
                                                 
                                                 echo "
-                                                    <button onclick='openchat({$amigo['id_user']})' class='friend-tab-button' style='display: flex; align-items: center; gap: 10px; border: none; padding: 10px; border-radius: 5px; width: 100%; cursor: pointer; text-align: left;'>
+                                                    <button onclick='openchat({$amigo['id_user']})' class='friend-tab-button' style='display: flex; align-items: center; gap: 10px; border: none; padding: 10px; border-radius: 5px; width: 100%; cursor: pointer; text-align: left; margin-bottom: 5px;'>
                                                         <img src='$foto' id='fotoFriend' alt='Foto de perfil' style='width: 30px; height: 30px; border-radius: 50%;'>
                                                         <span id='nombreboton'>{$amigo['username']}</span>
                                                     </button>
-                                                    <div style='height: 2px; background-color: #393e42'></div>
+                                                    <div style='height: 2px; background-color: #393e42; margin-bottom: 5px;'></div>
                                                 ";
                                             }
                                         } 
@@ -378,6 +378,10 @@
                     </div>
                     <div class="main-content">
                         <div>
+                            <div class="container_options_header" id="container_options_header">
+                                <h1 id="myaccount_text">Mi cuenta</h1>
+                                <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeoptionspanel()">
+                            </div>
                             <div id="profileinfo" class="profile-info" hidden>
                                 <?php
                                     $baseDir = "../assets/users/$usuario/img_profile/";
@@ -437,14 +441,13 @@
                                 </div>
                             </div>
                             <div class="password_autentication" id="password_autentication">
-                                <p style="font-size: 20px; font-weight: bold;">Contraseña y autentificacion</p>
+                                <p style="font-size: 20px; font-weight: 400;">Contraseña y autentificacion</p>
                                 <button class="change_password" id="">Cambiar contraseña</button>
 
                                 <p id="text_disabled_account">Suspension de cuenta</p>
                                 <p id="text2_disabled_account">Puedes recuperar la cuenta en cualquier momento despues de deshabilitarla.</p>
 
                                 <div class="container_account">
-                                    <button id="disabled_account">Deshabilitar cuenta</button>
                                     <button id="delete_acount">Eliminar cuenta</button>
                                 </div>
                             </div>

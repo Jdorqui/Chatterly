@@ -9,6 +9,8 @@ const emojiList = document.getElementById('emojiList');
 const mensajeInput = document.getElementById('mensaje');
 let destinatario = null;
 
+document.getElementById("container_options_header").style.display = "none";
+
 function showoptionspanel()
 {
     optionsPanel.style.display = "block";
@@ -24,6 +26,7 @@ function closeoptionspanel()
     document.getElementById('container-group').style.display = "none";
     document.getElementById("openonlinemenu").style.display = "none";
     document.getElementById("password_autentication").style.display = "none";
+    document.getElementById("container_options_header").style.display = "none";
 }
 
 function closechat()
@@ -228,24 +231,24 @@ async function cargarMensajes() //carga los mensajes
                             mensajeHtml += `</div>`;
                         }
                     } 
-                    else // si el mensaje es de texto
+                    else //si el mensaje es de texto
                     { 
                         let contenido = mensaje.contenido;
 
-                        let urlRegex = /(https?:\/\/[^\s]+)/g; // detecta si el mensaje contiene enlaces
+                        let urlRegex = /(https?:\/\/[^\s]+)/g; //detecta si el mensaje contiene enlaces
 
-                        contenido = contenido.replace(urlRegex, function (url)  // reemplaza los enlaces por enlaces clicables
+                        contenido = contenido.replace(urlRegex, function (url)  //reemplaza los enlaces por enlaces clicables
                         { 
-                            let youtubeMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([\w-]+)/); // comprueba si el enlace es de youtube
-                            if (youtubeMatch) // si el enlace es de youtube se muestra el video
+                            let youtubeMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([\w-]+)/); //comprueba si el enlace es de youtube
+                            if (youtubeMatch) //si el enlace es de youtube se muestra el video
                             { 
-                                let videoId = youtubeMatch[1]; // extrae el ID del video
+                                let videoId = youtubeMatch[1]; //extrae el ID del video
                                 return `<br><iframe width="500" height="300" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe><br>`; // muestra el video
                             }
-                            return `<a href="${url}" target="_blank" id="link">${url}</a>`; // enlace normal
+                            return `<a href="${url}" target="_blank" id="link">${url}</a>`; //enlace normal
                         });
 
-                        mensajeHtml += `<div style="margin-bottom: 10px;">${contenido}</div>`; // mensaje de texto normal
+                        mensajeHtml += `<div style="margin-bottom: 10px;">${contenido}</div>`; //mensaje de texto normal
                     }
 
                     mensajeHtml += `</div></div>`; // cierra el div del mensaje
@@ -390,6 +393,7 @@ function showprofileinfo() //muestra el panel de información del perfil
     showoptionspanel();
     document.getElementById("profileinfo").style.display = "block";
     document.getElementById("password_autentication").style.display = "block";
+    document.getElementById("container_options_header").style.display = "flex";
 }
 
 const img = document.getElementById('profileImg');

@@ -97,6 +97,11 @@
     align-items: center;
 }
 
+.section-title
+{
+    font-weight: 400px;
+}
+
 .upload-form 
 {
     display: flex;
@@ -233,7 +238,7 @@
     padding: 10px 15px;
 }
 
-#disabled_account
+#delete_acount
 {
     width: 170px;
     height: auto;
@@ -241,11 +246,23 @@
     padding: 10px 15px;
 }
 
-#delete_acount
+#exit_button_image
 {
-    width: 140px;
-    height: auto;
-    padding: 10px 15px;
-    background-color: #2e2e33 !important;
-    color: #f37672 !important;
+    width: 60px;
+    height: 85px;
+    cursor: pointer;
+}
+
+.container_options_header
+{
+    display: flex;
+    align-items: center;
+    gap: 550px;
+    margin-bottom: 5px;
+}
+
+#myaccount_text
+{
+    text-align: left !important;
+    width: 200px;;
 }
