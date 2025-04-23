@@ -58,12 +58,14 @@ async function numeroUsuario_Api(id_user)
     return data.alias;
 }
 
-function crearGrupo_Api() {
+function crearGrupo_Api() 
+{
     const nombreGrupo = document.getElementById('nombreServidor').value;
     const imagen = document.getElementById('file-input').files[0];
 
-    if (!nombreGrupo || !imagen) {
-        alert("Debes proporcionar un nombre y una imagen.");
+    if (!nombreGrupo) 
+    {
+        alert("Debes proporcionar un nombre.");
         return;
     }
 
@@ -77,10 +79,12 @@ function crearGrupo_Api() {
     })
     .then(res => res.json())
     .then(data => {
-        if (data.success) {
-            alert("Grupo creado con éxito con ID " + data.group_id);
-            // Opcional: cerrar el modal, refrescar lista de grupos, etc.
-        } else {
+        if (data.success) 
+        {
+            document.getElementById('container-group').style.display = "none";   
+        }
+        else 
+        {
             alert("Error: " + data.error);
         }
     })

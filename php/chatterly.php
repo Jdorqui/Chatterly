@@ -17,7 +17,7 @@
     $usuarioData = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$usuarioData) 
     {
-        echo "Usuario no encontrado.";
+        header( 'Location: ../html/index.html');
         exit();
     }
     $id_usuario_actual = $usuarioData['id_user'];
@@ -54,6 +54,17 @@
     ");
     $stmt->execute(['id_usuario_actual' => $id_usuario_actual]);
     $amigos_en_linea = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $sql = "
+    SELECT g.id_grupo, g.nombre, g.imagen
+    FROM grupos g
+    JOIN usuarios u ON g.id_creador = u.id_user
+    WHERE u.username = ?
+    ORDER BY g.fecha_creacion DESC
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$usuario]);
+    $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -80,7 +91,7 @@
                 <input type="file" id="file-input" style="display: none;">
                 <label id="nombreServidor-text">NOMBRE DEL SERVIDOR</label>
                 <input type="text" id="nombreServidor" placeholder="Nombre del servidor" required>
-                <p>Al crear un servidor, aceptas las <link><a id="link" href="../html/comunity.html">Directivas de la comunidad</a></link>  de Chatterly.</p>
+                <p>Al crear un servidor, aceptas las <link><a id="link" href="../html/comunity.html">Directivas de la comunidad</a></link> de Chatterly.</p>
 
                 <div id="button-container">
                     <button id="btn-group1" onclick="openandclosecreategroup()">Atras</button>
@@ -99,12 +110,26 @@
                         <div>
                             <img id="message-logo" src="../assets/imgs/message_logo.png" alt="logo" onclick=""><br>
                             <div style="height: 2px; background-color: #393e42"></div><br>
+                            <?php 
+                                foreach ($groups as $group): //recorre todos los grupos del usuario
+                                    $groupName = htmlspecialchars($group['nombre'], ENT_QUOTES, 'UTF-8');
+                                    $groupId = (int)$group['id_grupo'];
+                                    $imageName = urlencode($group['imagen']);
+                                    $userDir = urlencode($usuario);
+                                    $imagePath = "../assets/users/{$userDir}/groups/{$groupId}/img_profile/{$imageName}";
+                                    $imageAlt = $groupName;
+                                ?>
+                                    <div class="sidebar-item server-icon" title="<?= $groupName ?>">
+                                        <img src="<?= $imagePath ?>" alt="<?= $imageAlt ?>">
+                                    </div>
+                                <?php endforeach;
+                            ?>
                             <img id="message" src="../assets/imgs/newServer_logo.png" alt="logo" onclick="openandclosecreategroup()" style="padding: 10px; width: 30px; height: 30px;"><br>
                         </div>
                     </div>
                     <div style="background-color: #2b2d31; width: 14%; color: white; min-width: 200px;"> <!-- barra2 -->
                         <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
-                            <div style="padding: 10px;">
+                            <div id="direct_message_containter" style="padding: 10px;"> <!-- mensaje directo -->
                                 <button id="options-button" style="text-align: center; display: flex; align-items: center;" onclick="closechat();">
                                     <img src="../assets/imgs/default_profile.png" alt="account" style="width: 20px; height: 20px; margin-right: 15px;">
                                     <span>Amigos</span>
@@ -155,6 +180,11 @@
                                         }
                                     ?>
                             </div>
+
+                            <div id="group_container1" style="display: none;"> <!-- group panel 1-->
+                                
+                            </div>
+
                             <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background-color: #232428; width: 100%;"> <!-- userpanel -->
                                 <?php 
                                     $baseDir = "../assets/users/$usuario/img_profile/";
@@ -415,14 +445,14 @@
 
                                     <div class="container">
                                         <p><?php echo htmlspecialchars($usuario, ENT_QUOTES, 'UTF-8'); ?></p>
-                                        <button class="change_button" id="edit_name">Editar</button>
+                                        <button class="change_button" id="edit_name" onclick="openeditname()">Editar</button>
                                     </div>
                                     
                                     <p id="text_username">NOMBRE DE USUARIO</p>
 
                                     <div class="container">
                                         <p><?php echo htmlspecialchars($usuario, ENT_QUOTES, 'UTF-8'); ?></p>
-                                        <button class="change_button" id="edit_username">Editar</button>
+                                        <button class="change_button" id="edit_username" onclick="openeditusername()">Editar</button>
                                     </div>
 
                                     <p id="text_email">CORREO ELECTRONICO</p>
@@ -436,13 +466,13 @@
                                                 echo htmlspecialchars($emailData['email'], ENT_QUOTES, 'UTF-8'); //se muestra el email del usuario 
                                             ?>
                                         </p>
-                                        <button class="change_button" id="edit_email">Editar</button>
+                                        <button class="change_button" id="edit_email" onclick="openeditemail()">Editar</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="password_autentication" id="password_autentication">
                                 <p style="font-size: 20px; font-weight: 400;">Contraseña y autentificacion</p>
-                                <button class="change_password" id="">Cambiar contraseña</button>
+                                <button class="change_password" onclick="openchangepassword()">Cambiar contraseña</button>
 
                                 <p id="text_disabled_account">Suspension de cuenta</p>
                                 <p id="text2_disabled_account">Puedes recuperar la cuenta en cualquier momento despues de deshabilitarla.</p>
@@ -451,6 +481,81 @@
                                     <button id="delete_acount">Eliminar cuenta</button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <div id="change_name_container" style="display: none;">
+                        <div class="change_username" id="change_username">
+                            <div class="change_name">
+                                <div class="container">
+                                    <p id="text_change_name">Cambiar nombre</p>
+                                    <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditname()">
+                                </div>
+                                <form action="../php/cambiar_nombre_usuario.php" method="post">
+                                    <input type="text" name="new_name" id="new_name" placeholder="Nuevo nombre" required>
+                                    <button type="submit">Cambiar nombre</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="change_username_container" style="display: none;">
+                        <div class="change_username" id="change_username">
+                            <div class="change_username_container">
+                                <div class="change_username">
+                                    <div class="container">
+                                        <p id="text_change_username">Cambiar nombre de usuario</p>
+                                        <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditusername()">
+                                    </div>
+                                    <form action="../php/cambiar_nombre_usuario.php" method="post">
+                                        <input type="text" name="new_username" id="new_username" placeholder="Nuevo nombre de usuario" required>
+                                        <button type="submit">Cambiar nombre de usuario</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="change_email_container" style="display: none;"> 
+                        <div class="change_email" id="change_email">
+                            <div class="change_email">
+                                <div class="container">
+                                    <p id="text_change_email">Cambiar correo electronico</p>
+                                    <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditemail()">
+                                </div>
+                                <form action="../php/cambiar_correo.php" method="post">
+                                    <input type="email" name="new_email" id="new_email" placeholder="Nuevo correo electronico" required>
+                                    <button type="submit">Cambiar correo electronico</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="change_password_container" style="display: none;"> 
+                        <div class="change_password" id="change_password">
+                            <div class="change_oldpassword">
+                                <div class="container">
+                                    <p id="text_change_password">Cambiar contraseña</p>
+                                    <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closechangepassword()">
+                                </div>
+                                <form action="../php/cambiar_contrasena.php" method="post">
+                                    <input type="password" name="old_password" id="old_password" placeholder="Contraseña actual" required>
+                                    <input type="password" name="new_password" id="new_password" placeholder="Nueva contraseña" required>
+                                    <input type="password" name="confirm_new_password" id="confirm_new_password" placeholder="Confirmar nueva contraseña" required>
+                                    <button type="submit">Cambiar contraseña</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="delete_account" id="delete_account" hidden>
+                        <div class="delete_account_container">
+                            <p id="text_delete_account">Eliminar cuenta</p>
+                            <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closedeleteaccount()">
+                            <p id="text_delete_account2">¿Estas seguro de que deseas eliminar tu cuenta? Esta accion no se puede deshacer.</p>
+                            <form action="../php/eliminar_cuenta.php" method="post">
+                                <button type="submit">Eliminar cuenta</button>
+                            </form>
                         </div>
                     </div>
                 </div>

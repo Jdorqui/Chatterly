@@ -76,6 +76,46 @@ function openallfriends()
     document.getElementById("allfriends").style.display = "block";
 }
 
+function openeditname()
+{
+    document.getElementById("change_name_container").style.display = "block";
+}
+
+function closeeditname()
+{
+    document.getElementById("change_name_container").style.display = "none";
+}
+
+function openeditusername()
+{
+    document.getElementById("change_username_container").style.display = "block";
+}
+
+function closeeditusername()
+{
+    document.getElementById("change_username_container").style.display = "none";
+}
+
+function openeditemail()
+{
+    document.getElementById("change_email_container").style.display = "block";
+}
+
+function closeeditemail()
+{
+    document.getElementById("change_email_container").style.display = "none";
+}
+
+function openchangepassword()
+{
+    document.getElementById("change_password_container").style.display = "block";
+}
+
+function closechangepassword()
+{
+    document.getElementById("change_password_container").style.display = "none";
+}
+
 //sesion
 function cerrarSesion()
 {

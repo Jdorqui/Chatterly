@@ -17,7 +17,8 @@
     z-index: 9999;
 }
 
-#create-group {
+#create-group 
+{
     position: fixed;
     top: 50%;
     left: 50%;
@@ -30,7 +31,8 @@
     z-index: 9998;
 }
 
-#group-exit {
+#group-exit 
+{
     position: absolute;
     top: 10px;
     right: 10px;
@@ -43,11 +45,13 @@
     margin: 0;
 }
 
-#group-exit:hover {
+#group-exit:hover 
+{
     color: #fff;
 }
 
-#nombreServidor {
+#nombreServidor 
+{
     width: 100%;
     padding: 10px;
     margin-bottom: 16px; 
@@ -65,24 +69,28 @@
     display: flex;
 }
 
-#nombreServidor-text {
+#nombreServidor-text 
+{
     font-weight: bold;
     font-size: 12px;
 }
 
-#nombreServidor:focus {
+#nombreServidor:focus 
+{
     outline: none;
     border-color: #7289da;
 }
 
-#button-container {
+#button-container 
+{
     display: flex;
     justify-content: flex-end;
     gap: 8px; 
     margin-top: 24px; 
 }
 
-#btn-group1, #btn-group2 {
+#btn-group1, #btn-group2 
+{
     padding: 10px 16px;
     border: none;
     font-size: 14px;
@@ -91,6 +99,34 @@
     transition: background-color 0.15s ease;
 }
 
-#btn-group1 {
+#btn-group1 
+{
     background-color: #2b2d31;
+}
+
+.server-icon 
+{ 
+    display: block; 
+    margin: 8px 0; 
+}
+
+.server-icon img 
+{ 
+    width: 50px; 
+    height: 50px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    cursor: pointer;
+}
+
+.server-icon:hover::before
+{
+    content: '';
+    position: absolute;
+    left: -2px;
+    border-radius: 15px;
+    width: 4px;
+    height: 50px;              
+    transform: translateY(0%);
+    background: #fff;
 }

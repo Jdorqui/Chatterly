@@ -52,6 +52,8 @@ CREATE OR REPLACE TABLE grupos (
     id_creador INT,
     FOREIGN KEY (id_creador) REFERENCES usuarios(id_user)
 );
+ALTER TABLE grupos
+  ADD COLUMN imagen VARCHAR(100) NULL AFTER descripcion;
 
 -- 5. Tabla canales (texto o voz, pertenecen a un grupo)
 CREATE OR REPLACE TABLE canales (
