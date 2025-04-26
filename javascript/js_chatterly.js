@@ -7,6 +7,7 @@ const inputMensaje = document.getElementById('mensaje');
 const botonEnviar = document.getElementById('enviarMensaje');
 const emojiList = document.getElementById('emojiList');
 const mensajeInput = document.getElementById('mensaje');
+const notification_audio = new Audio('../assets/sounds/notification.mp3');
 let destinatario = null;
 
 document.getElementById("container_options_header").style.display = "none";
@@ -186,7 +187,7 @@ async function cargarMensajes() //carga los mensajes
             let mensajes = await cargarMensajes_Api(id_usuario_actual, destinatario); //carga los mensajes
             if(mensajes.length > count || mensajes.length == 0) //si hay mensajes nuevos
             {
-
+                //notification_audio.play();
                 count = mensajes.length; //actualiza el contador de mensajes
                 $('#chat-messages').empty(); //limpia los mensajes
                 

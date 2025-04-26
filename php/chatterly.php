@@ -78,6 +78,7 @@
         <link rel="stylesheet" href="../css/style_chatterly.css">
         <link rel="stylesheet" href="../css/style_chat.css">
         <link rel="stylesheet" href="../css/style_groups.css">
+        <link rel="stylesheet" href="../css/style_menuGIF.css">
         <link rel="icon" href="../assets/imgs/logo_bg.ico">
     </head>
     <body>
@@ -207,7 +208,7 @@
                                     }
 
                                      echo"
-                                     <button id='panel_button' class='panel_button' style='display: flex; align-items: center; gap: 5px; padding: 5px 10px; max-width: 140px; cursor: pointer;' onclick='showprofileinfo()'> 
+                                     <button id='panel_button' class='panel_button' style='display: flex; align-items: center; gap: 5px; padding: 5px 10px; max-width: 1350px; cursor: pointer;' onclick='showprofileinfo()'> 
                                         <img id='profileImg2' src='$foto' alt='profile' style='border-radius: 50%; width: 30px; height: 30px;'> 
                                         <span style='color: white; font-size: 16px;'>$usuario</span>
                                     </button>";
@@ -376,6 +377,8 @@
                             <img src="../assets/imgs/upload.png" id="uploadfile" alt="Upload" class="upload-icon">
                             <input type="file" id="fileInput" class="hidden-file-input">
                             <img src="../assets/imgs/emojis.png" onclick="showEmojis()" class="emoji-icon">
+                            <img src="../assets/imgs/gif_button.png" id="gifButton" class="gifButton">
+                            <div id="gifPickerContainer"></div>
                             <button id="enviarMensaje" class="send-button">Enviar</button>
                         </div>
 
@@ -562,6 +565,7 @@
             </div>
         </div>
         <script defer src="../javascript/api.js"></script>
+        <script src="../javascript/tenor_api.js"></script>
         <script defer src="../javascript/group.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
         <script defer src="../javascript/js_chatterly.js"></script>

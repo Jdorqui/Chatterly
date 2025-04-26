@@ -74,7 +74,7 @@
     padding-left: 10px !important;
     position: relative !important;
     color: white !important;
-    padding-right: 100px !important;
+    padding-right: 140px !important;
 }
 
 .upload-icon 
@@ -148,4 +148,16 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+.gifButton 
+{
+    width: 45px;
+    position: absolute;
+    right: 85px;
+    top: 12px;
+    height: 40px;
+    cursor: pointer;
+    padding: 0 15px;
+    border: none;
 }

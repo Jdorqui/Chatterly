@@ -29,7 +29,8 @@
 
         $fileName = basename($_FILES['profile_picture']['name']); //obtiene el nombre del archivo
         $fileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION)); //obtiene la extensión del archivo
-        $targetFile = $targetDir . $fileType; //se crea el nombre del archivo
+        $newName    = time() . '_' . $fileName;  //nuevo nombre del archivo
+        $targetFile = $targetDir . $newName; //ruta completa del archivo
         
         if (in_array($fileType, ['png', 'jpg', 'jpeg'])) //valida que el archivo sea una imagen
         {
