@@ -96,7 +96,7 @@
 
                 <div id="button-container">
                     <button id="btn-group1" onclick="openandclosecreategroup()">Atras</button>
-                    <button id="btn-group2" onclick="crearGrupo_Api()">Crear</button>
+                    <button id="btn-group2" onclick="crearGrupo()">Crear</button>
                 </div>
             </div>
         </div>
@@ -481,7 +481,7 @@
                                 <p id="text2_disabled_account">Puedes recuperar la cuenta en cualquier momento despues de deshabilitarla.</p>
 
                                 <div class="container_account">
-                                    <button id="delete_acount">Eliminar cuenta</button>
+                                    <button id="delete_acount" onclick="eliminar_cuenta()">Eliminar cuenta</button>
                                 </div>
                             </div>
                         </div>
@@ -494,10 +494,8 @@
                                     <p id="text_change_name">Cambiar nombre</p>
                                     <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditname()">
                                 </div>
-                                <form action="../php/cambiar_nombre_usuario.php" method="post">
-                                    <input type="text" name="new_name" id="new_name" placeholder="Nuevo nombre" required>
-                                    <button type="submit">Cambiar nombre</button>
-                                </form>
+                                <input type="text" name="new_name" id="new_name" placeholder="Nuevo nombre" required>
+                                <button type="submit" onclick="cambiar_alias()">Cambiar nombre</button>
                             </div>
                         </div>
                     </div>
@@ -510,10 +508,8 @@
                                         <p id="text_change_username">Cambiar nombre de usuario</p>
                                         <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditusername()">
                                     </div>
-                                    <form action="../php/cambiar_nombre_usuario.php" method="post">
-                                        <input type="text" name="new_username" id="new_username" placeholder="Nuevo nombre de usuario" required>
-                                        <button type="submit">Cambiar nombre de usuario</button>
-                                    </form>
+                                    <input type="text" name="new_username" id="new_username" placeholder="Nuevo nombre de usuario" required>
+                                    <button type="submit" onclick="cambiar_username()">Cambiar nombre de usuario</button>
                                 </div>
                             </div>
                         </div>
@@ -526,10 +522,8 @@
                                     <p id="text_change_email">Cambiar correo electronico</p>
                                     <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditemail()">
                                 </div>
-                                <form action="../php/cambiar_correo.php" method="post">
-                                    <input type="email" name="new_email" id="new_email" placeholder="Nuevo correo electronico" required>
-                                    <button type="submit">Cambiar correo electronico</button>
-                                </form>
+                                <input type="email" name="new_email" id="new_email" placeholder="Nuevo correo electronico" required>
+                                <button type="submit" onclick="cambiar_email()">Cambiar correo electronico</button>
                             </div>
                         </div>
                     </div>
@@ -541,12 +535,10 @@
                                     <p id="text_change_password">Cambiar contraseña</p>
                                     <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closechangepassword()">
                                 </div>
-                                <form action="../php/cambiar_contrasena.php" method="post">
-                                    <input type="password" name="old_password" id="old_password" placeholder="Contraseña actual" required>
-                                    <input type="password" name="new_password" id="new_password" placeholder="Nueva contraseña" required>
-                                    <input type="password" name="confirm_new_password" id="confirm_new_password" placeholder="Confirmar nueva contraseña" required>
-                                    <button type="submit">Cambiar contraseña</button>
-                                </form>
+                                <input type="password" name="old_password" id="old_password" placeholder="Contraseña actual" required>
+                                <input type="password" name="new_password" id="new_password" placeholder="Nueva contraseña" required>
+                                <input type="password" name="confirm_new_password" id="confirm_new_password" placeholder="Confirmar nueva contraseña" required>
+                                <button type="submit" onclick="cambiar_contrasena()">Cambiar contraseña</button>
                             </div>
                         </div>
                     </div>
@@ -556,9 +548,7 @@
                             <p id="text_delete_account">Eliminar cuenta</p>
                             <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closedeleteaccount()">
                             <p id="text_delete_account2">¿Estas seguro de que deseas eliminar tu cuenta? Esta accion no se puede deshacer.</p>
-                            <form action="../php/eliminar_cuenta.php" method="post">
-                                <button type="submit">Eliminar cuenta</button>
-                            </form>
+                            <button type="submit">Eliminar cuenta</button>
                         </div>
                     </div>
                 </div>

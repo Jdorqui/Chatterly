@@ -469,3 +469,189 @@ fileProfile.addEventListener('change', () => {
     })
     .catch(error => console.error('Error en la subida de la imagen:', error));
 });
+
+//modificar perfil
+
+async function cambiar_alias() 
+{
+    const nuevo = document.getElementById('new_name').value.trim();
+    if (!nuevo)
+    {
+        return alert('Ingresa un nombre.');
+    } 
+
+    const res = await fetch('../php/cambiar_nombre_usuario.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+        id_user: id_usuario_actual,
+        new_name: nuevo
+        })
+    });
+
+    const { success, message } = await res.json();
+    if (success)
+    {
+        return alert(message || 'Nombre cambiado');
+    } 
+
+    if (!success)
+    {
+        return alert(message || 'Error');
+    } 
+
+  //document.getElementById('user_alias_display').textContent = nuevo;
+  //closeeditname();
+}
+  
+async function cambiar_username() 
+{
+    const nuevo = document.getElementById('new_username').value.trim();
+    if (!nuevo)
+    {
+        return alert('Ingresa un nombre de usuario.');
+    } 
+
+    const res = await fetch('../php/cambiar_username.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+        id_user: id_usuario_actual,
+        new_username: nuevo
+        })
+    });
+
+    const { success, message } = await res.json();
+    if (success)
+    {
+        return alert(message || 'Nombre cambiado');
+    } 
+
+    if (!success)
+    {
+        return alert(message || 'Error al cambiar username');
+    } 
+
+  // Actualiza en pantalla si tienes un <span id="user_username_display">
+  //const userElem = document.getElementById('user_username_display');
+  //if (userElem) userElem.textContent = nuevo;
+  //closeeditusername();
+}
+
+async function cambiar_email() 
+{
+    const nuevo = document.getElementById('new_email').value.trim();
+    if (!nuevo) return alert('Ingresa un correo válido.');
+  
+    const res = await fetch('../php/cambiar_correo.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id_user: id_usuario_actual,
+        new_email: nuevo
+      })
+    });
+  
+    const { success, message } = await res.json();
+    if (success) return alert(message || 'Correo cambiado');
+    if (!success) return alert(message || 'Error al cambiar correo');
+}
+
+async function cambiar_contrasena() 
+{
+    const oldPwd = document.getElementById('old_password').value;
+    const newPwd = document.getElementById('new_password').value;
+    const confPwd = document.getElementById('confirm_new_password').value;
+  
+    if (!oldPwd || !newPwd || !confPwd) {
+      return alert('Completa todos los campos.');
+    }
+  
+    if (newPwd !== confPwd) {
+      return alert('Las nuevas contraseñas no coinciden.');
+    }
+  
+    // Validación: mínimo 5 caracteres, al menos 1 mayúscula y 1 carácter especial
+    const criteria = /^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{5,}$/;
+    if (!criteria.test(newPwd)) {
+      return alert(
+        'La contraseña debe tener al menos 5 caracteres, ' +
+        'incluyendo al menos una letra MAYÚSCULA y un carácter ESPECIAL.'
+      );
+    }
+  
+    const res = await fetch('../php/cambiar_contrasena.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id_user: id_usuario_actual,
+        old_password: oldPwd,
+        new_password: newPwd
+      })
+    });
+  
+    const { success, message } = await res.json();
+    if (!success) {
+      return alert(message || 'Error al cambiar contraseña');
+    }
+  
+    alert(message || 'Contraseña actualizada correctamente');
+}
+
+async function eliminar_cuenta() 
+{
+    if (!confirm('¿Seguro que quieres borrar tu cuenta? Esta acción no se puede deshacer.')) {
+      return;
+    }
+  
+    const res = await fetch('../php/eliminar_cuenta.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id_user: id_usuario_actual })
+    });
+  
+    const { success, message } = await res.json();
+    if (!success) {
+      return alert(message || 'Error al eliminar cuenta');
+    }
+  
+    alert(message || 'Cuenta eliminada. Hasta luego.');
+    window.location.href = '../html/index.html';
+}
+
+//grupos
+function crearGrupo() 
+{
+    const nombreGrupo = document.getElementById('nombreServidor').value;
+    const imagen = document.getElementById('file-input').files[0];
+
+    if (!nombreGrupo) 
+    {
+        alert("Debes proporcionar un nombre.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("nombre_grupo", nombreGrupo);
+    formData.append("imagen_grupo", imagen);
+
+    fetch('../php/create_group.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) 
+        {
+            document.getElementById('container-group').style.display = "none";   
+        }
+        else 
+        {
+            alert("Error: " + data.error);
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Ocurrió un error al enviar la solicitud.");
+    });
+}
