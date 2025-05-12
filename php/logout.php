@@ -18,7 +18,7 @@ if (isset($_SESSION['usuario']))
         session_destroy();
 
         //redidrecciona al index
-        header("Location: ../html/index.html");
+        header("Location: ../html/login.html");
         echo json_encode(["status" => "success", "message" => "Sesión cerrada correctamente."]);
     } 
     catch (PDOException $e) 

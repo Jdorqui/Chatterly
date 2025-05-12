@@ -117,16 +117,6 @@ function closechangepassword()
     document.getElementById("change_password_container").style.display = "none";
 }
 
-//sesion
-function cerrarSesion()
-{
-    fetch("../php/logout.php", { method: "POST" })
-        .then(() => {
-            mostrarLogin();
-        })
-        .catch((error) => console.error("Error:", error));
-}
-
 //amigos
 function selectFriend(nombre, foto, destinatario) 
 {
@@ -135,7 +125,7 @@ function selectFriend(nombre, foto, destinatario)
 
     nombreAmigo.textContent = nombre; //muestra el nombre del amigo
     fotoAmigo.src = foto; //muestra la foto del amigo
-
+    
     openchat(destinatario); //abre el chat con el amigo seleccionado
 }
 
@@ -440,38 +430,29 @@ function showprofileinfo() //muestra el panel de información del perfil
 const img = document.getElementById('profileImg');
 const img2 = document.getElementById('profileImg2');
 const fileProfile = document.getElementById('fotoProfile');
-const uploadForm = document.getElementById('uploadForm');
 
 //abre el selector de archivos al hacer clic en la imagen
 img.addEventListener('click', () => {
     fileProfile.click();
 });
 
-//subir la imagen seleccionada al servidor
-fileProfile.addEventListener('change', () => {
-    const formData = new FormData(uploadForm);
-
-    fetch('upload.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success)
-        {
-            img.src = data.newImagePath; //actualiza la imagen de perfil
-            img2.src = data.newImagePath; 
-        } 
-        else 
-        {
-            alert(data.error);
-        }
-    })
-    .catch(error => console.error('Error en la subida de la imagen:', error));
+//cambia la imagen de perfil
+fileProfile.addEventListener('change', async () => {
+    let data = await cambiarFotoPerfil_Api();
+    
+    if(data.success)
+    {
+        img.src = data.newImagePath; //actualiza la imagen de perfil
+        img2.src = data.newImagePath; 
+    }
+    else
+    {
+        alert("Error al cambiar la imagen de perfil");
+    } 
 });
 
-//modificar perfil
 
+//modificar perfil
 async function cambiar_alias() 
 {
     const nuevo = document.getElementById('new_name').value.trim();
@@ -557,46 +538,46 @@ async function cambiar_email()
     if (!success) return alert(message || 'Error al cambiar correo');
 }
 
-async function cambiar_contrasena() 
-{
-    const oldPwd = document.getElementById('old_password').value;
-    const newPwd = document.getElementById('new_password').value;
-    const confPwd = document.getElementById('confirm_new_password').value;
-  
-    if (!oldPwd || !newPwd || !confPwd) {
-      return alert('Completa todos los campos.');
-    }
-  
-    if (newPwd !== confPwd) {
-      return alert('Las nuevas contraseñas no coinciden.');
-    }
-  
-    // Validación: mínimo 5 caracteres, al menos 1 mayúscula y 1 carácter especial
-    const criteria = /^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{5,}$/;
-    if (!criteria.test(newPwd)) {
-      return alert(
-        'La contraseña debe tener al menos 5 caracteres, ' +
-        'incluyendo al menos una letra MAYÚSCULA y un carácter ESPECIAL.'
-      );
-    }
-  
-    const res = await fetch('../php/cambiar_contrasena.php', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        id_user: id_usuario_actual,
-        old_password: oldPwd,
-        new_password: newPwd
-      })
+function changePassword() {
+  const out        = document.getElementById('mensajeChange');
+  const oldPwd     = document.getElementById('old_password').value.trim();
+  const newPwd     = document.getElementById('new_password').value.trim();
+  const confirmNew = document.getElementById('confirm_new_password').value.trim();
+
+  // limpiamos mensaje previo
+  out.textContent = '';
+  out.classList.remove('success','error');
+
+  console.log('[changePassword] Iniciando flujo de cambio de contraseña');
+
+  // 1) Validaciones locales
+  if (!oldPwd || !newPwd || !confirmNew) {
+    console.log('[changePassword] Falta algún campo');
+    out.textContent = 'Completa todos los campos.';
+    out.classList.add('error');
+    return;
+  }
+  if (newPwd !== confirmNew) {
+    console.log('[changePassword] Las nuevas contraseñas no coinciden');
+    out.textContent = 'Las nuevas contraseñas no coinciden.';
+    out.classList.add('error');
+    return;
+  }
+
+  // 2) Llamamos al API
+  changePassword_Api()
+    .then(data => {
+      console.log('[changePassword] Respuesta del servidor:', data);
+      out.textContent = data.message;
+      out.classList.add(data.success ? 'success' : 'error');
+    })
+    .catch(err => {
+      console.error('[changePassword] Error de red o excepción:', err);
+      out.textContent = 'Error de conexión. Intenta más tarde.';
+      out.classList.add('error');
     });
-  
-    const { success, message } = await res.json();
-    if (!success) {
-      return alert(message || 'Error al cambiar contraseña');
-    }
-  
-    alert(message || 'Contraseña actualizada correctamente');
 }
+
 
 async function eliminar_cuenta() 
 {

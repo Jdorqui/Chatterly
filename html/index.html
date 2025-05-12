@@ -1,68 +1,19 @@
-<!DOCTYPE html>
 <html lang="es">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Chatterly</title>
-        <link rel="stylesheet" href="../css/style_login.css">
+        <title>Chatterly | Tu red social de confianza</title>
+        <link rel="stylesheet" href="../css/style_website.css">
         <link rel="icon" href="../assets/imgs/logo_bg.ico">
     </head>
     <body>
-        <div id="loginDiv" class="menu show">
-            <div class="input-group">
-                <h1 id="ms1">¡Hola de nuevo!</h1>
-                <label id="ms2" for="ms2">¡Nos alegramos mucho de volver a verte!</label>
-                <label id="ms3" for="usuario-login">Nombre de usuario * </label>
-                <input type="text" name="usuario" id="usuario-login" required>
-            </div>
-            <div class="input-group">
-                <label id="ms4" for="password-login">Contraseña *</label>
-                <input type="password" name="password" id="password-login" required>
-            </div>
-            <div class="">
-                <a id="link" href="../php/forgotPassword.php">¿Olvidaste tu contraseña?</a>
-                <button type="button" id="btn-submit-login" onclick="login()" style="margin-top: 15px; margin-bottom: 15px;">Iniciar Sesion</button> <!-- se oculta el div login y se muesta bienvenida --> 
-                <a id="link" href="#" onclick="mostrarRegistro()" style="margin-top: 5px;">¿No tienes cuenta, registrate?</a>
-            </div>
-            <div>
-                <div id="error-message" style="color: red; display: none; margin-top: 15px;"></div>
-            </div>
-        </div>
+        <header>
+            
+        </header>
 
-        <div id="registroDiv" class="menu">
-            <h1 id="ms1">Crear una cuenta</h1>
-            <form id="form-registro">
-                <div class="input-group">
-                    <label id="ms5" for="email">Correo electronico *</label>
-                    <input type="text" name="email" id="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
-                </div>
-                <div class="input-group">
-                    <label id="ms6" for="username">Mostrar nombre</label>
-                    <input type="text" name="username" id="username" maxlength="31">
-                </div>
-                <div class="input-group">
-                    <label id="ms7" for="alias">Nombre de usuario *</label>
-                    <input type="text" name="alias" id="alias" required maxlength="50">
-                </div>
-                <div class="input-group">
-                    <label id="ms8" for="password">Contraseña *</label>
-                    <input type="password" name="password" id="password" required>
-                </div>
-                <div class="input-group">
-                    <label id="ms9" for="fecha_nacimiento">Fecha de Nacimiento *</label>
-                    <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" required>
-                </div>
-                <div style="margin-bottom: 5px;">
-                    <input id="ms9" type="checkbox" name="terminos" id="terminos" required>
-                    <label style="font-size: 12px;" for="terminos">He leido y acepto las <a href="../html/terms of service.html" id="link">Condiciones del Servicio</a> y la  <a href="../html/privacity policy.html" id="link">Politica de privacidad</a> de Chatterly.</label>
-                </div>
-                <div>
-                    <button type="button" onclick="registrarUsuario_Api()">Continuar</button>
-                    <a id="link" style="top: 15px;" href="#" onclick="mostrarLogin()">¿Ya tienes cuenta?</a>
-                </div><br>
-                <div id="error-message-registro" style="color: red; display: none;"></div> 
-            </form>
-        </div>
-        <script defer src="../javascript/loginRegister.js"></script>
+        
+        <footer>
+
+        </footer>
     </body>
 </html>

@@ -1,26 +1,59 @@
 function openandclosecreategroup() //abre o cierra el menu para crear los grupos
 {
-    if (document.getElementById('container-group').style.display === "block") 
-    {
-        document.getElementById('container-group').style.display = "none";
-    } 
-    else 
-    {
-        document.getElementById('container-group').style.display = "block";
-    }
+  if (document.getElementById('container-group').style.display === "none") 
+  {
+      document.getElementById('container-group').style.display = "block";
+  } 
+  else 
+  {
+      document.getElementById('container-group').style.display = "none";
+  }
 }
 
 function uploadGroupImage() //abre el explorador de archivos para subir una imagen
 {
-    document.getElementById('file-input').click();
+  document.getElementById('file-input').click();
 }
 
-function previewGroupImage(event) //muestra la imagen seleccionada en el input de tipo file
+function closegroup()
 {
-    var reader = new FileReader();
-    reader.onload = function(){
-        var output = document.getElementById('group-image-preview');
-        output.src = reader.result;
+  document.getElementById('barra2').style.display = "block";
+  document.getElementById('initialpanel').style.display = "block";
+
+  document.getElementById('barra2_group').style.display = "none";
+  document.getElementById('initialpanel_group').style.display = "none";
+  document.getElementById('chatcontainer').style.display = "none";
+}
+
+function opengroup(el) 
+{
+  document.getElementById('barra2').style.display = "none";
+  document.getElementById('initialpanel').style.display = "none";
+  document.getElementById('chatcontainer').style.display = "none";
+  
+  document.getElementById('barra2_group').style.display = "block";
+  document.getElementById('initialpanel_group').style.display = "block";
+
+  //se lee el dataset del elemento clicado
+  const groupId = el.dataset.groupId;
+  const groupName = el.dataset.groupName;
+  console.log('Clicked group:', groupId, groupName);
+
+  //actualiza el nombre del grupo
+  document.getElementById('groupname').textContent = groupName;
+
+  //envia el id del grupo al php
+  fetch('../php/select_group.php', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify({ group_id: groupId })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (!data.success) {
+      console.error('Error al cargar grupo:', data.error);
     }
-    reader.readAsDataURL(event.target.files[0]);
+    //actualiza el chat......
+  })
+  .catch(err => console.error('Fetch fallido:', err));
 }

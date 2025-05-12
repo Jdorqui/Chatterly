@@ -1,3 +1,4 @@
+/* ==== fuente y configuracion inicial  ==== */
 @font-face 
 {
     font-family: 'newfont';
@@ -92,8 +93,9 @@ button.active
     color: #ffffff;
 }
 
+/* ==== form y panel button ==== */
 
-#login, #form-container
+#form-container
 {
     background-color: #34343c;
     padding: 30px;
@@ -104,75 +106,9 @@ button.active
     display: none;
 }
 
-#ms1
-{
-    margin: 0;
-    padding-bottom: 10px;
-    font-weight: bold;
-    font-size: 30px;
-    text-align: center;
-}
-
-#ms2
-{
-    margin: 0;
-    padding-bottom: 20px;
-    color: #adadad;
-    font-size: 20px;
-    text-align: center;
-}
-
-#login.active, #form-container.active 
+#form-container.active 
 {
     display: block;
-}
-
-#link
-{
-    color: #00aafc;
-    text-decoration: none;
-    position: relative;
-}
-
-#link::after
-{
-    content: '';
-    position: absolute;
-    height: 2px;
-    bottom: 0;
-    left: 50%;
-    background-color: #6d58a8;
-    visibility: hidden;
-    transform: translateX(-50%) scaleX(0);
-    transition: all 0.3s ease-in-out;
-    width: 100%;
-}
-
-#link:hover::after
-{
-    visibility: visible;
-    transform: translateX(-50%) scaleX(1);
-}
-
-
-.input-group 
-{
-    display: flex;
-    margin-right: 26px;
-    flex-direction: column;
-    margin-bottom: 20px;
-}
-
-.button-group 
-{
-    display: flex;
-    gap: 10px;               
-    justify-content: center; 
-}
-
-.button-group button 
-{
-    display: inline-block;
 }
 
 .panel_button
@@ -185,27 +121,7 @@ button.active
     background-color: #35373c;
 }
 
-.menu
-{
-    position: absolute;
-    width: 100%;
-    max-width: 450px;
-    background-color: #34343c;
-    padding: 35px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-20px);
-    transition: opacity 0.5s ease, visibility 0.5s ease, transform 0.5s ease;
-}
-
-.menu.show 
-{
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
+/* ==== opciones ==== */
 
 #options-button 
 {
@@ -237,6 +153,8 @@ button.active
     outline: none; 
     background-color: #404249;
 }
+
+/* ==== message logo y message (panel 1 circulos)  ==== */
 
 #message 
 {
@@ -310,6 +228,8 @@ button.active
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
 }
 
+/* ==== En linea, Todos, Pediente y Añadir amigo  (botones) ==== */
+
 .friend-tab-button 
 {
     background-color: #313338;
@@ -351,29 +271,33 @@ button.active
     background-color: #43c46b;
 }
 
-#chat-messages div 
+/* ==== links y scrollbar ==== */
+
+#link
 {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    word-break: break-word; 
+    color: #00aafc;
+    text-decoration: none;
+    position: relative;
 }
 
-#chat-messages div:hover 
+#link::after
 {
-    background-color: #2e3035; 
-    border-radius: 5px; 
+    content: '';
+    position: absolute;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: #6d58a8;
+    visibility: hidden;
+    transform: translateX(-50%) scaleX(0);
+    transition: all 0.3s ease-in-out;
+    width: 100%;
 }
 
-#chat-messages div strong 
+#link:hover::after
 {
-    white-space: nowrap; 
-    flex-shrink: 0; 
-}
-
-#chat-messages div span 
-{
-    flex-grow: 1; 
+    visibility: visible;
+    transform: translateX(-50%) scaleX(1);
 }
 
 ::-webkit-scrollbar

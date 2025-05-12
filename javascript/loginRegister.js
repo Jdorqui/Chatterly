@@ -1,8 +1,3 @@
-function cerrarLogin()
-{
-    document.getElementById("loginDiv").style.display = "none";
-}
-
 function mostrarLogin() //animacion
 {
     document.getElementById("registroDiv").classList.remove("show");
@@ -14,6 +9,11 @@ function mostrarLogin() //animacion
     setTimeout(() => {
         document.getElementById("loginDiv").classList.add("show");
     }, 10);
+
+    document.getElementById("forgotPasswordDiv").classList.remove("show");
+    setTimeout(() => {
+        document.getElementById("forgotPasswordDiv").style.display = "none";
+    }, 500);
 }
 
 function mostrarRegistro() //animacion
@@ -27,6 +27,19 @@ function mostrarRegistro() //animacion
     setTimeout(() => {
         document.getElementById("registroDiv").classList.add("show");
     }, 10); 
+}
+
+function mostrarForgotPassword() //animacion
+{
+    document.getElementById("loginDiv").classList.remove("show");
+    setTimeout(() => {
+        document.getElementById("loginDiv").style.display = "none";
+    }, 500);
+
+    document.getElementById("forgotPasswordDiv").style.display = "block";
+    setTimeout(() => {
+        document.getElementById("forgotPasswordDiv").classList.add("show");
+    }, 10);
 }
 
 async function registrarUsuario_Api() //verifica errores del registro y registra los usuarios
@@ -123,4 +136,23 @@ async function loginUsuario_Api() //verifica errores del login
             }
         } 
     return data;
+}
+
+function forgotPassword() 
+{
+    const out = document.getElementById('mensaje');
+    out.textContent = '';
+    out.style.color = '';
+    out.classList.remove('success','error');
+
+    forgotPassword_Api()
+    .then(data => {
+      out.textContent = data.message;
+      out.style.color = data.color;
+    })
+    .catch(err => {
+      console.error(err);
+      out.textContent = 'Error de conexión. Intenta más tarde.';
+      out.style.color = 'rgb(247,118,122)';
+    });
 }

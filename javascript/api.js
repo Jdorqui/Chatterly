@@ -57,3 +57,53 @@ async function numeroUsuario_Api(id_user)
     let data = await fetchData.json();
     return data.alias;
 }
+
+function cerrarSesion()
+{
+    fetch("../php/logout.php", { method: "POST" })
+        .then(() => {
+            mostrarLogin();
+        })
+        .catch((error) => console.error("Error:", error));
+}
+
+function forgotPassword_Api() {
+  const form = document.getElementById('form-forgotPassword');
+  const body = new URLSearchParams(new FormData(form)).toString();
+
+  return fetch('../php/forgotPassword.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+    },
+    body
+  })
+  .then(res => res.json());
+}
+
+function changePassword_Api() {
+  const old_password = document.getElementById('old_password').value;
+  const new_password = document.getElementById('new_password').value;
+
+  return fetch('../php/forgotPassword.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id_user: id_usuario_actual,
+      old_password,
+      new_password
+    })
+  })
+  .then(res => res.json());
+}
+
+async function cambiarFotoPerfil_Api() //sube la imagen al servidor
+{
+    const formData = new FormData(document.getElementById('uploadForm'));
+
+    return fetch('../php/upload.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json());
+}

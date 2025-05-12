@@ -1,70 +1,71 @@
 <?php
-    session_start();
-    require 'conexion.php';
+session_start();
+require 'conexion.php';
 
-    if (!isset($_SESSION['usuario']) || !isset($_SESSION['password']))  //si el usuario no ha iniciado sesion
-    { 
-        header("Location: ../html/index.html"); //redirecciona al index
-        exit(); //finaliza la ejecucion del script
-    }
+if (!isset($_SESSION['usuario']) || !isset($_SESSION['password']))  //si el usuario no ha iniciado sesion
+{ 
+    header("Location: ../html/login.html"); //redirecciona al index
+    exit(); //finaliza la ejecucion del script
+}
 
-    //recupera el usuario y contraseña de la sesion
-    $usuario = $_SESSION['usuario'];
-    
-    //obtiene el id del usuario
-    $stmt = $pdo->prepare("SELECT id_user FROM usuarios WHERE username = ?");
-    $stmt->execute([$usuario]);
-    $usuarioData = $stmt->fetch(PDO::FETCH_ASSOC);
-    if (!$usuarioData) 
-    {
-        header( 'Location: ../html/index.html');
-        exit();
-    }
-    $id_usuario_actual = $usuarioData['id_user'];
+//recupera el usuario y contraseña de la sesion
+$usuario = $_SESSION['usuario'];
 
-    //obtiene las solicitudes pendientes
-    $stmt = $pdo->prepare("SELECT usuarios.alias, amigos.id_user1 FROM amigos 
-                        JOIN usuarios ON amigos.id_user1 = usuarios.id_user 
-                        WHERE amigos.id_user2 = ? AND amigos.estado = 'pendiente'");
-    $stmt->execute([$id_usuario_actual]);
-    $solicitudes_pendientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//obtiene el id del usuario
+$stmt = $pdo->prepare("SELECT id_user FROM usuarios WHERE username = ?");
+$stmt->execute([$usuario]);
+$usuarioData = $stmt->fetch(PDO::FETCH_ASSOC);
+if (!$usuarioData) 
+{
+    header( 'Location: ../html/login.html');
+    exit();
+}
+$id_usuario_actual = $usuarioData['id_user'];
+//obtiene las solicitudes pendientes
 
-    //obtener la lista de amigos del usuario
-    $stmt = $pdo->prepare("
-        SELECT usuarios.username, 
-            amigos.id_user1,
-            amigos.id_user2
-        FROM amigos 
-        JOIN usuarios ON amigos.id_user1 = usuarios.id_user OR amigos.id_user2 = usuarios.id_user 
-        WHERE (amigos.id_user1 = :id_usuario OR amigos.id_user2 = :id_usuario) 
-        AND amigos.estado = 'aceptado' 
-        AND usuarios.id_user != :id_usuario
-    ");
-    $stmt->execute(['id_usuario' => $id_usuario_actual]);
-    $amigos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $pdo->prepare("SELECT usuarios.alias, amigos.id_user1 FROM amigos 
+                    JOIN usuarios ON amigos.id_user1 = usuarios.id_user 
+                    WHERE amigos.id_user2 = ? AND amigos.estado = 'pendiente'");
+$stmt->execute([$id_usuario_actual]);
+$solicitudes_pendientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    //obtener amigos en linea
-    $stmt = $pdo->prepare("
-        SELECT u.username, u.id_user, u.en_linea
-        FROM amigos a
-        JOIN usuarios u ON (a.id_user1 = u.id_user OR a.id_user2 = u.id_user)
-        WHERE (a.id_user1 = :id_usuario_actual OR a.id_user2 = :id_usuario_actual)
-        AND u.en_linea = 1
-        AND u.id_user != :id_usuario_actual
-    ");
-    $stmt->execute(['id_usuario_actual' => $id_usuario_actual]);
-    $amigos_en_linea = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//obtener la lista de amigos del usuario
+$stmt = $pdo->prepare("
+    SELECT usuarios.username, 
+        amigos.id_user1,
+        amigos.id_user2
+    FROM amigos 
+    JOIN usuarios ON amigos.id_user1 = usuarios.id_user OR amigos.id_user2 = usuarios.id_user 
+    WHERE (amigos.id_user1 = :id_usuario OR amigos.id_user2 = :id_usuario) 
+    AND amigos.estado = 'aceptado' 
+    AND usuarios.id_user != :id_usuario
+");
+$stmt->execute(['id_usuario' => $id_usuario_actual]);
+$amigos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $sql = "
-    SELECT g.id_grupo, g.nombre, g.imagen
-    FROM grupos g
-    JOIN usuarios u ON g.id_creador = u.id_user
-    WHERE u.username = ?
-    ORDER BY g.fecha_creacion DESC
-    ";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$usuario]);
-    $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//obtener amigos en linea
+$stmt = $pdo->prepare("
+    SELECT u.username, u.id_user, u.en_linea
+    FROM amigos a
+    JOIN usuarios u ON (a.id_user1 = u.id_user OR a.id_user2 = u.id_user)
+    WHERE (a.id_user1 = :id_usuario_actual OR a.id_user2 = :id_usuario_actual)
+    AND u.en_linea = 1
+    AND u.id_user != :id_usuario_actual
+");
+$stmt->execute(['id_usuario_actual' => $id_usuario_actual]);
+$amigos_en_linea = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+//grupos
+$sql = "
+SELECT g.id_grupo, g.nombre, g.imagen
+FROM grupos g
+JOIN usuarios u ON g.id_creador = u.id_user
+WHERE u.username = ?
+ORDER BY g.fecha_creacion DESC
+";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$usuario]);
+$groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -109,7 +110,7 @@
                 <div style="display: flex; flex: 1;">
                     <div style="background-color: #1e1f22; width: 2.7vw; padding: 10px; color: white; min-width: 50px;"> <!-- barra1 -->
                         <div>
-                            <img id="message-logo" src="../assets/imgs/message_logo.png" alt="logo" onclick=""><br>
+                            <img id="message-logo" src="../assets/imgs/message_logo.png" alt="logo" onclick="closegroup()"><br>
                             <div style="height: 2px; background-color: #393e42"></div><br>
                             <?php 
                                 foreach ($groups as $group): //recorre todos los grupos del usuario
@@ -120,15 +121,15 @@
                                     $imagePath = "../assets/users/{$userDir}/groups/{$groupId}/img_profile/{$imageName}";
                                     $imageAlt = $groupName;
                                 ?>
-                                    <div class="sidebar-item server-icon" title="<?= $groupName ?>">
-                                        <img src="<?= $imagePath ?>" alt="<?= $imageAlt ?>">
+                                    <div class="sidebar-item server-icon" data-group-id="<?= $groupId ?>" data-group-name="<?= $groupName ?>" onclick="opengroup(this)" title="<?= $groupName ?>">
+                                        <img src="<?= $imagePath ?>" alt="<?= $groupName ?>" width="40" height="40">
                                     </div>
                                 <?php endforeach;
                             ?>
                             <img id="message" src="../assets/imgs/newServer_logo.png" alt="logo" onclick="openandclosecreategroup()" style="padding: 10px; width: 30px; height: 30px;"><br>
                         </div>
                     </div>
-                    <div style="background-color: #2b2d31; width: 14%; color: white; min-width: 200px;"> <!-- barra2 -->
+                    <div id="barra2" style="background-color: #2b2d31; width: 14%; color: white; min-width: 200px;"> <!-- barra2 -->
                         <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
                             <div id="direct_message_containter" style="padding: 10px;"> <!-- mensaje directo -->
                                 <button id="options-button" style="text-align: center; display: flex; align-items: center;" onclick="closechat();">
@@ -182,8 +183,65 @@
                                     ?>
                             </div>
 
-                            <div id="group_container1" style="display: none;"> <!-- group panel 1-->
+                            <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background-color: #232428; width: 100%;"> <!-- userpanel -->
+                                <?php 
+                                    $baseDir = "../assets/users/$usuario/img_profile/";
+                                    $defaultImage = '../assets/imgs/default_profile.png';
+                                    
+                                    $profileImages = glob($baseDir . '*.{jpg,jpeg,png}', GLOB_BRACE);
+                                    
+                                    if (!empty($profileImages)) 
+                                    {
+                                        usort($profileImages, function($a, $b) 
+                                        {
+                                            return filemtime($b) - filemtime($a);
+                                        });
+                                    
+                                        $foto = $profileImages[0];
+                                    } 
+                                    else 
+                                    {   
+                                        $foto = $defaultImage;
+                                    }
+
+                                     echo"
+                                     <button id='panel_button' class='panel_button' style='display: flex; align-items: center; gap: 5px; padding: 5px 10px; max-width: 1350px; cursor: pointer;' onclick='showprofileinfo()'> 
+                                        <img id='profileImg2' src='$foto' alt='profile' style='border-radius: 50%; width: 30px; height: 30px;'> 
+                                        <span style='color: white; font-size: 16px;'>$usuario</span>
+                                    </button>";
+                                ?> 
+                                <div style="display: flex; padding-right: 19px;"> <!-- icono -->
+                                    <div id="options_button">
+                                        <img src="../assets/imgs/options_icon.png" alt="options" id="options_icon" onclick="showoptionspanel()">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="barra2_group"> <!-- barra2_group -->
+                        <div id="group_info">
+                            <div id="serverthings" style="padding: 10px;">
+                                <div class="container">
+                                    <button class="groupname_buton" id="options-button">
+                                        <h1 id="groupname" style="padding-left: 5px;"></h1>
+                                    </button>
+                                    <button class="add_member_button" id="options-button">
+                                        <img id="add_member_image" src="../assets/imgs/add_member_icon.png">
+                                    </button>
+                                </div>
                                 
+                                <div style="background-color: #393e42; height: 2px; margin-bottom: 5px;"></div>
+                                
+                                <button id="options-button">
+                                    <div class="container" style="padding: 0; margin: 0;">
+                                        <img src="../assets/imgs/members_icon.png" style="width: 30px; height: 30px;">
+                                        <p style="margin-right: 100000px;">Miembros</p>
+                                    </div>
+                                </button>
+                                
+                                <div style="background-color: #393e42; height: 2px; margin-bottom: 5px; margin-top: 5px;"></div>
+
                             </div>
 
                             <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background-color: #232428; width: 100%;"> <!-- userpanel -->
@@ -358,6 +416,11 @@
                                 ?>
                         </div>
                     </div>
+
+                    <div id="initialpanel_group" style="background-color: #313338; flex: 1; display: flex; flex-direction: column; min-width: 500px; display: none;">
+
+                    </div>
+                    
 
                     <div id="chatcontainer" style="display: none;">
                         <div class="chat-header">
@@ -538,7 +601,8 @@
                                 <input type="password" name="old_password" id="old_password" placeholder="Contraseña actual" required>
                                 <input type="password" name="new_password" id="new_password" placeholder="Nueva contraseña" required>
                                 <input type="password" name="confirm_new_password" id="confirm_new_password" placeholder="Confirmar nueva contraseña" required>
-                                <button type="submit" onclick="cambiar_contrasena()">Cambiar contraseña</button>
+                                <button type="button" onclick="changePassword()">Cambiar contraseña</button>
+                                <div id="mensajeChange"></div>
                             </div>
                         </div>
                     </div>

@@ -161,3 +161,28 @@
     padding: 0 15px;
     border: none;
 }
+
+#chat-messages div 
+{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    word-break: break-word; 
+}
+
+#chat-messages div:hover 
+{
+    background-color: #2e3035; 
+    border-radius: 5px; 
+}
+
+#chat-messages div strong 
+{
+    white-space: nowrap; 
+    flex-shrink: 0; 
+}
+
+#chat-messages div span 
+{
+    flex-grow: 1; 
+}

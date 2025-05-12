@@ -3,7 +3,7 @@
 
     if (!isset($_SESSION['usuario']) || !isset($_SESSION['password']))  // Si el usuario no ha iniciado sesión
     { 
-        header("Location: index.html"); // Redirecciona al index
+        header("Location: login.html"); // Redirecciona al index
         exit();
     }
 
@@ -29,7 +29,7 @@
 
         $fileName = basename($_FILES['profile_picture']['name']); //obtiene el nombre del archivo
         $fileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION)); //obtiene la extensión del archivo
-        $newName    = time() . '_' . $fileName;  //nuevo nombre del archivo
+        $newName = time() . '_' . $fileName;  //nuevo nombre del archivo
         $targetFile = $targetDir . $newName; //ruta completa del archivo
         
         if (in_array($fileType, ['png', 'jpg', 'jpeg'])) //valida que el archivo sea una imagen

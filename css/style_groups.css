@@ -130,3 +130,53 @@
     transform: translateY(0%);
     background: #fff;
 }
+
+#groupname
+{
+    font-size: 20px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    text-align: left;
+    justify-content: left;
+}
+
+#barra2_group
+{
+    background-color: #2b2d31; 
+    width: 14%; 
+    color: white; 
+    min-width: 200px; 
+    display: none;
+}
+
+#group_info
+{
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+    height: 100%;
+}
+
+.groupname_buton
+{
+    padding: 0 !important; 
+    padding-right: 6px !important; 
+    width: auto !important;
+}
+
+.add_member_button
+{
+    width: 35px !important; 
+    height: 35px !important; 
+    padding: 0 !important; 
+    text-align: center !important;
+}
+
+#add_member_image 
+{
+    text-align: center !important; 
+    align-items: center !important; 
+    width: 30px !important; 
+    height: 30px !important; 
+    padding-top: 2px !important;
+}

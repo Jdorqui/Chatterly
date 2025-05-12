@@ -310,7 +310,7 @@
 
 #old_password
 {
-    margin-top: 25px;
+    margin-top: 5px;
     width: 94%;
 }
 
@@ -338,4 +338,9 @@
 {
     font-size: 19px;
     font-weight: 400;
+}
+
+#mensajeChange
+{
+    margin-top: 15px;
 }
