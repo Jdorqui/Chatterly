@@ -25,7 +25,7 @@
                 <a id="link" onclick="mostrarRegistro()" style="margin-top: 5px;">¿No tienes cuenta, registrate?</a>
             </div>
             <div>
-                <div id="error-message" style="color: red; display: none; margin-top: 15px;"></div>
+                <div id="error-message" class="error" style="display:none; margin-top: 15px;"></div>
             </div>
         </div>
 
@@ -57,10 +57,10 @@
                     <label style="font-size: 12px;" for="terminos">He leido y acepto las <a href="../html/terms of service.html" id="link">Condiciones del Servicio</a> y la  <a href="../html/privacity policy.html" id="link">Politica de privacidad</a> de Chatterly.</label>
                 </div>
                 <div>
-                    <button type="button" onclick="registrarUsuario_Api()">Continuar</button>
-                    <a id="link" style="top: 15px;" href="#" onclick="mostrarLogin()">¿Ya tienes cuenta?</a>
+                    <button type="button" onclick="registrarUsuario()">Continuar</button>
+                    <a id="link" style="top: 15px;" onclick="mostrarLogin()">¿Ya tienes cuenta?</a>
                 </div><br>
-                <div id="error-message-registro" style="color: red; display: none;"></div> 
+                <div id="error-message-registro" style="color: #f7767a; display: none;"></div> 
             </form>
         </div>
 

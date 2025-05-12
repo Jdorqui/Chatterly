@@ -1,3 +1,24 @@
+async function login_Api(usuario, password) 
+{
+    const body = new URLSearchParams({ usuario, password }).toString();
+    const res  = await fetch('../php/login.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body
+  });
+  return res.json();
+}
+
+async function registrarUsuarioApi() 
+{
+    const formData = new FormData(document.getElementById("form-registro"));
+    const res      = await fetch("../php/registro.php", {
+    method: "POST",
+    body: formData
+  });
+  return res.json();
+}
+
 async function enviarMensajes_Api(usuario, destinatario, mensaje)
 {
     await fetch("../php/chat.php",
@@ -58,6 +79,17 @@ async function numeroUsuario_Api(id_user)
     return data.alias;
 }
 
+async function cambiarFotoPerfil_Api() //sube la imagen al servidor
+{
+    const formData = new FormData(document.getElementById('uploadForm'));
+
+    return fetch('../php/upload.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json());
+}
+
 function cerrarSesion()
 {
     fetch("../php/logout.php", { method: "POST" })
@@ -67,7 +99,8 @@ function cerrarSesion()
         .catch((error) => console.error("Error:", error));
 }
 
-function forgotPassword_Api() {
+function forgotPassword_Api()  //con correo
+{
   const form = document.getElementById('form-forgotPassword');
   const body = new URLSearchParams(new FormData(form)).toString();
 
@@ -81,7 +114,8 @@ function forgotPassword_Api() {
   .then(res => res.json());
 }
 
-function changePassword_Api() {
+function changePassword_Api() //con contraseña
+{
   const old_password = document.getElementById('old_password').value;
   const new_password = document.getElementById('new_password').value;
 
@@ -95,15 +129,4 @@ function changePassword_Api() {
     })
   })
   .then(res => res.json());
-}
-
-async function cambiarFotoPerfil_Api() //sube la imagen al servidor
-{
-    const formData = new FormData(document.getElementById('uploadForm'));
-
-    return fetch('../php/upload.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json());
 }

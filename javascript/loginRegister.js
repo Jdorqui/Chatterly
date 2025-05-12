@@ -42,100 +42,79 @@ function mostrarForgotPassword() //animacion
     }, 10);
 }
 
-async function registrarUsuario_Api() //verifica errores del registro y registra los usuarios
+async function registrarUsuario()
 {
-    const formData = new FormData(document.getElementById("form-registro")); 
+    const err = document.getElementById("error-message-registro");
+    err.textContent = "";
+    err.style.display = "none";
+    err.classList.remove("success","error");
 
-    let fetchData = await fetch(`../php/registro.php`, {
-        method: "POST",
-        body: formData,
-    });
-
-    let data = await fetchData.json();
-
-    try
+    try 
     {
-        const errorMessage = document.getElementById("error-message-registro");
-        errorMessage.style.display = "none";  //reseteamos el mensaje de error
+        const data = await registrarUsuarioApi();
 
-        if (data.status === "success") 
+        if (data.status === "success") // Registro OK: volvemos al login
         {
-            mostrarLogin();  //vuelve al login
+            mostrarLogin(); 
         } 
-        else //muestra el mensaje de error si hubo un problema 
+        else // Error de validación o servidor: mostramos mensaje en rojo
         {
-            errorMessage.style.display = "block";
-            errorMessage.style.color = "#f7767a";  //mostramos el mensaje de error
-            errorMessage.textContent = data.message;
+            err.textContent = data.message;
+            err.classList.add("error");
+            err.style.color = "#f7767a";
+            err.style.display = "block";
         }
-    }
-    catch(e)
+    } 
+    catch (e) 
     {
-        console.error("Error:", error);
-        const errorMessage = document.getElementById("error-message-registro");
-        errorMessage.style.display = "block";
-        errorMessage.textContent = "Hubo un error al procesar la solicitud. Intenta nuevamente más tarde.";
+        console.error("Error en registro:", e);
+        err.textContent = "Error de conexión. Intenta nuevamente.";
+        err.classList.add("error");
+        err.style.color = "#f7767a";
+        err.style.display = "block";
     }
 }
 
-async function login()
+async function login() 
 {
-    const usuario = document.getElementById("usuario-login").value;
-    const password = document.getElementById("password-login").value;
+    const user = document.getElementById('usuario-login').value.trim();
+    const pass = document.getElementById('password-login').value.trim();
+    const err  = document.getElementById('error-message');
 
-    let data = await loginUsuario_Api();
-    if(data.status === 'success')
+    err.style.display = 'none';
+    err.textContent = '';
+    err.style.color = '';
+
+    if (!user || !pass) // Validación mínima
     {
-        await fetch(`../php/login.php`, {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `usuario=${encodeURIComponent(usuario)}&password=${encodeURIComponent(password)}`
-        });
-        
-        window.location.href = "../php/chatterly.php";
+        err.textContent = 'Introduce usuario y contraseña.';
+        err.style.color = "#f7767a";
+        err.style.display = 'block';
+        return;
     }
-}
 
-async function login_Api(usuario, password) //devuelve si login.php success
-{
-    let fetchData = await fetch("../php/login.php",
+    try 
+    {
+        const data = await login_Api(user, pass);
+
+        if (data.status === 'success')
         {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `usuario=${encodeURIComponent(usuario)}&password=${encodeURIComponent(password)}`
-        });
-
-    let data = await fetchData.json();
-    return data;
-}
-
-async function loginUsuario_Api() //verifica errores del login
-{
-    const usuario = document.getElementById("usuario-login").value;
-    const password = document.getElementById("password-login").value;
-    const errorMessage = document.getElementById("error-message");
-
-    errorMessage.style.display = "none";
-    errorMessage.textContent = "";
-
-    let data = await login_Api(usuario, password); //se usa el metodo login_api                                               
-
-    if (data.status !== "success") 
-        {
-            errorMessage.textContent = data.message;
-
-            errorMessage.style.color = "#f7767a";
-            document.getElementById("ms3").style.color = "#f7767a";
-            document.getElementById("ms4").style.color = "#f7767a";
-            
-            if(document.getElementById("ms3").textContent.includes(data.message) == false)
-            {
-                document.getElementById("ms3").textContent = document.getElementById("ms3").textContent + ` - ${data.message}`;
-                document.getElementById("ms4").textContent = document.getElementById("ms4").textContent + ` - ${data.message}`;
-
-            }
+            window.location.href = '../php/chatterly.php';
         } 
-    return data;
+        else // Mostrar mensaje de error
+        {
+            err.textContent   = data.message;
+            err.style.color   = "#f7767a";
+            err.style.display = 'block';
+        }   
+    } 
+    catch (e) 
+    {
+        console.error('Login error:', e);
+        err.textContent   = 'Error de conexión. Intenta de nuevo.';
+        err.style.color   = "#f7767a";
+        err.style.display = 'block';
+    }
 }
 
 function forgotPassword() 
@@ -147,12 +126,20 @@ function forgotPassword()
 
     forgotPassword_Api()
     .then(data => {
-      out.textContent = data.message;
-      out.style.color = data.color;
+        out.textContent = data.message;
+
+        if (data.success) // Éxito
+        {
+            out.style.color = '#7af776'; // verde claro
+        }
+        else // Error
+        {
+            out.style.color = '#f7767a';
+        }
     })
     .catch(err => {
-      console.error(err);
-      out.textContent = 'Error de conexión. Intenta más tarde.';
-      out.style.color = 'rgb(247,118,122)';
+        console.error('forgotPassword error:', err);
+        out.textContent = 'Error de conexion. Intenta más tarde.';
+        out.style.color = '#f7767a';
     });
 }
