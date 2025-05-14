@@ -74,7 +74,6 @@ $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Chatterly</title>
-        <link rel="stylesheet" href="../css/style.css">
         <link rel="stylesheet" href="../css/style_options.css">
         <link rel="stylesheet" href="../css/style_chatterly.css">
         <link rel="stylesheet" href="../css/style_chat.css">
@@ -103,15 +102,20 @@ $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
         
         <div id="chatterly">
-            <div style="display: flex; flex-direction: column; width: 100vw; height: 100vh;">
-                <div style="background-color: #1e1f22; color: white; padding: 5px; text-align: left; height: 20px;"> <!-- barra superior -->
-                    <span style="font-weight: bold; color: #949ba4;">Chatterly</span>
+            <div id="chatterly-container">
+                <div id="barra-superior"> <!-- barra superior -->
+                    <div id="barra-superior-buttons"> 
+                        <img id="message-logo" src="../assets/imgs/message_logo.png" alt="logo" onclick="closegroup()">
+                        <button class="friend-tab-button" onclick="openonlinemenu()"><p id="link">En linea</p></button>
+                        <button class="friend-tab-button" onclick="openallfriends()"><p id="link">Todos</p></button>
+                        <button class="friend-tab-button" onclick="openpendingmenu()"><p id="link">Pendiente</p></button>
+                        <button class="add-friend-button" onclick="openaddfriendmenu()"><p id="link">Añadir amigo</p></button>
+                    </div>
                 </div>
-                <div style="display: flex; flex: 1;">
-                    <div style="background-color: #1e1f22; width: 2.7vw; padding: 10px; color: white; min-width: 50px;"> <!-- barra1 -->
+
+                <div id="barra1-container">
+                    <div id="barra1"> <!-- barra1 -->
                         <div>
-                            <img id="message-logo" src="../assets/imgs/message_logo.png" alt="logo" onclick="closegroup()"><br>
-                            <div style="height: 2px; background-color: #393e42"></div><br>
                             <?php 
                                 foreach ($groups as $group): //recorre todos los grupos del usuario
                                     $groupName = htmlspecialchars($group['nombre'], ENT_QUOTES, 'UTF-8');
@@ -126,18 +130,13 @@ $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     </div>
                                 <?php endforeach;
                             ?>
-                            <img id="message" src="../assets/imgs/newServer_logo.png" alt="logo" onclick="openandclosecreategroup()" style="padding: 10px; width: 30px; height: 30px;"><br>
+                            <img id="message" src="../assets/imgs/newServer_logo.png" alt="logo" onclick="openandclosecreategroup()"><br>
                         </div>
                     </div>
-                    <div id="barra2" style="background-color: #2b2d31; width: 14%; color: white; min-width: 200px;"> <!-- barra2 -->
-                        <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
-                            <div id="direct_message_containter" style="padding: 10px;"> <!-- mensaje directo -->
-                                <button id="options-button" style="text-align: center; display: flex; align-items: center;" onclick="closechat();">
-                                    <img src="../assets/imgs/default_profile.png" alt="account" style="width: 20px; height: 20px; margin-right: 15px;">
-                                    <span>Amigos</span>
-                                </button>
-                                <div style="height: 2px; background-color: #393e42"></div>
-                                <p style="text-align: center;">MENSAJES DIRECTOS</p>
+                    <div id="barra2"> <!-- barra2 -->
+                        <div id="barra2-content-container">
+                            <div id="direct_message_containter"> <!-- mensaje directo -->
+                                <p style="text-align: center;">¿Con quién vas a hablar hoy?</p>
                                     <?php //se recorre la lista de amigos para mostrar los mensajes directos con cada uno de ellos 
                                         if (count($amigos) > 0) 
                                         {
@@ -183,7 +182,7 @@ $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     ?>
                             </div>
 
-                            <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background-color: #232428; width: 100%;"> <!-- userpanel -->
+                            <div id="userpanel"> <!-- userpanel -->
                                 <?php 
                                     $baseDir = "../assets/users/$usuario/img_profile/";
                                     $defaultImage = '../assets/imgs/default_profile.png';
@@ -210,8 +209,8 @@ $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <span style='color: white; font-size: 16px;'>$usuario</span>
                                     </button>";
                                 ?> 
-                                <div style="display: flex; padding-right: 19px;"> <!-- icono -->
-                                    <div id="options_button">
+                                <div> <!-- icono -->
+                                    <div id="options_button_gear">
                                         <img src="../assets/imgs/options_icon.png" alt="options" id="options_icon" onclick="showoptionspanel()">
                                     </div>
                                 </div>
@@ -272,7 +271,7 @@ $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     </button>";
                                 ?> 
                                 <div style="display: flex; padding-right: 19px;"> <!-- icono -->
-                                    <div id="options_button">
+                                    <div id="options_button_gear">
                                         <img src="../assets/imgs/options_icon.png" alt="options" id="options_icon" onclick="showoptionspanel()">
                                     </div>
                                 </div>
@@ -280,21 +279,11 @@ $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                     </div>
 
-                    <div id="initialpanel" style="background-color: #313338; flex: 1; display: flex; flex-direction: column; min-width: 500px;"> <!-- initialpanel -->
-                        <div style="background-color: #313338; display: flex; padding: 10px; align-items: center; color: white; gap: 10px;"> 
-                            <img src="../assets/imgs/default_profile.png" alt="friends" style="padding: 10px; width: 24px; height: 24px;">
-                            <span style="font-size: 16px;">Amigos</span>
-                            <div style="width: 2px; background-color: #393e42; height: 100%;"></div>
-                            <button class="friend-tab-button" style="width: 60px;" onclick="openonlinemenu()">En linea</button>
-                            <button class="friend-tab-button" style="width: 50px;" onclick="openallfriends()">Todos</button>
-                            <button class="friend-tab-button" onclick="openpendingmenu()">Pendiente</button>
-                            <button class="add-friend-button" onclick="openaddfriendmenu()">Añadir amigo</button>
-                        </div>
-
-                        <div id="openonlinemenu" style="display: column; padding: 30px; padding-top: 0;" hidden>
+                    <div id="initialpanel"> <!-- initialpanel -->
+                        <div id="openonlinemenu" hidden>
                                 <span>AMIGOS EN LINEA</span>
                                 <p>Estos son tus amigos que están en linea:</p>
-                                <div id="friend-list-container" style="display: background-color: #313338;">
+                                <div id="friend-list-container">
                                     <?php
                                         if (count($amigos_en_linea) > 0) 
                                         {
@@ -464,12 +453,12 @@ $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="sidebar">
                         <div class="form-container">
                             <p class="section-title">AJUSTES DE USUARIO</p>
-                            <button id="options-button" onclick="showprofileinfo()">Mi cuenta</button>
+                            <button id="options-button" class="options-buttons" onclick="showprofileinfo()">Mi cuenta</button>
                         </div>
                         <div class="divider"></div>
                         <div class="form-container">
-                            <button id="options-button" onclick="window.location.href='../php/logout.php'">Cerrar sesión</button>
-                            <button id="options-button" onclick="closeoptionspanel()">Volver</button>
+                            <button id="options-button" class="options-buttons" onclick="window.location.href='../php/logout.php'">Cerrar sesión</button>
+                            <button id="options-button" class="options-buttons" onclick="closeoptionspanel()">Volver</button>
                         </div>
                     </div>
                     <div class="main-content">

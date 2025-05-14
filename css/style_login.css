@@ -16,7 +16,7 @@ html
 
 body 
 {
-    background-image: url('../assets/imgs/bg.jpg');
+    background-image: url('../assets/imgs/bg.svg');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -47,7 +47,7 @@ input[type = "text"], input[type = "password"], input[type = "date"], input[type
     padding: 12px;
     border: 1px solid #1e1e1e;
     border-radius: 6px;
-    background-color: #1e1e1e;
+    background-color: #410140;
     color: #e4e4e4;
     font-size: 15px;
     transition: border-color 0.3s ease;
@@ -62,7 +62,7 @@ button
 {
     width: 100%;
     padding: 15px;
-    background-color: #5865f2;
+    background-color: #410140;
     color: #ffffff;
     border: none;
     border-radius: 6px;
@@ -74,7 +74,7 @@ button
 
 button:hover 
 {
-    background-color: #6d58a8;
+    background-color: #360135;
     transform: scale(1.02);
 }
 
@@ -154,7 +154,7 @@ button.active
     position: absolute;
     width: 100%;
     max-width: 450px;
-    background-color: #34343c;
+    background-color: #890444;
     padding: 35px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -169,6 +169,44 @@ button.active
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+}
+
+#bg-login
+{
+    width: 100%;
+    max-width: 440px;
+    height: 385px;
+    background-color: #75033a;
+    padding: 55px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: -10;
+}
+
+#bg-registro
+{
+    width: 100%;
+    max-width: 440px;
+    height: 700px;
+    background-color: #75033a;
+    padding-top: 5px;
+    padding-left: 80px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: -10;
+}
+
+#bg-forgot
+{
+    width: 100%;
+    max-width: 440px;
+    height: 385px;
+    background-color: #75033a;
+    padding-top: 60px;
+    padding-left: 70px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: -10;
 }
 
 .container 
@@ -189,7 +227,7 @@ button.active
 
 #link
 {
-    color: #00aafc;
+    color: #f2805b;
     text-decoration: none;
     position: relative;
 }
@@ -201,7 +239,7 @@ button.active
     height: 2px;
     bottom: 0;
     left: 50%;
-    background-color: #6d58a8;
+    background-color: #f36536;
     visibility: hidden;
     transform: translateX(-50%) scaleX(0);
     transition: all 0.3s ease-in-out;

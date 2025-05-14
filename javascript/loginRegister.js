@@ -5,15 +5,30 @@ function mostrarLogin() //animacion
         document.getElementById("registroDiv").style.display = "none";
     }, 500);
 
-    document.getElementById("loginDiv").style.display = "block";
+    document.getElementById("bg-registro").classList.remove("show");
     setTimeout(() => {
-        document.getElementById("loginDiv").classList.add("show");
-    }, 10);
+        document.getElementById("bg-registro").style.display = "none";
+    }, 500);
 
     document.getElementById("forgotPasswordDiv").classList.remove("show");
     setTimeout(() => {
         document.getElementById("forgotPasswordDiv").style.display = "none";
     }, 500);
+
+    document.getElementById("bg-forgot").classList.remove("show");
+    setTimeout(() => {
+        document.getElementById("bg-forgot").style.display = "none";
+    }, 500);
+
+    document.getElementById("loginDiv").style.display = "block";
+    setTimeout(() => {
+        document.getElementById("loginDiv").classList.add("show");
+    }, 10); 
+
+    document.getElementById("bg-login").style.display = "block";
+    setTimeout(() => {
+        document.getElementById("bg-login").classList.add("show");
+    }, 10); 
 }
 
 function mostrarRegistro() //animacion
@@ -23,10 +38,20 @@ function mostrarRegistro() //animacion
         document.getElementById("loginDiv").style.display = "none";
     }, 500);
 
+    document.getElementById("bg-login").classList.remove("show");
+    setTimeout(() => {
+        document.getElementById("bg-login").style.display = "none";
+    }, 500);
+
     document.getElementById("registroDiv").style.display = "block";
     setTimeout(() => {
         document.getElementById("registroDiv").classList.add("show");
-    }, 10); 
+    }, 10);
+
+    document.getElementById("bg-registro").style.display = "block";
+    setTimeout(() => {
+        document.getElementById("bg-registro").classList.add("show");
+    }, 10);
 }
 
 function mostrarForgotPassword() //animacion
@@ -36,9 +61,19 @@ function mostrarForgotPassword() //animacion
         document.getElementById("loginDiv").style.display = "none";
     }, 500);
 
+    document.getElementById("bg-login").classList.remove("show");
+    setTimeout(() => {
+        document.getElementById("bg-login").style.display = "none";
+    }, 500);
+
     document.getElementById("forgotPasswordDiv").style.display = "block";
     setTimeout(() => {
         document.getElementById("forgotPasswordDiv").classList.add("show");
+    }, 10);
+
+    document.getElementById("bg-forgot").style.display = "block";
+    setTimeout(() => {
+        document.getElementById("bg-forgot").classList.add("show");
     }, 10);
 }
 
