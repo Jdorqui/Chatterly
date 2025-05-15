@@ -142,10 +142,14 @@
 
 #barra2_group
 {
-    background-color: #2b2d31; 
-    width: 14%; 
-    color: white; 
-    min-width: 200px; 
+    width: 14%;
+    color: white;
+    min-width: 217px;
+    background: linear-gradient(180deg, #4a1e3d 0%, #793663 100%);
+    border-right: 2px solid var(--color-accent-3);
+    border-bottom: 2px solid var(--color-accent-3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
     display: none;
 }
 
@@ -179,4 +183,63 @@
     width: 30px !important; 
     height: 30px !important; 
     padding-top: 2px !important;
+}
+
+
+#userpanel_group
+{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: rgba(25, 15, 35, 0.6);
+    backdrop-filter: blur(8px);
+    border: 2px solid var(--color-accent-1);
+    box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    z-index: 1;
+}
+
+#initialpanel_group
+{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(360deg, #4e223c 0%, #4e1b3e 100%);
+    border-right: 2px solid var(--color-accent-1);
+    border-bottom: 2px solid var(--color-accent-1);
+    box-shadow: -3px 3px 10px 0px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    display: none;
+}
+
+#group-button 
+{
+    background: linear-gradient(to top, #a73814, #f2805b);
+    font-family: 'newfont', sans-serif;
+    color: #ffffff; 
+    font-size: 14px; 
+    border: none; 
+    padding: 10px 15px; 
+    margin: 5px 0;
+    text-align: left;
+    cursor: pointer; 
+    border-radius: 3px;
+    transition: background-color 0.2s ease; 
+}
+
+#group-button:hover 
+{
+    background: linear-gradient(to top, #c24d1e, #fa9270);
+}
+
+#group-button:active 
+{
+    background: linear-gradient(to top, #c24d1e, #fa9270);
+}
+
+#group-button:focus 
+{
+    outline: none; 
+    background: linear-gradient(to top, #c24d1e, #fa9270);
 }

@@ -111,8 +111,16 @@ p
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    transition: opacity 0.60s ease;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
+#start.hidden 
+{
+  opacity: 0;
+}
 
 #section1, #section2, #section3
 {
@@ -138,6 +146,33 @@ p
     background-color: #fc552b;
     z-index: 2;
     mask-image: linear-gradient(to bottom, transparent 0%, #fc552b 25%);
+}
+
+/* ==== animacion ==== */
+
+/* Estado inicial antes del fade-in */
+.fade-element
+{
+  opacity: 0;
+  transform: translateY(15px);
+}
+
+/* Animación de aparición */
+@keyframes fadeInUp 
+{
+  to 
+  {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in 
+{
+  animation-name: fadeInUp;
+  animation-duration: 0.4s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-out;
 }
 
 /* ==== container ==== */
@@ -188,19 +223,18 @@ p
 
 ::-webkit-scrollbar
 {
-    width: 5px; 
+    width: 10px; 
 }
 
 ::-webkit-scrollbar-track
 {
     background-color: #2b2d31; 
-    border-radius: 15px; 
 }
 
 ::-webkit-scrollbar-thumb
 {
     background-color: #1a1b1e; 
-    border-radius: 15px; 
+    border-radius: 10px; 
 }
 
 /* ==== modificacion para movil ==== */

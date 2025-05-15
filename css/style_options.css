@@ -29,7 +29,8 @@
 
 .sidebar 
 {
-    background-color: #2b2d31;
+    background: linear-gradient(180deg, #651d4d 0%, #5d2540 50%);
+    border-right: 2px solid var(--color-accent-2);
     width: 54%;
     padding: 10px;
     color: white;
@@ -38,15 +39,24 @@
     gap: 10px;
 }
 
-.form-container p
+#buttons-options-panel
 {
-    text-align: right;
-    margin: 0;
+    background: linear-gradient(to top, #a73814, #f2805b);
+    font-family: 'newfont', sans-serif;
+    color: #ffffff;
+    font-size: 14px;
+    border: none;
+    padding: 10px 15px;
+    margin: 5px 0;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 3px;
+    width: 120px;
 }
 
-.options-buttons
+#buttons-options-panel:hover 
 {
-    text-align: right !important;
+    background: linear-gradient(to top, #c24d1e, #fa9270);
 }
 
 .divider 
@@ -57,7 +67,11 @@
 
 .main-content 
 {
-    background-color: #313338;
+    background: linear-gradient(180deg, #4a1e3d 0%, #793663 100%);
+    border-right: 2px solid var(--color-accent-3);
+    border-bottom: 2px solid var(--color-accent-3);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    border-radius: 5px;
     width: 100%;
     padding: 35px;
     color: white;
@@ -95,7 +109,7 @@
 
 .section-title
 {
-    font-weight: 400px;
+    font-family: 'newfontbold', sans-serif;
 }
 
 .upload-form 
@@ -242,6 +256,11 @@
     padding: 10px 15px;
 }
 
+#delete_acount:hover
+{
+ background-color: #cf1e29 !important;   
+}
+
 #exit_button_image
 {
     width: 60px;
@@ -339,4 +358,22 @@
 #mensajeChange
 {
     margin-top: 15px;
+}
+
+#buttons_options_container
+{
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    align-items: flex-end
+}
+
+#options_container
+{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 5px;
 }

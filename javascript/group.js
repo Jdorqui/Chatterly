@@ -17,12 +17,49 @@ function uploadGroupImage() //abre el explorador de archivos para subir una imag
 
 function closegroup()
 {
-  document.getElementById('barra2').style.display = "block";
-  document.getElementById('initialpanel').style.display = "block";
+  document.getElementById('barra2').style.display = "";
+  document.getElementById('initialpanel').style.display = "";
 
   document.getElementById('barra2_group').style.display = "none";
   document.getElementById('initialpanel_group').style.display = "none";
   document.getElementById('chatcontainer').style.display = "none";
+}
+
+//grupos
+function crearGrupo() 
+{
+    const nombreGrupo = document.getElementById('nombreServidor').value;
+    const imagen = document.getElementById('file-input').files[0];
+
+    if (!nombreGrupo) 
+    {
+        alert("Debes proporcionar un nombre.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("nombre_grupo", nombreGrupo);
+    formData.append("imagen_grupo", imagen);
+
+    fetch('../php/create_group.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) 
+        {
+            document.getElementById('container-group').style.display = "none";   
+        }
+        else 
+        {
+            alert("Error: " + data.error);
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Ocurrió un error al enviar la solicitud.");
+    });
 }
 
 function opengroup(el) 
@@ -56,4 +93,9 @@ function opengroup(el)
     //actualiza el chat......
   })
   .catch(err => console.error('Fetch fallido:', err));
+}
+
+crearCanalTexto()
+{
+
 }

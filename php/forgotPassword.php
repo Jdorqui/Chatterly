@@ -25,21 +25,26 @@ function respuesta($success, $message)
 }
 
 // 2) Flujo de recuperación por email
-if ($email !== '') {
-    if (!$new_password || !$confirm_password) {
+if ($email !== '') 
+{
+    if (!$new_password || !$confirm_password) 
+    {
         respuesta(false, 'Faltan los datos de la nueva contraseña.');
     }
-    if ($new_password !== $confirm_password) {
+    if ($new_password !== $confirm_password) 
+    {
         respuesta(false, 'Las contraseñas no coinciden.');
     }
-    if (!preg_match('/^(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{5,}$/', $new_password)) {
+    if (!preg_match('/^(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{5,}$/', $new_password)) 
+    {
         respuesta(false, 'La contraseña debe tener al menos 5 caracteres, una mayúscula y un carácter especial.');
     }
 
     // ¿Existe el email?
     $stmt = $pdo->prepare("SELECT id_user FROM usuarios WHERE email = ?");
     $stmt->execute([$email]);
-    if (!$stmt->fetch(PDO::FETCH_ASSOC)) {
+    if (!$stmt->fetch(PDO::FETCH_ASSOC)) 
+    {
         respuesta(false, 'El correo no está registrado.');
     }
 

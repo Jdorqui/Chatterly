@@ -1,6 +1,7 @@
 <?php
 session_start();
 require 'conexion.php';
+require 'functions.php';
 
 if (!isset($_SESSION['usuario']) || !isset($_SESSION['password']))  //si el usuario no ha iniciado sesion
 { 
@@ -8,64 +9,11 @@ if (!isset($_SESSION['usuario']) || !isset($_SESSION['password']))  //si el usua
     exit(); //finaliza la ejecucion del script
 }
 
-//recupera el usuario y contraseña de la sesion
+//recupera el usuario
 $usuario = $_SESSION['usuario'];
 
-//obtiene el id del usuario
-$stmt = $pdo->prepare("SELECT id_user FROM usuarios WHERE username = ?");
-$stmt->execute([$usuario]);
-$usuarioData = $stmt->fetch(PDO::FETCH_ASSOC);
-if (!$usuarioData) 
-{
-    header( 'Location: ../html/login.html');
-    exit();
-}
-$id_usuario_actual = $usuarioData['id_user'];
-//obtiene las solicitudes pendientes
-
-$stmt = $pdo->prepare("SELECT usuarios.alias, amigos.id_user1 FROM amigos 
-                    JOIN usuarios ON amigos.id_user1 = usuarios.id_user 
-                    WHERE amigos.id_user2 = ? AND amigos.estado = 'pendiente'");
-$stmt->execute([$id_usuario_actual]);
-$solicitudes_pendientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-//obtener la lista de amigos del usuario
-$stmt = $pdo->prepare("
-    SELECT usuarios.username, 
-        amigos.id_user1,
-        amigos.id_user2
-    FROM amigos 
-    JOIN usuarios ON amigos.id_user1 = usuarios.id_user OR amigos.id_user2 = usuarios.id_user 
-    WHERE (amigos.id_user1 = :id_usuario OR amigos.id_user2 = :id_usuario) 
-    AND amigos.estado = 'aceptado' 
-    AND usuarios.id_user != :id_usuario
-");
-$stmt->execute(['id_usuario' => $id_usuario_actual]);
-$amigos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-//obtener amigos en linea
-$stmt = $pdo->prepare("
-    SELECT u.username, u.id_user, u.en_linea
-    FROM amigos a
-    JOIN usuarios u ON (a.id_user1 = u.id_user OR a.id_user2 = u.id_user)
-    WHERE (a.id_user1 = :id_usuario_actual OR a.id_user2 = :id_usuario_actual)
-    AND u.en_linea = 1
-    AND u.id_user != :id_usuario_actual
-");
-$stmt->execute(['id_usuario_actual' => $id_usuario_actual]);
-$amigos_en_linea = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-//grupos
-$sql = "
-SELECT g.id_grupo, g.nombre, g.imagen
-FROM grupos g
-JOIN usuarios u ON g.id_creador = u.id_user
-WHERE u.username = ?
-ORDER BY g.fecha_creacion DESC
-";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$usuario]);
-$groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//se consigue el id actual
+$id_usuario_actual = get_id_user($pdo, $usuario)
 ?>
 
 <!DOCTYPE html>
@@ -106,30 +54,17 @@ $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div id="barra-superior"> <!-- barra superior -->
                     <div id="barra-superior-buttons"> 
                         <img id="message-logo" src="../assets/imgs/message_logo.png" alt="logo" onclick="closegroup()">
-                        <button class="friend-tab-button" onclick="openonlinemenu()"><p id="link">En linea</p></button>
-                        <button class="friend-tab-button" onclick="openallfriends()"><p id="link">Todos</p></button>
-                        <button class="friend-tab-button" onclick="openpendingmenu()"><p id="link">Pendiente</p></button>
-                        <button class="add-friend-button" onclick="openaddfriendmenu()"><p id="link">Añadir amigo</p></button>
+                        <button class="add-friend-button" onclick="openaddfriendmenu()"><p id="link-top">Añadir amigo</p></button>
+                        <button class="friend-tab-button" onclick="openpendingmenu()"><p id="link-top">Solicitudes de amistad</p></button>
+                        <button class="friend-tab-button" onclick="openonlinemenu()"><p id="link-top">Amigos en linea</p></button>
+                        <button class="friend-tab-button" onclick="openallfriends()"><p id="link-top">Todos tus amigos</p></button>
                     </div>
                 </div>
 
                 <div id="barra1-container">
                     <div id="barra1"> <!-- barra1 -->
                         <div>
-                            <?php 
-                                foreach ($groups as $group): //recorre todos los grupos del usuario
-                                    $groupName = htmlspecialchars($group['nombre'], ENT_QUOTES, 'UTF-8');
-                                    $groupId = (int)$group['id_grupo'];
-                                    $imageName = urlencode($group['imagen']);
-                                    $userDir = urlencode($usuario);
-                                    $imagePath = "../assets/users/{$userDir}/groups/{$groupId}/img_profile/{$imageName}";
-                                    $imageAlt = $groupName;
-                                ?>
-                                    <div class="sidebar-item server-icon" data-group-id="<?= $groupId ?>" data-group-name="<?= $groupName ?>" onclick="opengroup(this)" title="<?= $groupName ?>">
-                                        <img src="<?= $imagePath ?>" alt="<?= $groupName ?>" width="40" height="40">
-                                    </div>
-                                <?php endforeach;
-                            ?>
+                            <?php get_group($pdo, $usuario); ?>
                             <img id="message" src="../assets/imgs/newServer_logo.png" alt="logo" onclick="openandclosecreategroup()"><br>
                         </div>
                     </div>
@@ -137,78 +72,11 @@ $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div id="barra2-content-container">
                             <div id="direct_message_containter"> <!-- mensaje directo -->
                                 <p style="text-align: center;">¿Con quién vas a hablar hoy?</p>
-                                    <?php //se recorre la lista de amigos para mostrar los mensajes directos con cada uno de ellos 
-                                        if (count($amigos) > 0) 
-                                        {
-                                            foreach ($amigos as $amigo) //recorre la lista de amigos
-                                            {
-                                                $amigoDir = "../assets/users/{$amigo['username']}/img_profile/";
-                                                $defaultImage = '../assets/imgs/default_profile.png';
-
-                                                $amigoImages = glob($amigoDir . '*.{jpg,jpeg,png}', GLOB_BRACE); //glob — busca coincidencias de nombres de ruta de acuerdo a un patrón por tanto busca las imagenes en la carpeta del amigo y las guarda en un array para luego ordenarlas por fecha de modificacion y mostrar la mas reciente
-
-                                                if (!empty($amigoImages)) //si hay imagenes en la carpeta del amigo
-                                                {
-                                                    usort($amigoImages, function ($a, $b)  //con usort se ordena el array para ordenar las imagenes por fecha de modificacion
-                                                    {
-                                                        return filemtime($b) - filemtime($a); //filemtime — obtiene la fecha de modificación de un archivo y se ordenan las imagenes por fecha de modificacion
-                                                    });
-
-                                                    $foto = $amigoImages[0]; //se guarda la imagen mas reciente
-                                                }
-                                                else 
-                                                {
-                                                    $foto = $defaultImage; //si no hay imagenes se muestra la imagen por defecto
-                                                }
-
-                                                $destinatario = ($amigo['id_user1'] == $id_usuario_actual) ? $amigo['id_user2'] : $amigo['id_user1']; //se obtiene el id del destinatario
-                                                $nombre = htmlspecialchars($amigo['username'], ENT_QUOTES, 'UTF-8'); //se obtiene el nombre del amigo
-                                                $foto = htmlspecialchars($foto, ENT_QUOTES, 'UTF-8'); //se obtiene la foto del amigo
-
-                                                echo "
-                                                    <button 
-                                                        onclick=\"selectFriend('$nombre', '$foto', $destinatario)\" 
-                                                        id='options-button' 
-                                                        style='display: flex; align-items: center; gap: 10px; border: none; padding: 10px; border-radius: 5px; margin-bottom: 5px; cursor: pointer; width: 100%; text-align: left;'>
-                                                        <img src='$foto' id='fotoFriend' alt='Foto de perfil' style='width: 30px; height: 30px; border-radius: 50%;'>
-                                                        <span id='nombreboton'>$nombre</span>
-                                                    </button>";
-                                            }
-                                        } 
-                                        else 
-                                        {
-                                            echo "<p style='text-align: center;'>No tienes amigos en la lista</p>";
-                                        }
-                                    ?>
+                                    <?php get_direct_messages($pdo, $usuario); ?>
                             </div>
 
                             <div id="userpanel"> <!-- userpanel -->
-                                <?php 
-                                    $baseDir = "../assets/users/$usuario/img_profile/";
-                                    $defaultImage = '../assets/imgs/default_profile.png';
-                                    
-                                    $profileImages = glob($baseDir . '*.{jpg,jpeg,png}', GLOB_BRACE);
-                                    
-                                    if (!empty($profileImages)) 
-                                    {
-                                        usort($profileImages, function($a, $b) 
-                                        {
-                                            return filemtime($b) - filemtime($a);
-                                        });
-                                    
-                                        $foto = $profileImages[0];
-                                    } 
-                                    else 
-                                    {   
-                                        $foto = $defaultImage;
-                                    }
-
-                                     echo"
-                                     <button id='panel_button' class='panel_button' style='display: flex; align-items: center; gap: 5px; padding: 5px 10px; max-width: 1350px; cursor: pointer;' onclick='showprofileinfo()'> 
-                                        <img id='profileImg2' src='$foto' alt='profile' style='border-radius: 50%; width: 30px; height: 30px;'> 
-                                        <span style='color: white; font-size: 16px;'>$usuario</span>
-                                    </button>";
-                                ?> 
+                                <?php render_user_panel_button($pdo, $usuario)?> 
                                 <div> <!-- icono -->
                                     <div id="options_button_gear">
                                         <img src="../assets/imgs/options_icon.png" alt="options" id="options_icon" onclick="showoptionspanel()">
@@ -222,17 +90,17 @@ $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div id="group_info">
                             <div id="serverthings" style="padding: 10px;">
                                 <div class="container">
-                                    <button class="groupname_buton" id="options-button">
+                                    <button class="groupname_buton" id="group-button">
                                         <h1 id="groupname" style="padding-left: 5px;"></h1>
                                     </button>
-                                    <button class="add_member_button" id="options-button">
+                                    <button class="add_member_button" id="group-button">
                                         <img id="add_member_image" src="../assets/imgs/add_member_icon.png">
                                     </button>
                                 </div>
                                 
                                 <div style="background-color: #393e42; height: 2px; margin-bottom: 5px;"></div>
                                 
-                                <button id="options-button">
+                                <button id="group-button">
                                     <div class="container" style="padding: 0; margin: 0;">
                                         <img src="../assets/imgs/members_icon.png" style="width: 30px; height: 30px;">
                                         <p style="margin-right: 100000px;">Miembros</p>
@@ -241,36 +109,15 @@ $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 
                                 <div style="background-color: #393e42; height: 2px; margin-bottom: 5px; margin-top: 5px;"></div>
 
+                                <div id="canales">
+                                    <button id="group-button" onclick="crearCanalTexto()">Crear canal</button>
+                                </div>
+                               <!-- <?php crearCanalTexto($pdo, $usuario)?> -->
                             </div>
 
-                            <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background-color: #232428; width: 100%;"> <!-- userpanel -->
-                                <?php 
-                                    $baseDir = "../assets/users/$usuario/img_profile/";
-                                    $defaultImage = '../assets/imgs/default_profile.png';
-                                    
-                                    $profileImages = glob($baseDir . '*.{jpg,jpeg,png}', GLOB_BRACE);
-                                    
-                                    if (!empty($profileImages)) 
-                                    {
-                                        usort($profileImages, function($a, $b) 
-                                        {
-                                            return filemtime($b) - filemtime($a);
-                                        });
-                                    
-                                        $foto = $profileImages[0];
-                                    } 
-                                    else 
-                                    {   
-                                        $foto = $defaultImage;
-                                    }
-
-                                     echo"
-                                     <button id='panel_button' class='panel_button' style='display: flex; align-items: center; gap: 5px; padding: 5px 10px; max-width: 1350px; cursor: pointer;' onclick='showprofileinfo()'> 
-                                        <img id='profileImg2' src='$foto' alt='profile' style='border-radius: 50%; width: 30px; height: 30px;'> 
-                                        <span style='color: white; font-size: 16px;'>$usuario</span>
-                                    </button>";
-                                ?> 
-                                <div style="display: flex; padding-right: 19px;"> <!-- icono -->
+                            <div id="userpanel_group"> <!-- userpanel -->
+                                 <?php render_user_panel_button($pdo, $usuario)?> 
+                                <div> <!-- icono -->
                                     <div id="options_button_gear">
                                         <img src="../assets/imgs/options_icon.png" alt="options" id="options_icon" onclick="showoptionspanel()">
                                     </div>
@@ -278,80 +125,34 @@ $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                         </div>
                     </div>
-
+                                    
                     <div id="initialpanel"> <!-- initialpanel -->
-                        <div id="openonlinemenu" hidden>
-                                <span>AMIGOS EN LINEA</span>
-                                <p>Estos son tus amigos que están en linea:</p>
-                                <div id="friend-list-container">
-                                    <?php
-                                        if (count($amigos_en_linea) > 0) 
-                                        {
-                                            foreach ($amigos_en_linea as $amigo) 
-                                            {
-                                                $amigoDir = "../assets/users/{$amigo['username']}/img_profile/";
-                                                $defaultImage = '../assets/imgs/default_profile.png';
 
-                                                $amigoImages = glob($amigoDir . '*.{jpg,jpeg,png}', GLOB_BRACE); 
-
-                                                if (!empty($amigoImages)) 
-                                                {
-                                                    usort($amigoImages, function($a, $b) 
-                                                    {
-                                                        return filemtime($b) - filemtime($a);
-                                                    });
-
-                                                    $foto = $amigoImages[0];
-                                                } 
-                                                else 
-                                                {
-                                                    $foto = $defaultImage;
-                                                }
-                                                
-                                                echo "
-                                                    <button onclick='openchat({$amigo['id_user']})' class='friend-tab-button' style='display: flex; align-items: center; gap: 10px; border: none; padding: 10px; border-radius: 5px; width: 100%; cursor: pointer; text-align: left; margin-bottom: 5px;'>
-                                                        <img src='$foto' id='fotoFriend' alt='Foto de perfil' style='width: 30px; height: 30px; border-radius: 50%;'>
-                                                        <span id='nombreboton'>{$amigo['username']}</span>
-                                                    </button>
-                                                    <div style='height: 2px; background-color: #393e42; margin-bottom: 5px;'></div>
-                                                ";
-                                            }
-                                        } 
-                                        else 
-                                        {
-                                            echo "<p style='text-align: center;'>No tienes amigos en línea</p>";
-                                        }
-                                    ?>
-                                </div>
-
-                            <p id="resultado"></p>
-                        </div>
-
-                        <div id="addfriendmenu" style="display: column; padding: 30px; padding-top: 0;" hidden>
-                                <span>AÑADIR AMIGO</span>
-                                <p>Puedes añadir amigos con su nombre de usuario de Chatterly.</p>
-                            <div style="display: flex; overflow: hidden; background-color: #313338;">
-                                <form action="../php/enviar_solicitud.php" method="post" style="width: 100%; position: relative;">
-                                    <input id="alias_amigo" name="alias_amigo" required type="text" style="border-color: #1e1f22; background-color: #1e1f22; width: 100%; box-sizing: border-box; height: 50px; padding-left: 10px; position: relative;" placeholder="Puedes añadir amigos con su nombre de usuario de Chatterly.">
-                                    <button id="enviar_solicitud" type="submit" style="width: 200px; position: absolute; right: 5px; top: 5px; height: 40px; font-size: 14px; background-color: #5865F2; cursor: pointer; padding: 0 15px; border: none;">Enviar solicitud de amistad</button>
+                     <div id="addfriendmenu" hidden>
+                                <span>Añadir amigo</span>
+                                <p>Puedes añadir amigos buscando su nombre de usuario de Chatterly.</p>
+                            <div id="addfriendmenu-container">
+                                <form id="addfriendmenu-form" action="../php/enviar_solicitud.php" method="post">
+                                    <input id="alias_amigo" name="alias_amigo" required type="text" placeholder="Puedes añadir amigos con su nombre de usuario de Chatterly.">
+                                    <button id="enviar_solicitud" type="submit">Enviar solicitud de amistad</button>
                                 </form>
                             </div>
                             <p id="resultado"></p>
                         </div>
 
-                        <div id="pendingmenu" style="padding: 30px; padding-top: 0;" hidden>
-                        <span>SOLICITUDES PENDIENTES</span>
+                        <div id="pendingmenu" hidden>
+                            <span>Solicitudes de amistad</span>
                             <?php
                                 if (isset($solicitudes_pendientes) && count($solicitudes_pendientes) > 0) 
                                 {
                                     //comprueba si hay solicitudes penddientes
                                     foreach ($solicitudes_pendientes as $solicitud): ?> 
-                                        <div class="solicitud" style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background-color: #2b2d31; margin-bottom: 10px; border-radius: 5px;">
+                                        <div class="solicitud">
                                             <span><?php echo htmlspecialchars($solicitud['alias']) . " quiere ser tu amigo."; ?></span>
-                                            <form action="gestionar_solicitud.php" method="post" style="display: flex; gap: 10px;">
+                                            <form id="pendingmenu-form" action="gestionar_solicitud.php" method="post">
                                                 <input type="hidden" name="solicitante" value="<?php echo $solicitud['id_user1']; ?>">
-                                                <button type="submit" name="accion" value="aceptar" style="background-color: #5865F2; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Aceptar</button>
-                                                <button type="submit" name="accion" value="rechazar" style="background-color: #FF5C5C; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Rechazar</button>
+                                                <button id="button_aceptar" type="submit" name="accion" value="aceptar">Aceptar</button>
+                                                <button id="button_rechazar" type="submit" name="accion" value="rechazar">Rechazar</button>
                                             </form>
                                         </div>
                                     <?php endforeach;
@@ -362,61 +163,34 @@ $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 }
                             ?>
                         </div>
+                        
+                        <div id="openonlinemenu" hidden>
+                                <span>Amigos en linea</span>
+                                <div id="friend-list-container">
+                                <?php get_online_friends($pdo, $usuario) ?>
+                                </div>
 
-                        <div id="allfriends" style="padding: 30px; padding-top: 0;" hidden>
-                            <span>TODOS TUS AMIGOS</span>
-                                <?php
-                                    if (count($amigos) > 0) 
-                                    {
-                                        foreach ($amigos as $amigo) 
-                                        {
-                                            $amigoDir = "../assets/users/{$amigo['username']}/img_profile/";
-                                            $defaultImage = '../assets/imgs/default_profile.png';
+                            <p id="resultado"></p>
+                        </div>
 
-                                            $amigoImages = glob($amigoDir . '*.{jpg,jpeg,png}', GLOB_BRACE); //glob — busca coincidencias de nombres de ruta de acuerdo a un patrón por tanto busca las imagenes en la carpeta del amigo y las guarda en un array para luego ordenarlas por fecha de modificacion y mostrar la mas reciente
-
-                                            if (!empty($amigoImages)) //si hay imagenes en la carpeta del amigo
-                                            {
-                                                usort($amigoImages, function($a, $b) //usort — ordena un array según sus valores usando una función de comparación definida por el usuario  y se ordenan las imagenes por fecha de modificacion 
-                                                {
-                                                    return filemtime($b) - filemtime($a); //filemtime — obtiene la fecha de modificación de un archivo y se ordenan las imagenes por fecha de modificacion 
-                                                });
-
-                                                $foto = $amigoImages[0]; //se guarda la imagen mas reciente
-                                            } 
-                                            else 
-                                            {
-                                                $foto = $defaultImage; //si no hay imagenes se muestra la imagen por defecto
-                                            }
-
-                                            $destinatario = ($amigo['id_user1'] == $id_usuario_actual) ? $amigo['id_user2'] : $amigo['id_user1']; //se obtiene el id del amigo
-                                            echo "
-                                                <div style='display: flex; align-items: center; gap: 10px; padding: 10px;'>
-                                                    <img src='$foto' id='fotoFriend' alt='Foto de perfil' style='width: 30px; height: 30px; border-radius: 50%;'>
-                                                    <span id='nombreboton'>{$amigo['username']}</span>
-                                                </div>
-                                            ";
-                                        }
-                                    } 
-                                    else 
-                                    {
-                                        echo "<p style='text-align: center;'>No tienes amigos en la lista</p>";
-                                    }
-                                ?>
+                        <div id="allfriends" hidden>
+                            <span>Todos tus amigos</span>
+                            <?php get_all_friends($pdo, $usuario) ?>
                         </div>
                     </div>
 
-                    <div id="initialpanel_group" style="background-color: #313338; flex: 1; display: flex; flex-direction: column; min-width: 500px; display: none;">
-
+                    <div id="initialpanel_group"> <!-- initialpanel -->
                     </div>
-                    
 
                     <div id="chatcontainer" style="display: none;">
                         <div class="chat-header">
                             <div class="chat-header-content">
                                 <img id="foto-amigo" src="../assets/imgs/default_profile.png" alt="Foto del amigo" class="friend-photo">
                                 <span id="nombre-amigo" class="friend-name"></span>
-                                <!--<img src="../assets/imgs/call_button.png" style="width: 30px; height: 30px; cursor: pointer;" onclick="startCall()">-->
+                                <div id="call_button" style="height: 30px; width: 100%; justify-content: flex-end; margin-right: 10px; display: flex; text-align: left;">
+                                    <img src="../assets/imgs/call_button.svg" style="width: 30px; height: 30px; cursor: pointer;" onclick="">
+                                </div>
+                                
                             </div>
                         </div>
 
@@ -445,20 +219,91 @@ $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div id="options" hidden>
+
+            <div id="change_name_container" style="display: none;">
+                <div class="change_username" id="change_username">
+                    <div class="change_name">
+                        <div class="container">
+                            <p id="text_change_name">Cambiar nombre</p>
+                            <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditname()">
+                        </div>
+                        <input type="text" name="new_name" id="new_name" placeholder="Nuevo nombre" required>
+                        <button type="submit" onclick="cambiar_alias()">Cambiar nombre</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="change_username_container" style="display: none;">
+                <div class="change_username" id="change_username">
+                    <div class="change_username_container">
+                        <div class="change_username">
+                            <div class="container">
+                                <p id="text_change_username">Cambiar nombre de usuario</p>
+                                <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditusername()">
+                            </div>
+                            <input type="text" name="new_username" id="new_username" placeholder="Nuevo nombre de usuario" required>
+                            <button type="submit" onclick="cambiar_username()">Cambiar nombre de usuario</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="change_email_container" style="display: none;"> 
+                <div class="change_email" id="change_email">
+                    <div class="change_email">
+                        <div class="container">
+                            <p id="text_change_email">Cambiar correo electronico</p>
+                            <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditemail()">
+                        </div>
+                        <input type="email" name="new_email" id="new_email" placeholder="Nuevo correo electronico" required>
+                        <button type="submit" onclick="cambiar_email()">Cambiar correo electronico</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="change_password_container" style="display: none;"> 
+                <div class="change_password" id="change_password">
+                    <div class="change_oldpassword">
+                        <div class="container">
+                            <p id="text_change_password">Cambiar contraseña</p>
+                            <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closechangepassword()">
+                        </div>
+                        <input type="password" name="old_password" id="old_password" placeholder="Contraseña actual" required>
+                        <input type="password" name="new_password" id="new_password" placeholder="Nueva contraseña" required>
+                        <input type="password" name="confirm_new_password" id="confirm_new_password" placeholder="Confirmar nueva contraseña" required>
+                        <button type="button" onclick="changePassword()">Cambiar contraseña</button>
+                        <div id="mensajeChange"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="delete_account" id="delete_account" hidden>
+                <div class="delete_account_container">
+                    <p id="text_delete_account">Eliminar cuenta</p>
+                    <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closedeleteaccount()">
+                    <p id="text_delete_account2">¿Estas seguro de que deseas eliminar tu cuenta? Esta accion no se puede deshacer.</p>
+                    <button type="submit">Eliminar cuenta</button>
+                </div>
+            </div>
+            
             <div class="options-container">
-                <div class="header-bar">
-                    <span class="header-title">Chatterly</span>
+                <div id="barra-superior"> <!-- barra superior -->
+                    <div id="barra-superior-buttons"> 
+                        <img id="message-logo" src="../assets/imgs/message_logo.png" alt="logo" onclick="closeoptionspanel()">
+                    </div>
                 </div>
                 <div class="content-wrapper">
                     <div class="sidebar">
-                        <div class="form-container">
-                            <p class="section-title">AJUSTES DE USUARIO</p>
-                            <button id="options-button" class="options-buttons" onclick="showprofileinfo()">Mi cuenta</button>
+                        <div id="buttons_options_container">
+                            <p class="section-title">Ajustes de usuario</p>
+                            <div class="options_container">
+                                <button id="buttons-options-panel" class="buttons-options-panel" onclick="showprofileinfo()">Mi cuenta</button>
+                            </div>
                         </div>
-                        <div class="divider"></div>
-                        <div class="form-container">
-                            <button id="options-button" class="options-buttons" onclick="window.location.href='../php/logout.php'">Cerrar sesión</button>
-                            <button id="options-button" class="options-buttons" onclick="closeoptionspanel()">Volver</button>
+                            <div class="divider"></div>
+                        <div id="buttons_options_container">
+                            <div class="options_container">
+                                <button id="buttons-options-panel" class="buttons-options-panel" onclick="window.location.href='../php/logout.php'">Cerrar sesión</button><br>
+                                <button id="buttons-options-panel" class="buttons-options-panel" onclick="closeoptionspanel()">Volver</button>
+                            </div>
                         </div>
                     </div>
                     <div class="main-content">
@@ -468,33 +313,7 @@ $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeoptionspanel()">
                             </div>
                             <div id="profileinfo" class="profile-info" hidden>
-                                <?php
-                                    $baseDir = "../assets/users/$usuario/img_profile/";
-                                    $defaultImage = '../assets/imgs/default_profile.png';
-                                    $profileImages = glob($baseDir . '*.{jpg,jpeg,png}', GLOB_BRACE); 
-
-                                    if (!empty($profileImages)) 
-                                    {
-                                        usort($profileImages, function($a, $b) 
-                                        {
-                                            return filemtime($b) - filemtime($a);
-                                        });
-                                        $foto = $profileImages[0];
-                                    } 
-                                    else 
-                                    {
-                                        $foto = $defaultImage;
-                                    }
-
-                                    echo "
-                                    <div class='profile-header'>
-                                        <form id='uploadForm' method='POST' enctype='multipart/form-data' class='upload-form'>
-                                            <input type='file' id='fotoProfile' name='profile_picture' accept='.png, .jpg, .jpeg' class='file-input'>
-                                            <img id='profileImg' src='$foto' alt='profile' class='profile-img'>
-                                            <span class='profile-username'>$usuario</span>
-                                        </form>
-                                    </div>";
-                                ?>
+                                <?php render_profile_header($pdo, $usuario)?>
                                 <div class="profile-details">
                                     <p id="text_name">NOMBRE</p>
 
@@ -536,72 +355,6 @@ $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <button id="delete_acount" onclick="eliminar_cuenta()">Eliminar cuenta</button>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div id="change_name_container" style="display: none;">
-                        <div class="change_username" id="change_username">
-                            <div class="change_name">
-                                <div class="container">
-                                    <p id="text_change_name">Cambiar nombre</p>
-                                    <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditname()">
-                                </div>
-                                <input type="text" name="new_name" id="new_name" placeholder="Nuevo nombre" required>
-                                <button type="submit" onclick="cambiar_alias()">Cambiar nombre</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="change_username_container" style="display: none;">
-                        <div class="change_username" id="change_username">
-                            <div class="change_username_container">
-                                <div class="change_username">
-                                    <div class="container">
-                                        <p id="text_change_username">Cambiar nombre de usuario</p>
-                                        <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditusername()">
-                                    </div>
-                                    <input type="text" name="new_username" id="new_username" placeholder="Nuevo nombre de usuario" required>
-                                    <button type="submit" onclick="cambiar_username()">Cambiar nombre de usuario</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="change_email_container" style="display: none;"> 
-                        <div class="change_email" id="change_email">
-                            <div class="change_email">
-                                <div class="container">
-                                    <p id="text_change_email">Cambiar correo electronico</p>
-                                    <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditemail()">
-                                </div>
-                                <input type="email" name="new_email" id="new_email" placeholder="Nuevo correo electronico" required>
-                                <button type="submit" onclick="cambiar_email()">Cambiar correo electronico</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="change_password_container" style="display: none;"> 
-                        <div class="change_password" id="change_password">
-                            <div class="change_oldpassword">
-                                <div class="container">
-                                    <p id="text_change_password">Cambiar contraseña</p>
-                                    <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closechangepassword()">
-                                </div>
-                                <input type="password" name="old_password" id="old_password" placeholder="Contraseña actual" required>
-                                <input type="password" name="new_password" id="new_password" placeholder="Nueva contraseña" required>
-                                <input type="password" name="confirm_new_password" id="confirm_new_password" placeholder="Confirmar nueva contraseña" required>
-                                <button type="button" onclick="changePassword()">Cambiar contraseña</button>
-                                <div id="mensajeChange"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="delete_account" id="delete_account" hidden>
-                        <div class="delete_account_container">
-                            <p id="text_delete_account">Eliminar cuenta</p>
-                            <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closedeleteaccount()">
-                            <p id="text_delete_account2">¿Estas seguro de que deseas eliminar tu cuenta? Esta accion no se puede deshacer.</p>
-                            <button type="submit">Eliminar cuenta</button>
                         </div>
                     </div>
                 </div>

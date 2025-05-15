@@ -33,7 +33,7 @@ function closeoptionspanel()
 function closechat()
 {
     chat.style.display = "none";
-    initialpanel.style.display = "block";
+    initialpanel.style.display = "";
 }
 
 function openaddfriendmenu()
@@ -43,6 +43,7 @@ function openaddfriendmenu()
     document.getElementById("openonlinemenu").style.display = "none";
     document.getElementById('container-group').style.display = "none";
     document.getElementById("allfriends").style.display = "none";
+    document.getElementById("initialpanel_group").style.display = "none";
     closechat();
 }
 
@@ -53,6 +54,7 @@ function openpendingmenu()
     document.getElementById("openonlinemenu").style.display = "none";
     document.getElementById('container-group').style.display = "none";
     document.getElementById("allfriends").style.display = "none";
+    document.getElementById("initialpanel_group").style.display = "none";
     closechat();
 }
 
@@ -64,6 +66,7 @@ function openonlinemenu()
     document.getElementById("profileinfo").style.display = "none";
     document.getElementById('container-group').style.display = "none";
     document.getElementById("allfriends").style.display = "none";
+    document.getElementById("initialpanel_group").style.display = "none";
     closechat();
 }
 
@@ -74,6 +77,7 @@ function openallfriends()
     document.getElementById("addfriendmenu").style.display = "none";
     document.getElementById("profileinfo").style.display = "none";
     document.getElementById('container-group').style.display = "none";
+    document.getElementById("initialpanel_group").style.display = "none";
     document.getElementById("allfriends").style.display = "block";
 }
 
@@ -578,7 +582,6 @@ function changePassword() {
     });
 }
 
-
 async function eliminar_cuenta() 
 {
     if (!confirm('¿Seguro que quieres borrar tu cuenta? Esta acción no se puede deshacer.')) {
@@ -600,39 +603,21 @@ async function eliminar_cuenta()
     window.location.href = '../html/index.html';
 }
 
-//grupos
-function crearGrupo() 
-{
-    const nombreGrupo = document.getElementById('nombreServidor').value;
-    const imagen = document.getElementById('file-input').files[0];
+//listener para los top-links
+document.addEventListener('click', e => { //evento al hacer clic en cualquier parte del documento
+  
+  const isLinkTop = e.target.matches('[id="link-top"]'); //guarda si el elemento clicado es un link-top
+  const isButton  = e.target.matches('button'); //guarda si el elemento clicado es un boton
 
-    if (!nombreGrupo) 
-    {
-        alert("Debes proporcionar un nombre.");
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append("nombre_grupo", nombreGrupo);
-    formData.append("imagen_grupo", imagen);
-
-    fetch('../php/create_group.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) 
-        {
-            document.getElementById('container-group').style.display = "none";   
-        }
-        else 
-        {
-            alert("Error: " + data.error);
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Ocurrió un error al enviar la solicitud.");
+  if (isLinkTop || isButton) //si el elemento clicado es un link-top o un boton
+  {
+    document.querySelectorAll('[id="link-top"]').forEach(link => { //se recorre todos los links-top para quitarles la clase .active
+      link.classList.remove('active'); //quita la clase .active
     });
-}
+
+    if (isLinkTop) //si el elemento clicado es un link-top
+    {
+      e.target.classList.add('active'); //se le añade la clase .active al link clicado
+    } 
+  }
+});

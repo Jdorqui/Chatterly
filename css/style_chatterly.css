@@ -23,11 +23,10 @@ html
 
 body 
 {
-    background-image: url('../assets/imgs/bg.svg');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
-    background-color: #2a223d;
+    background: linear-gradient(to bottom, #621f48 50%, #4e223c );
     color: #e4e4e4;
     display: flex;
     justify-content: center;
@@ -46,6 +45,7 @@ img
 
 h1 
 {
+    font-family: 'newfontBold', sans-serif;
     text-align: center;
     margin-bottom: 20px;
 }
@@ -111,12 +111,22 @@ button.active
 
 #barra-superior
 {
-    background-color: #3c2042; 
+    display: flex;
+    background: linear-gradient(360deg, #651d4d 0%, #5d2540 50%);
     color: white; 
     padding: 5px; 
     text-align: left; 
     height: 60px;
-    border-bottom: #ff8900 5px solid;
+    border-bottom: 2px solid var(--color-accent-1);
+}
+
+#barra-superior-buttons
+{
+    display: flex; 
+    padding: 5px; 
+    align-items: center; 
+    color: white; 
+    gap: 20px;
 }
 
 #chatterly-text
@@ -129,15 +139,6 @@ button.active
 {
     width: 60px;
     height: 60px;
-}
-
-#barra-superior-buttons
-{
-    display: flex; 
-    padding: 5px; 
-    align-items: center; 
-    color: white; 
-    gap: 10px;
 }
 
 #divisor-barra-superior-buttons
@@ -153,7 +154,7 @@ button.active
 #message-logo
 {
     position: relative;
-    background: linear-gradient(to top, #160d18, #552b59);
+    background: linear-gradient(to top, #2B0232,#5D1340);
     border-radius: 50%;
     width: 50px;       
     height: 50px;      
@@ -166,7 +167,7 @@ button.active
 
 #message-logo:hover 
 {
-    background: linear-gradient(to top, #160d1877, #ff88006a);
+    background: linear-gradient(to top,rgba(43, 2, 50, 0.7), rgba(252, 106, 77, 0.4));
     border-radius: 16px;
 }
 
@@ -250,8 +251,8 @@ button.active
     padding: 10px; 
     color: white; 
     min-width: 50px;
-    background: linear-gradient(to top, #552b5b, #231525);
-    border-right: #ff8900 5px solid;
+    background: linear-gradient(180deg, #651d4d 0%, #5d2540 50%);
+    border-right: 2px solid var(--color-accent-2);
 }
 
 /* ==== message logo y message (circulos)  ==== */
@@ -269,12 +270,12 @@ button.active
     cursor: pointer; 
     transition: background-color 0.3s ease, border-radius 0.3s ease;
     padding: 10px; 
-
 }
 
 #message:hover 
 {
-    background: linear-gradient(to top, #160d1877, #ff88006a);
+     
+    background: linear-gradient(to top, #1f111f, #663b6f);
     transition: background-color 0.3s ease, border-radius 0.3s ease;
     border-radius: 16px;
 }
@@ -299,13 +300,14 @@ button.active
 
 #barra2
 {
-    background-color: #2b2d31; 
     width: 14%; 
     color: white; 
-    min-width: 200px;
-    background: linear-gradient(to top, #c760d7, #3d1e43);
-    border-right: #ff8900 5px solid;
-    border-bottom: #ff8900 5px solid;
+    min-width: 217px;
+    background: linear-gradient(180deg, #4a1e3d 0%, #793663 100%);
+    border-right: 2px solid var(--color-accent-3);
+    border-bottom: 2px solid var(--color-accent-3);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    border-radius: 5px;
 }
 
 #barra2-content-container
@@ -315,6 +317,8 @@ button.active
     justify-content: 
     space-between;
     height: 100%;
+    border-radius: 5px;
+
 }
 
 #direct_message_containter
@@ -338,8 +342,12 @@ button.active
     align-items: center; 
     gap: 10px; 
     padding: 10px; 
-    background-color: #552b5b; 
-    border-top: #ff8900 5px solid;
+    background: rgba(25,15,35,0.6);
+    backdrop-filter: blur(8px);
+    border: 2px solid var(--color-accent-1);
+    box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    z-index: 1;
 }
 
 
@@ -349,27 +357,141 @@ button.active
 {
     flex: 1; display: flex; 
     flex-direction: column; 
-    min-width: 500px;
-    background: linear-gradient(to top, #e35100, #502756);
-    border-bottom: #ff8900 5px solid;
-    border-right: #ff8900 5px solid;
+    background: linear-gradient(360deg, #4e223c 0%, #4e1b3e 100%);
+    border-right: 2px solid var(--color-accent-1);
+    border-bottom: 2px solid var(--color-accent-1);
+    box-shadow: -3px 3px 10px 0px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
 }
+
+/* ==== openonlinemenu ==== */
 
 #openonlinemenu
 {
     padding: 30px; 
 }
 
-/*#friend-list-container
+#button_name
 {
-   
-}*/
+    display: flex; 
+    align-items: center;
+    gap: 10px; 
+    border: none; 
+    padding: 10px; 
+    border-radius: 5px; 
+    width: 100%; 
+    cursor: pointer; 
+    text-align: left; 
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
 
+#nombreboton
+{
+    font-size: 16px; 
+    color: white !important;
+}
+
+#fotoFriend
+{
+    width: 30px; 
+    height: 30px; 
+    border-radius: 50%;
+}
+
+#no_friends
+{
+    text-align: center;
+}
+
+/* ==== addfriendmenu ==== */
+
+#addfriendmenu
+{
+    padding: 30px; 
+}
+
+#addfriendmenu-container
+{
+    display: flex; 
+    overflow: hidden; 
+    background-color: #313338;
+}
+
+#addfriendmenu-form
+{
+    width: 100%; position: relative;
+}
+
+#alias_amigo
+{
+    border-color: #1e1f22; background-color: #1e1f22; width: 100%; box-sizing: border-box; height: 50px; padding-left: 10px; position: relative;
+}
+
+#enviar_solicitud
+{
+    width: 200px; position: absolute; right: 5px; top: 5px; height: 40px; font-size: 14px; background-color: #5865F2; cursor: pointer; padding: 0 15px; border: none;
+}
+
+/* ==== pendingmenu ==== */
+
+#pendingmenu
+{
+    padding: 30px; 
+}
+
+#pendingmenu-form
+{
+    display: flex; gap: 10px;
+}
+
+.solicitud
+{
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 10px; 
+    background-color: #2b2d31; 
+    margin-bottom: 10px; 
+    border-radius: 5px;
+}
+
+#button_aceptar
+{
+    background-color: #5865F2; 
+    color: white; 
+    border: none; 
+    padding: 5px 10px; 
+    border-radius: 3px; 
+    cursor: pointer;
+}
+
+#button_rechazar
+{
+    background-color: #FF5C5C; 
+    color: white; 
+    border: none; 
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/* ==== allfriends ==== */
+
+#allfriends
+{
+    padding: 30px; 
+}
+
+#allfriends-container
+{
+    display: flex; align-items: center; gap: 10px; padding: 10px;
+}
 /* ==== opciones ==== */
 
 #options-button 
 {
-    background-color: #5a2c61; 
+    background: linear-gradient(to top, #a73814, #f2805b);
     font-family: 'newfont', sans-serif;
     color: #ffffff; 
     font-size: 14px; 
@@ -384,19 +506,18 @@ button.active
 
 #options-button:hover 
 {
-    background-color: #ff88006a;
+    background: linear-gradient(to top, #c24d1e, #fa9270);
 }
 
 #options-button:active 
 {
-    background-color: #ff88006a;
-    background-color: #5a2b61;
+    background: linear-gradient(to top, #c24d1e, #fa9270);
 }
 
 #options-button:focus 
 {
     outline: none; 
-    background-color: #ff88006a;
+    background: linear-gradient(to top, #c24d1e, #fa9270);
 }
 
 /* ==== form y panel button ==== */
@@ -417,21 +538,27 @@ button.active
     display: block;
 }
 
+/* ==== botones ==== */
+
 .panel_button
 {
-    background-color: #232428;
+    display: flex; 
+    align-items: center; 
+    gap: 5px; 
+    padding: 5px 10px; 
+    max-width: 1350px; 
+    cursor: pointer;
+    background: linear-gradient(to top, #a73814, #f2805b);
 }
 
 .panel_button:hover
 {
-    background-color: #35373c;
+    background: linear-gradient(to top, #c24d1e, #fa9270);
 }
-
-/* ==== botones ==== */
 
 #options_button_gear
 {
-    transition: background 0.3s ease-in-out;
+    transition: background 0.4s ease-in-out;
     width: 40px; 
     height: 40px;
     cursor: pointer;
@@ -443,7 +570,8 @@ button.active
 
 #options_button_gear:hover 
 {
-    background: #37383f;
+    transition: background 0.4s ease-in-out;
+    background: linear-gradient(to top, #c24d1e4e, #fa92704b);
 }
 
 #options_icon 
@@ -488,6 +616,39 @@ button.active
     transform: translateX(-50%) scaleX(1);
 }
 
+#link-top
+{
+    color: #f2805b;
+    text-decoration: none;
+    position: relative;
+}
+
+#link-top::after 
+{
+  content: '';
+  position: absolute;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: #f36536;
+  visibility: hidden;
+  transform: translateX(-50%) scaleX(0);
+  transition: all 0.3s ease-in-out;
+  width: 100%;
+}
+
+#link-top:hover::after 
+{
+  visibility: visible;
+  transform: translateX(-50%) scaleX(1);
+}
+
+#link-top.active::after, #link-top:focus::after 
+{
+  visibility: visible;
+  transform: translateX(-50%) scaleX(1);
+}
+
 ::-webkit-scrollbar
 {
     width: 5px; 
@@ -496,7 +657,6 @@ button.active
 ::-webkit-scrollbar-track
 {
     background-color: #2b2d31; 
-    border-radius: 15px; 
 }
 
 ::-webkit-scrollbar-thumb
