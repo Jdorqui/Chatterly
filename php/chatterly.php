@@ -92,7 +92,11 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                             <div id="serverthings" style="padding: 10px;">
                                 <div class="container">
                                     <button class="groupname_buton" id="group-button">
-                                        <h1 id="groupname" style="padding-left: 5px;"></h1>
+                                        <div class="container">
+                                            <img id="groupimage">
+                                            <h1 id="groupname" style="padding-left: 5px;"></h1>
+                                        </div>
+                                        
                                     </button>
                                     <button class="add_member_button" id="group-button">
                                         <img id="add_member_image" src="../assets/imgs/add_member_icon.png">
@@ -111,7 +115,31 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                                 <div style="background-color: #393e42; height: 2px; margin-bottom: 5px; margin-top: 5px;"></div>
 
                                 <div id="canales">
-                                    <button id="group-button" onclick="crearCanalTexto()">Crear canal</button>
+                                    <div id="acordeon-texto" class="accordion"> <!-- texto -->
+                                        <div id="header-texto" class="accordion-header" onclick="toggleAccordion('contenido-texto')">
+                                            <span>📝 Canales de Texto</span>
+                                            <span id="icono-texto">▸</span>
+                                            <button id="add_text_channel" onclick="crearCanalTexto()">+</button>
+                                        </div>
+                                        <div id="contenido-texto" class="accordion-content">
+                                            <ul class="channel-list" id="lista-texto">
+                                                <!-- Aquí puedes inyectar tus <li> con canales -->
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div id="acordeon-voz" class="accordion"> <!-- voz -->
+                                        <div id="header-voz" class="accordion-header" onclick="toggleAccordion('contenido-voz')">
+                                            <span>🔊 Canales de Voz</span>
+                                            <span id="icono-voz">▸</span>
+                                            <button id="add_voice_channel" onclick="crearCanalVoz()">+</button>
+                                        </div>
+                                        <div id="contenido-voz" class="accordion-content">
+                                            <ul class="channel-list" id="lista-voz">
+                                                <!-- Aquí puedes inyectar tus <li> con canales -->
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                                <!-- <?php //crearCanalTexto($pdo, $usuario)?> -->
                             </div>
@@ -129,7 +157,7 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                                     
                     <div id="initialpanel"> <!-- initialpanel -->
 
-                     <div id="addfriendmenu" hidden>
+                        <div id="addfriendmenu" hidden>
                                 <span>Añadir amigo</span>
                                 <p>Puedes añadir amigos buscando su nombre de usuario de Chatterly.</p>
                             <div id="addfriendmenu-container">
@@ -180,9 +208,6 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                         </div>
                     </div>
 
-                    <div id="initialpanel_group"> <!-- initialpanel -->
-                    </div>
-
                     <div id="chatcontainer" style="display: none;">
                         <div class="chat-header">
                             <div class="chat-header-content">
@@ -215,12 +240,40 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                             </div>
                         </div>
                     </div>
+
+                    <div id="initialpanel_group"></div> <!-- initialpanel_group -->
+
+                    <div id="chatcontainer_group">
+                        <div class="chat-header-group">
+                            <div class="chat-header-content-group">
+                                <span id="nombre-canal-grupo"></span>
+                            </div>
+                        </div>
+                        <div id="chat-separator-group"></div>
+
+                        <div id="chat-messages-group" class="chat-messages"></div>
+
+                        <div class="chat-input-group">
+                            <input type="text" id="mensaje-grupo" class="message-input" placeholder="Escribe un mensaje...">
+                            <img src="../assets/imgs/upload.png" id="uploadfile" alt="Upload" class="upload-icon">
+                            <input type="file" id="fileInput" class="hidden-file-input">
+                            <img src="../assets/imgs/emojis.png" onclick="showEmojis()" class="emoji-icon">
+                            <img src="../assets/imgs/gif_button.png" id="gifButton" class="gifButton">
+                            <div id="gifPickerContainer"></div>
+                            <button id="enviarMensaje" class="send-button">Enviar</button>
+                        </div>
+
+                        <div class="emoji-container">
+                            <div id="emojisDiv" class="emoji-div">
+                                <div id="emojiList" class="emoji-list"></div>
+                            </div>
+                        </div>
+                   </div>
                 </div>
             </div>
         </div>
 
         <div id="options" hidden>
-
             <div id="change_name_container" style="display: none;">
                 <div class="change_username" id="change_username">
                     <div class="change_name">
