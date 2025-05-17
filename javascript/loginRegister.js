@@ -178,3 +178,10 @@ function forgotPassword()
         out.style.color = '#f7767a';
     });
 }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('mode') === 'register') {
+      mostrarRegistro();
+    }
+  });

@@ -66,3 +66,8 @@ function closeStart()
     startOverlayElement.style.display = "none";
   }, overlayFadeOutDurationMs);
 }
+
+function mostrarRegistroWeb() 
+{
+  window.location.href = 'login.html?mode=register';
+}

@@ -3,10 +3,12 @@ function openandclosecreategroup() //abre o cierra el menu para crear los grupos
   if (document.getElementById('container-group').style.display === "none") 
   {
       document.getElementById('container-group').style.display = "block";
+      document.getElementById('bg-create-group').style.display = "block";
   } 
   else 
   {
       document.getElementById('container-group').style.display = "none";
+      document.getElementById('bg-create-group').style.display = "none";
   }
 }
 

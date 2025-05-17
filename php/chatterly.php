@@ -38,7 +38,7 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                 <a>Dale una personalidad propia a tu nuevo servidor con un nombre y un icono. Siempre puedes cambiarlo más tarde.</a>
                 <img id="selectImageGroup" src="../assets/imgs/uploadPhoto.png" onclick="uploadGroupImage()"><br>
                 <input type="file" id="file-input" style="display: none;">
-                <label id="nombreServidor-text">NOMBRE DEL SERVIDOR</label>
+                <label id="nombreServidor-text">Nombre del servidor</label>
                 <input type="text" id="nombreServidor" placeholder="Nombre del servidor" required>
                 <p>Al crear un servidor, aceptas las <link><a id="link" href="../html/comunity.html">Directivas de la comunidad</a></link> de Chatterly.</p>
 
@@ -46,7 +46,8 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                     <button id="btn-group1" onclick="openandclosecreategroup()">Atras</button>
                     <button id="btn-group2" onclick="crearGrupo()">Crear</button>
                 </div>
-            </div>
+            </div>  
+            <div id="bg-create-group" style="display: none;" class="background"></div>  
         </div>
         
         <div id="chatterly">
@@ -112,7 +113,7 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                                 <div id="canales">
                                     <button id="group-button" onclick="crearCanalTexto()">Crear canal</button>
                                 </div>
-                               <!-- <?php crearCanalTexto($pdo, $usuario)?> -->
+                               <!-- <?php //crearCanalTexto($pdo, $usuario)?> -->
                             </div>
 
                             <div id="userpanel_group"> <!-- userpanel -->
