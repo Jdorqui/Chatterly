@@ -27,6 +27,7 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
         <link rel="stylesheet" href="../css/style_chat.css">
         <link rel="stylesheet" href="../css/style_groups.css">
         <link rel="stylesheet" href="../css/style_menuGIF.css">
+        <link rel="stylesheet" href="../css/style_call.css">
         <link rel="icon" href="../assets/imgs/logo_bg.ico">
     </head>
     <body>
@@ -141,7 +142,6 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                                         </div>
                                     </div>
                                 </div>
-                               <!-- <?php //crearCanalTexto($pdo, $usuario)?> -->
                             </div>
 
                             <div id="userpanel_group"> <!-- userpanel -->
@@ -214,7 +214,7 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                                 <img id="foto-amigo" src="../assets/imgs/default_profile.png" alt="Foto del amigo" class="friend-photo">
                                 <span id="nombre-amigo" class="friend-name"></span>
                                 <div id="call_button" style="height: 30px; width: 100%; justify-content: flex-end; margin-right: 10px; display: flex; text-align: left;">
-                                    <img src="../assets/imgs/call_button.svg" style="width: 30px; height: 30px; cursor: pointer;" onclick="">
+                                    <img src="../assets/imgs/call_button.svg" style="width: 30px; height: 30px; cursor: pointer;" onclick="if (typeof destinatario !== 'undefined') llamarAmigo(destinatario); else alert('Selecciona un amigo primero.');">
                                 </div>
                                 
                             </div>
@@ -239,6 +239,34 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                                 <div id="emojiList" class="emoji-list"></div>
                             </div>
                         </div>
+                            <!-- Contenedor de llamada -->
+                            <div id="call-ui" style="display:none;">
+                                <div class="videos">
+                                <video id="localVideo" playsinline autoplay muted></video>
+                                <video id="remoteVideo" playsinline autoplay></video>
+                                <audio id="remoteAudio" autoplay controls style="display:none;"></audio>
+                                </div>
+                                <div class="controles">
+                                <button onclick="colgar()">❌ Colgar</button>
+                                <button onclick="toggleMute()">🎤 Mute</button>
+                                <button onclick="toggleDeafen()">🔇 Ensordecer</button>
+                                <button onclick="toggleCamera()">📷 Cámara On/Off</button>
+                                <button onclick="compartirPantalla()">🖥 Compartir pantalla</button>
+                                </div>
+                                <div class="dispositivos">
+                                <select id="audioSelect"></select>
+                                <button onclick="changeAudioDevice()">Cambiar micrófono</button>
+                                <select id="videoSelect"></select>
+                                <button onclick="changeVideoDevice()">Cambiar cámara</button>
+                                <label>
+                                    <input id="cameraToggle" type="checkbox" checked>
+                                    Cámara habilitada
+                                </label>
+                                </div>
+                            </div>
+                        <!-- Popup entrante -->
+                        <div id="popup-llamada" style="display:none;"></div>
+
                     </div>
 
                     <div id="initialpanel_group"></div> <!-- initialpanel_group -->
@@ -417,8 +445,11 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
         <script defer src="../javascript/api.js"></script>
         <script src="../javascript/tenor_api.js"></script>
         <script defer src="../javascript/group.js"></script>
+        <script defer src="../javascript/webRTC.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
         <script defer src="../javascript/js_chatterly.js"></script>
         <script>var id_usuario_actual = <?php echo $id_usuario_actual; ?>;</script> <!-- se guarda el id del usuario en una variable de javascript -->
+
+
     </body>
 </html>

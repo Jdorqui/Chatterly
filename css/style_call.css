@@ -1,0 +1,96 @@
+#call-ui {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0,0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  gap: 10px;
+}
+
+#call-ui video {
+  width: 45%;
+  border: 2px solid white;
+  border-radius: 10px;
+  background: black;
+}
+
+#call-ui audio {
+  /* se mostrará dinámicamente via JS */
+  margin-top: 8px;
+}
+
+#call-ui button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #ff5722;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+#call-ui select,
+#call-ui label {
+  margin: 5px;
+  font-size: 14px;
+  color: white;
+}
+
+#call-ui select {
+  padding: 5px;
+  background: #333;
+  border: 1px solid #555;
+  border-radius: 4px;
+  color: #fff;
+}
+
+#popup-llamada {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #222;
+  color: white;
+  border: 2px solid #ff8900;
+  border-radius: 10px;
+  padding: 15px;
+  z-index: 9999;
+  display: none;
+}
+
+#popup-llamada .popup button {
+  margin: 5px;
+  padding: 5px 15px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+#popup-llamada .popup button:first-of-type {
+  background-color: #4CAF50;
+  color: white;
+}
+
+#popup-llamada .popup button:last-of-type {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Icono de llamada junto a usuario, si lo usas */
+.btn-call {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: 0.2s;
+}
+.btn-call:hover {
+  opacity: 1;
+}
