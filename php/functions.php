@@ -28,6 +28,46 @@ function get_group(PDO $pdo, string $usuario) //esta funcion obtiene los grupos 
     <?php endforeach;
 }
 
+function mostrarSolicitudesPendientes(PDO $pdo, string $usuario): void {
+    // 1) traducir a id_user
+    $miId = get_id_user($pdo, $usuario);
+    if (!$miId) {
+        echo '<p>Usuario no encontrado.</p>';
+        return;
+    }
+
+    // 2) recuperar solicitudes
+    $sql = "
+        SELECT a.id_user1 AS solicitante_id, u.alias AS solicitante_alias
+        FROM amigos AS a
+        JOIN usuarios AS u ON a.id_user1 = u.id_user
+        WHERE a.id_user2 = :me
+          AND a.estado  = 'pendiente'
+        ORDER BY a.fecha_amistad DESC
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':me' => $miId]);
+    $sols = $stmt->fetchAll();
+
+    // 3) mostrar
+    if (count($sols) > 0) {
+        foreach ($sols as $sol) {
+            ?>
+            <div class="solicitud">
+              <span><?= htmlspecialchars($sol['solicitante_alias']) ?> quiere ser tu amigo.</span>
+              <form action="gestionar_solicitud.php" method="post">
+                <input type="hidden" name="solicitante" value="<?= (int)$sol['solicitante_id'] ?>">
+                <button type="submit" name="accion" value="aceptar">Aceptar</button>
+                <button type="submit" name="accion" value="rechazar">Rechazar</button>
+              </form>
+            </div>
+            <?php
+        }
+    } else {
+        echo '<p>No hay solicitudes pendientes.</p>';
+    }
+}
+
 function get_direct_messages(PDO $pdo, string $usuario): void
 {
     // 1⃣ Obtengo el id_user del usuario
@@ -111,7 +151,6 @@ function render_user_panel_button(PDO $pdo, string $usuario): void
       <span style='color: white; font-size: 16px;'>{$usuario}</span>
     </button>";
 }
-
 
 function get_online_friends(PDO $pdo, string $usuario): void
 {

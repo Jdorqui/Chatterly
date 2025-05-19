@@ -171,33 +171,14 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
 
                         <div id="pendingmenu" hidden>
                             <span>Solicitudes de amistad</span>
-                            <?php
-                                if (isset($solicitudes_pendientes) && count($solicitudes_pendientes) > 0) 
-                                {
-                                    //comprueba si hay solicitudes penddientes
-                                    foreach ($solicitudes_pendientes as $solicitud): ?> 
-                                        <div class="solicitud">
-                                            <span><?php echo htmlspecialchars($solicitud['alias']) . " quiere ser tu amigo."; ?></span>
-                                            <form id="pendingmenu-form" action="gestionar_solicitud.php" method="post">
-                                                <input type="hidden" name="solicitante" value="<?php echo $solicitud['id_user1']; ?>">
-                                                <button id="button_aceptar" type="submit" name="accion" value="aceptar">Aceptar</button>
-                                                <button id="button_rechazar" type="submit" name="accion" value="rechazar">Rechazar</button>
-                                            </form>
-                                        </div>
-                                    <?php endforeach;
-                                }
-                                else 
-                                {
-                                    echo "<p>No hay solicitudes pendientes.</p>"; //si no hay solicitudes pendientes
-                                }
-                            ?>
+                            <?php mostrarSolicitudesPendientes($pdo,  $usuario)?>
                         </div>
                         
                         <div id="openonlinemenu" hidden>
-                                <span>Amigos en linea</span>
+                            <span>Amigos en linea</span>
                                 <div id="friend-list-container">
                                 <?php get_online_friends($pdo, $usuario) ?>
-                                </div>
+                            </div>
 
                             <p id="resultado"></p>
                         </div>
