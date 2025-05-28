@@ -545,7 +545,7 @@ button.active
 
 #options-button 
 {
-    background: linear-gradient(to top, #a73814, #f2805b);
+    background: linear-gradient(to top, #a7391400, #f2815b00);
     font-family: 'newfont', sans-serif;
     color: #ffffff; 
     font-size: 14px; 
@@ -560,18 +560,18 @@ button.active
 
 #options-button:hover 
 {
-    background: linear-gradient(to top, #c24d1e, #fa9270);
+    background: linear-gradient(90deg, #5b4e86 0%, #603697 100%);
 }
 
 #options-button:active 
 {
-    background: linear-gradient(to top, #c24d1e, #fa9270);
+    background: linear-gradient(90deg, #5b4e86 0%, #603697 100%);
 }
 
 #options-button:focus 
 {
     outline: none; 
-    background: linear-gradient(to top, #c24d1e, #fa9270);
+    background: linear-gradient(90deg, #5b4e86 0%, #603697 100%);
 }
 
 /* ==== form y panel button ==== */

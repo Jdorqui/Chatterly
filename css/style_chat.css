@@ -31,6 +31,8 @@
     height: 60px;
     z-index: 10;
     display: flex;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
     align-items: center;
     gap: 10px;
 }
@@ -67,6 +69,12 @@
     flex-direction: column-reverse;
     gap: 10px;
     height: calc(98vh - 140px);
+
+}
+
+.chat-messages::-webkit-scrollbar-track 
+{
+    border-radius: 15px !important;
 }
 
 .chat-input 

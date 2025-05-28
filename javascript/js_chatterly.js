@@ -24,7 +24,7 @@ function showoptionspanel()
 function closeoptionspanel()
 {
     optionsPanel.style.display = "none";
-    document.getElementById('barra2').style.display = "flex";
+    document.getElementById('barra2').style.display = "";
     document.getElementById('initialpanel').style.display = "flex";
     document.getElementById("profileinfo").style.display = "none";
     document.getElementById('container-group').style.display = "none";
@@ -42,6 +42,8 @@ function closechat()
 function openaddfriendmenu()
 {
     pendingMenu.hidden = true;
+    optionsPanel.style.display = "none";
+    document.getElementById('barra2').style.display = "";
     document.getElementById("addfriendmenu").style.display = "block";
     document.getElementById("openonlinemenu").style.display = "none";
     document.getElementById('container-group').style.display = "none";
@@ -54,6 +56,8 @@ function openaddfriendmenu()
 function openpendingmenu() 
 {    
     pendingMenu.hidden = false;
+    optionsPanel.style.display = "none";
+    document.getElementById('barra2').style.display = "";
     document.getElementById("addfriendmenu").style.display = "none";
     document.getElementById("openonlinemenu").style.display = "none";
     document.getElementById('container-group').style.display = "none";
@@ -66,6 +70,8 @@ function openpendingmenu()
 function openonlinemenu() 
 {    
     pendingMenu.hidden = true;
+    optionsPanel.style.display = "none";
+    document.getElementById('barra2').style.display = "";
     document.getElementById("openonlinemenu").style.display = "block";
     document.getElementById("addfriendmenu").style.display = "none";
     document.getElementById("profileinfo").style.display = "none";
@@ -79,6 +85,8 @@ function openonlinemenu()
 function openallfriends()
 {
     pendingMenu.hidden = true;
+    optionsPanel.style.display = "none";
+    document.getElementById('barra2').style.display = "";
     document.getElementById("openonlinemenu").style.display = "none";
     document.getElementById("addfriendmenu").style.display = "none";
     document.getElementById("profileinfo").style.display = "none";
@@ -86,6 +94,7 @@ function openallfriends()
     document.getElementById("initialpanel_group").style.display = "none";
     document.getElementById("allfriends").style.display = "block";
     document.getElementById("chatcontainer_group").style.display = "none";
+    closechat();
 }
 
 function openeditname()

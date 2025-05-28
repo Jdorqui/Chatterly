@@ -52,7 +52,7 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
             <div id="bg-create-group" style="display: none;" class="background"></div>  
         </div>
         
-        <div id="change_name_container" style="display: none;">
+        <div id="change_name_container" class="container-panels" style="display: none;">
             <div class="change_username" id="change_username">
                 <div class="change_name">
                     <div class="container">
@@ -60,12 +60,13 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                         <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditname()">
                     </div>
                     <input type="text" name="new_name" id="new_name" placeholder="Nuevo nombre" required>
-                    <button type="submit" onclick="cambiar_alias()">Cambiar nombre</button>
+                    <button type="submit" class="accept-button" onclick="cambiar_alias()">Cambiar nombre</button>
                 </div>
             </div>
+            <div id="change_name_container_background"></div>  
         </div>
         
-        <div id="change_username_container" style="display: none;">
+        <div id="change_username_container" class="container-panels" style="display: none;">
             <div class="change_username" id="change_username">
                 <div class="change_username_container">
                     <div class="change_username">
@@ -74,12 +75,14 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                             <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditusername()">
                         </div>
                         <input type="text" name="new_username" id="new_username" placeholder="Nuevo nombre de usuario" required>
-                        <button type="submit" onclick="cambiar_username()">Cambiar nombre de usuario</button>
+                        <button type="submit" class="accept-button" onclick="cambiar_username()">Cambiar nombre de usuario</button>
                     </div>
                 </div>
             </div>
+            <div id="change_username_container_background"></div>  
         </div>
-        <div id="change_email_container" style="display: none;"> 
+
+        <div id="change_email_container" class="container-panels" style="display: none;"> 
             <div class="change_email" id="change_email">
                 <div class="change_email">
                     <div class="container">
@@ -87,12 +90,13 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                         <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditemail()">
                     </div>
                     <input type="email" name="new_email" id="new_email" placeholder="Nuevo correo electronico" required>
-                    <button type="submit" onclick="cambiar_email()">Cambiar correo electronico</button>
+                    <button type="submit" class="accept-button" onclick="cambiar_email()">Cambiar correo electronico</button>
                 </div>
             </div>
+            <div id="change_email_container_background"></div>  
         </div>
         
-        <div id="change_password_container" style="display: none;"> 
+        <div id="change_password_container" class="container-panels" style="display: none;"> 
             <div class="change_password" id="change_password">
                 <div class="change_oldpassword">
                     <div class="container">
@@ -102,17 +106,20 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                     <input type="password" name="old_password" id="old_password" placeholder="Contraseña actual" required>
                     <input type="password" name="new_password" id="new_password" placeholder="Nueva contraseña" required>
                     <input type="password" name="confirm_new_password" id="confirm_new_password" placeholder="Confirmar nueva contraseña" required>
-                    <button type="button" onclick="changePassword()">Cambiar contraseña</button>
+                    <button type="button" class="accept-button" onclick="changePassword()">Cambiar contraseña</button>
                     <div id="mensajeChange"></div>
                 </div>
             </div>
+            <div id="change_password_container_background"></div>
         </div>
-        <div class="delete_account" id="delete_account" hidden>
+        
+        <div class="delete_account" class="container-panels" id="delete_account" hidden>
             <div class="delete_account_container">
                 <p id="text_delete_account">Eliminar cuenta</p>
                 <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closedeleteaccount()">
                 <p id="text_delete_account2">¿Estas seguro de que deseas eliminar tu cuenta? Esta accion no se puede deshacer.</p>
                 <button type="submit">Eliminar cuenta</button>
+                <div id="delete_account_background"></div>
             </div>
         </div>
 
