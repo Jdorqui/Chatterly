@@ -1,9 +1,6 @@
-.options-container 
+#options
 {
-    display: flex;
-    flex-direction: column;
-    width: 100vw;
-    height: 100vh;
+    flex: 1;
 }
 
 .header-bar 
@@ -21,26 +18,23 @@
     color: #949ba4;
 }
 
-.content-wrapper 
+.options-left-panel 
 {
     display: flex;
-    flex: 1;
-}
-
-.sidebar 
-{
-    background: linear-gradient(180deg, #651d4d 0%, #5d2540 50%);
-    border-right: 2px solid var(--color-accent-2);
+    background: linear-gradient(180deg, #2a2033 0%, #553366 70%, #34213c 100%);
+    border-radius: 5px;
+    margin: 10px;
+    margin-right: 0px;
     width: 54%;
-    padding: 10px;
+    padding: 25px;
     color: white;
     display: flex;
     flex-direction: column;
-    gap: 10px;
 }
 
 #buttons-options-panel
 {
+    display: flex;
     background: linear-gradient(to top, #a73814, #f2805b);
     font-family: 'newfont', sans-serif;
     color: #ffffff;
@@ -51,7 +45,7 @@
     text-align: left;
     cursor: pointer;
     border-radius: 3px;
-    width: 120px;
+    width: 130px;
 }
 
 #buttons-options-panel:hover 
@@ -67,9 +61,8 @@
 
 .main-content 
 {
-    background: linear-gradient(180deg, #4a1e3d 0%, #793663 100%);
-    border-right: 2px solid var(--color-accent-3);
-    border-bottom: 2px solid var(--color-accent-3);
+    background: linear-gradient(180deg, #23233b 0%, #191929 100%);
+    margin: 10px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     border-radius: 5px;
     width: 100%;
@@ -137,6 +130,13 @@
     cursor: pointer;
 }
 
+.profile-img:hover
+{
+    box-shadow: 0 0 14px 2px #ffb17466, 0 0 24px 4px #3e8dd944;
+    border-color: #8a4545;
+    transition: box-shadow 0.22s, border-color 0.18s;
+}
+
 .profile-username 
 {
     position: absolute;
@@ -187,8 +187,7 @@
 
 .password_autentication
 {
-    max-width: 650px;
-    padding: 0px;
+    padding-left: 5px;
     display: none;
 }
 
@@ -226,6 +225,7 @@
 {
     font-size: 19px;
     margin-bottom: 5px;
+    color: #fb9a4f;
 }
 
 #text2_disabled_account
@@ -241,7 +241,7 @@
     margin-bottom: 5px;
 }
 
-.change_password
+#change_password
 {
     width: 170px;
     height: auto;
@@ -372,7 +372,6 @@
 {
     display: flex;
     align-items: center;
-    justify-content: left;
     flex-direction: column;
     gap: 10px;
     margin-bottom: 5px;

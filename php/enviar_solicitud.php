@@ -11,7 +11,8 @@ $usuarioData = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$usuarioData) 
 {
-    echo "El usuario no existe en la base de datos.";
+    //El usuario no existe en la base de datos.
+    header("Location: chatterly.php");
     exit();
 }
 
@@ -24,7 +25,8 @@ if (isset($_POST['alias_amigo']))
 }
 else 
 {
-    echo "No se ha proporcionado el alias del amigo.";
+    //No se ha proporcionado el alias del amigo.
+    header("Location: chatterly.php");
     exit();
 }
 
@@ -35,7 +37,8 @@ $amigoData = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$amigoData) 
 {
-    echo "El amigo no existe en la base de datos.";
+    //El amigo no existe en la base de datos.
+    header("Location: chatterly.php");
     exit();
 }
 
@@ -48,7 +51,8 @@ $relacion = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($relacion) 
 {
-    echo "Ya existe una solicitud pendiente o ya son amigos.";
+    //ya existe una solicitud pendiente o ya son amigos.
+    header("Location: chatterly.php");
     exit();
 }
 

@@ -22,6 +22,7 @@ function closegroup()
   document.getElementById('barra2').style.display = "";
   document.getElementById('initialpanel').style.display = "";
 
+  document.getElementById("options").style.display = "none";
   document.getElementById('barra2_group').style.display = "none";
   document.getElementById('initialpanel_group').style.display = "none";
   document.getElementById('chatcontainer_group').style.display = "none";

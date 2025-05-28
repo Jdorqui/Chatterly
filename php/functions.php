@@ -1,5 +1,5 @@
 <?php 
-function get_id_user(PDO $pdo, string $usuario)
+function get_id_user(PDO $pdo, string $usuario) //esta funcion obtiene el id del usuario
 {
     $stmt = $pdo->prepare('SELECT id_user FROM usuarios WHERE username = ? LIMIT 1');
     $stmt->execute([$usuario]);
@@ -29,9 +29,9 @@ function get_group(PDO $pdo, string $usuario) //esta funcion obtiene los grupos 
 }
 
 function mostrarSolicitudesPendientes(PDO $pdo, string $usuario): void {
-    // 1) traducir a id_user
-    $miId = get_id_user($pdo, $usuario);
-    if (!$miId) {
+    $miId = get_id_user($pdo, $usuario); //obtiene el id del usario
+    if (!$miId) //verifica si el usuario existe
+    {
         echo '<p>Usuario no encontrado.</p>';
         return;
     }
@@ -46,25 +46,30 @@ function mostrarSolicitudesPendientes(PDO $pdo, string $usuario): void {
         ORDER BY a.fecha_amistad DESC
     ";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([':me' => $miId]);
+    $stmt->execute([':me' => $miId]); 
     $sols = $stmt->fetchAll();
 
-    // 3) mostrar
-    if (count($sols) > 0) {
-        foreach ($sols as $sol) {
+    if (count($sols) > 0) //se muestran las solicitudes pendientes si hay
+    {
+        foreach ($sols as $sol) //recorre las solicitudes
+        {
             ?>
             <div class="solicitud">
               <span><?= htmlspecialchars($sol['solicitante_alias']) ?> quiere ser tu amigo.</span>
               <form action="gestionar_solicitud.php" method="post">
                 <input type="hidden" name="solicitante" value="<?= (int)$sol['solicitante_id'] ?>">
-                <button type="submit" name="accion" value="aceptar">Aceptar</button>
-                <button type="submit" name="accion" value="rechazar">Rechazar</button>
+                <div class="container" style="margin: 0;">
+                    <button type="submit" id="boton-solicitud" class="accept-button" name="accion" value="aceptar">Aceptar</button>
+                    <button type="submit" id="boton-solicitud" class="reject-button" name="accion" value="rechazar">Rechazar</button>
+                </div>
               </form>
             </div>
             <?php
         }
-    } else {
-        echo '<p>No hay solicitudes pendientes.</p>';
+    } 
+    else //si no hay solicitudes pendientes se muestra el mensaje
+    {
+        echo '<p id="no_friends">No hay solicitudes pendientes.</p>';
     }
 }
 
@@ -160,7 +165,7 @@ function get_online_friends(PDO $pdo, string $usuario): void
     $u = $stmt->fetch(PDO::FETCH_ASSOC);
     $me = $u ? (int)$u['id_user'] : 0;
 
-    // Amigos en línea
+    // Amigos en línea SOLO si la amistad está aceptada
     $stmt = $pdo->prepare("
       SELECT u.username, u.id_user
       FROM amigos a
@@ -169,6 +174,7 @@ function get_online_friends(PDO $pdo, string $usuario): void
       WHERE (a.id_user1 = :me OR a.id_user2 = :me)
         AND u.en_linea = 1
         AND u.id_user != :me
+        AND a.estado = 'aceptado'
     ");
     $stmt->execute(['me' => $me]);
     $amigos_en_linea = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -274,6 +280,4 @@ function render_profile_header(PDO $pdo, string $usuario): void
       </form>
     </div>";
 }
-
-
 ?>

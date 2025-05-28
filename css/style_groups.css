@@ -12,9 +12,9 @@
 
 .background
 {
-    width: 420px;
-    height: 520px;
-    background-color: #75033a;
+    width: 435px;
+    height: 615px;
+    background: linear-gradient(180deg, #1c1c2f 0%, #11111c 100%);
     padding-top: 5px;
     padding-left: 80px;
     border-radius: 10px;
@@ -29,7 +29,7 @@
 #create-group p
 {
     font-family: 'newfont', sans-serif;
-    color: #92939a; 
+    color: #ced2ef; 
     font-size: 12px;
 }
 
@@ -51,10 +51,10 @@
     position: fixed;
     top: 50%;
     left: 50%;
-    background-color: #890444;
+    background: linear-gradient(180deg, #23233b 0%, #191929 100%);
     transform: translate(-50%, -50%);
-    width: 400px;
-    height: 430px;
+    width: 415px;
+    height: 515px;
     padding: 30px;
     border-radius: 10px;
     z-index: 9998;
@@ -79,17 +79,28 @@
     color: #fff;
 }
 
-#nombreServidor 
+#nombreServidor, #descripcionServidor
 {
     width: 100%;
     padding: 10px;
     margin-bottom: 16px; 
     font-size: 16px;
     box-sizing: border-box;
-    background-color: #410140;
+    border: 1.5px solid #353765;
+    background: linear-gradient(90deg, #262844 0%, #23253a 100%);
     border-radius: 6px;
     margin-top: 5px; 
-    margin-bottom: 5px;
+}
+
+#nombreServidor:focus, #descripcionServidor:focus
+{
+    border-color: #726cfb;
+    box-shadow: 0 0 0 2px #726cfb33;
+}
+
+#nombreServidor::placeholder, #descripcionServidor::placeholder
+{
+    color: #8d92b8;
 }
 
 #selectImageGroup
@@ -100,9 +111,8 @@
     display: flex;
 }
 
-#nombreServidor-text 
+#nombreServidor-text, #descripcionServidor-text
 {
-    font-weight: bold;
     font-size: 12px;
 }
 
@@ -119,16 +129,9 @@
     padding: 10px 16px;
     border: none;
     font-size: 14px;
-    background-color: #410140;
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.3sease, transform 0.2s ease;
-}
-
-#btn-group1:hover, #btn-group2:hover
-{
-    background-color: #360135;
-    transform: scale(1.02);
 }
 
 .server-icon 

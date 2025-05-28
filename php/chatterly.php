@@ -31,7 +31,6 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
         <link rel="icon" href="../assets/imgs/logo_bg.ico">
     </head>
     <body>
-
         <div id="container-group" style="display: none;">
             <button id="group-exit"></button>
             <div id="create-group">
@@ -41,24 +40,94 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                 <input type="file" id="file-input" style="display: none;">
                 <label id="nombreServidor-text">Nombre del servidor</label>
                 <input type="text" id="nombreServidor" placeholder="Nombre del servidor" required>
+                <label id="descripcionServidor-text">Descripcion del servidor</label>
+                <input type="text" id="descripcionServidor" placeholder="Descripcion del servidor" required>
                 <p>Al crear un servidor, aceptas las <link><a id="link" href="../html/comunity.html">Directivas de la comunidad</a></link> de Chatterly.</p>
 
                 <div id="button-container">
-                    <button id="btn-group1" onclick="openandclosecreategroup()">Atras</button>
-                    <button id="btn-group2" onclick="crearGrupo()">Crear</button>
+                    <button id="btn-group1" class="accept-button" onclick="openandclosecreategroup()">Atras</button>
+                    <button id="btn-group2" class="reject-button" onclick="crearGrupo()">Crear</button>
                 </div>
             </div>  
             <div id="bg-create-group" style="display: none;" class="background"></div>  
         </div>
         
+        <div id="change_name_container" style="display: none;">
+            <div class="change_username" id="change_username">
+                <div class="change_name">
+                    <div class="container">
+                        <p id="text_change_name">Cambiar nombre</p>
+                        <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditname()">
+                    </div>
+                    <input type="text" name="new_name" id="new_name" placeholder="Nuevo nombre" required>
+                    <button type="submit" onclick="cambiar_alias()">Cambiar nombre</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="change_username_container" style="display: none;">
+            <div class="change_username" id="change_username">
+                <div class="change_username_container">
+                    <div class="change_username">
+                        <div class="container">
+                            <p id="text_change_username">Cambiar nombre de usuario</p>
+                            <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditusername()">
+                        </div>
+                        <input type="text" name="new_username" id="new_username" placeholder="Nuevo nombre de usuario" required>
+                        <button type="submit" onclick="cambiar_username()">Cambiar nombre de usuario</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="change_email_container" style="display: none;"> 
+            <div class="change_email" id="change_email">
+                <div class="change_email">
+                    <div class="container">
+                        <p id="text_change_email">Cambiar correo electronico</p>
+                        <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditemail()">
+                    </div>
+                    <input type="email" name="new_email" id="new_email" placeholder="Nuevo correo electronico" required>
+                    <button type="submit" onclick="cambiar_email()">Cambiar correo electronico</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="change_password_container" style="display: none;"> 
+            <div class="change_password" id="change_password">
+                <div class="change_oldpassword">
+                    <div class="container">
+                        <p id="text_change_password">Cambiar contraseña</p>
+                        <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closechangepassword()">
+                    </div>
+                    <input type="password" name="old_password" id="old_password" placeholder="Contraseña actual" required>
+                    <input type="password" name="new_password" id="new_password" placeholder="Nueva contraseña" required>
+                    <input type="password" name="confirm_new_password" id="confirm_new_password" placeholder="Confirmar nueva contraseña" required>
+                    <button type="button" onclick="changePassword()">Cambiar contraseña</button>
+                    <div id="mensajeChange"></div>
+                </div>
+            </div>
+        </div>
+        <div class="delete_account" id="delete_account" hidden>
+            <div class="delete_account_container">
+                <p id="text_delete_account">Eliminar cuenta</p>
+                <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closedeleteaccount()">
+                <p id="text_delete_account2">¿Estas seguro de que deseas eliminar tu cuenta? Esta accion no se puede deshacer.</p>
+                <button type="submit">Eliminar cuenta</button>
+            </div>
+        </div>
+
         <div id="chatterly">
             <div id="chatterly-container">
                 <div id="barra-superior"> <!-- barra superior -->
                     <div id="barra-superior-buttons"> 
                         <img id="message-logo" src="../assets/imgs/message_logo.png" alt="logo" onclick="closegroup()">
-                        <button class="add-friend-button" onclick="openaddfriendmenu()"><p id="link-top">Añadir amigo</p></button>
+                        <p id="top-separator">|</p>
+                        <button class="friend-tab-button" onclick="openaddfriendmenu()"><p id="link-top">Añadir amigo</p></button>
+                        <p id="top-separator">|</p>
                         <button class="friend-tab-button" onclick="openpendingmenu()"><p id="link-top">Solicitudes de amistad</p></button>
+                        <p id="top-separator">|</p>
                         <button class="friend-tab-button" onclick="openonlinemenu()"><p id="link-top">Amigos en linea</p></button>
+                        <p id="top-separator">|</p>
                         <button class="friend-tab-button" onclick="openallfriends()"><p id="link-top">Todos tus amigos</p></button>
                     </div>
                 </div>
@@ -156,27 +225,37 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                     </div>
                                     
                     <div id="initialpanel"> <!-- initialpanel -->
-
                         <div id="addfriendmenu" hidden>
-                                <span>Añadir amigo</span>
+                                <div class="title-container">
+                                    <span>Añadir amigo</span>
+                                </div>
+                                <div id="separator"></div>
                                 <p>Puedes añadir amigos buscando su nombre de usuario de Chatterly.</p>
                             <div id="addfriendmenu-container">
                                 <form id="addfriendmenu-form" action="../php/enviar_solicitud.php" method="post">
-                                    <input id="alias_amigo" name="alias_amigo" required type="text" placeholder="Puedes añadir amigos con su nombre de usuario de Chatterly.">
-                                    <button id="enviar_solicitud" type="submit">Enviar solicitud de amistad</button>
+                                    <input id="alias_amigo" name="alias_amigo" required type="text" placeholder="Busca a tus amigos.">
+                                    <button id="enviar_solicitud" class="accept-button" type="submit">Enviar solicitud de amistad</button>
                                 </form>
                             </div>
                             <p id="resultado"></p>
                         </div>
 
                         <div id="pendingmenu" hidden>
-                            <span>Solicitudes de amistad</span>
+                            <div class="title-container">
+                                <span>Solicitudes de amistad</span>
+                            </div>
+                            <div id="separator"></div>
+                            
                             <?php mostrarSolicitudesPendientes($pdo,  $usuario)?>
                         </div>
                         
                         <div id="openonlinemenu" hidden>
-                            <span>Amigos en linea</span>
-                                <div id="friend-list-container">
+                            <div class="title-container">
+                                <span>Amigos en linea</span>
+                            </div>
+                            <div id="separator"></div>
+                            
+                            <div id="friend-list-container">
                                 <?php get_online_friends($pdo, $usuario) ?>
                             </div>
 
@@ -184,7 +263,11 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                         </div>
 
                         <div id="allfriends" hidden>
-                            <span>Todos tus amigos</span>
+                            <div class="title-container">
+                                <span>Todos tus amigos</span>
+                            </div>
+                            <div id="separator"></div>
+                            
                             <?php get_all_friends($pdo, $usuario) ?>
                         </div>
                     </div>
@@ -201,7 +284,7 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                             </div>
                         </div>
 
-                        <div id="chat-separator" style="position: absolute; top: 60px; width: 100%; height: 2px; background-color: #393e42; z-index: 10;"></div>
+                        <div id="chat-separator"></div>
 
                         <div id="chat-messages" class="chat-messages"></div>
 
@@ -220,34 +303,6 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                                 <div id="emojiList" class="emoji-list"></div>
                             </div>
                         </div>
-                            <!-- Contenedor de llamada -->
-                            <div id="call-ui" style="display:none;">
-                                <div class="videos">
-                                <video id="localVideo" playsinline autoplay muted></video>
-                                <video id="remoteVideo" playsinline autoplay></video>
-                                <audio id="remoteAudio" autoplay controls style="display:none;"></audio>
-                                </div>
-                                <div class="controles">
-                                <button onclick="colgar()">❌ Colgar</button>
-                                <button onclick="toggleMute()">🎤 Mute</button>
-                                <button onclick="toggleDeafen()">🔇 Ensordecer</button>
-                                <button onclick="toggleCamera()">📷 Cámara On/Off</button>
-                                <button onclick="compartirPantalla()">🖥 Compartir pantalla</button>
-                                </div>
-                                <div class="dispositivos">
-                                <select id="audioSelect"></select>
-                                <button onclick="changeAudioDevice()">Cambiar micrófono</button>
-                                <select id="videoSelect"></select>
-                                <button onclick="changeVideoDevice()">Cambiar cámara</button>
-                                <label>
-                                    <input id="cameraToggle" type="checkbox" checked>
-                                    Cámara habilitada
-                                </label>
-                                </div>
-                            </div>
-                        <!-- Popup entrante -->
-                        <div id="popup-llamada" style="display:none;"></div>
-
                     </div>
 
                     <div id="initialpanel_group"></div> <!-- initialpanel_group -->
@@ -278,151 +333,99 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                             </div>
                         </div>
                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div id="options" hidden>
-            <div id="change_name_container" style="display: none;">
-                <div class="change_username" id="change_username">
-                    <div class="change_name">
-                        <div class="container">
-                            <p id="text_change_name">Cambiar nombre</p>
-                            <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditname()">
-                        </div>
-                        <input type="text" name="new_name" id="new_name" placeholder="Nuevo nombre" required>
-                        <button type="submit" onclick="cambiar_alias()">Cambiar nombre</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="change_username_container" style="display: none;">
-                <div class="change_username" id="change_username">
-                    <div class="change_username_container">
-                        <div class="change_username">
-                            <div class="container">
-                                <p id="text_change_username">Cambiar nombre de usuario</p>
-                                <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditusername()">
-                            </div>
-                            <input type="text" name="new_username" id="new_username" placeholder="Nuevo nombre de usuario" required>
-                            <button type="submit" onclick="cambiar_username()">Cambiar nombre de usuario</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="change_email_container" style="display: none;"> 
-                <div class="change_email" id="change_email">
-                    <div class="change_email">
-                        <div class="container">
-                            <p id="text_change_email">Cambiar correo electronico</p>
-                            <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeeditemail()">
-                        </div>
-                        <input type="email" name="new_email" id="new_email" placeholder="Nuevo correo electronico" required>
-                        <button type="submit" onclick="cambiar_email()">Cambiar correo electronico</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="change_password_container" style="display: none;"> 
-                <div class="change_password" id="change_password">
-                    <div class="change_oldpassword">
-                        <div class="container">
-                            <p id="text_change_password">Cambiar contraseña</p>
-                            <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closechangepassword()">
-                        </div>
-                        <input type="password" name="old_password" id="old_password" placeholder="Contraseña actual" required>
-                        <input type="password" name="new_password" id="new_password" placeholder="Nueva contraseña" required>
-                        <input type="password" name="confirm_new_password" id="confirm_new_password" placeholder="Confirmar nueva contraseña" required>
-                        <button type="button" onclick="changePassword()">Cambiar contraseña</button>
-                        <div id="mensajeChange"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="delete_account" id="delete_account" hidden>
-                <div class="delete_account_container">
-                    <p id="text_delete_account">Eliminar cuenta</p>
-                    <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closedeleteaccount()">
-                    <p id="text_delete_account2">¿Estas seguro de que deseas eliminar tu cuenta? Esta accion no se puede deshacer.</p>
-                    <button type="submit">Eliminar cuenta</button>
-                </div>
-            </div>
-            
-            <div class="options-container">
-                <div id="barra-superior"> <!-- barra superior -->
-                    <div id="barra-superior-buttons"> 
-                        <img id="message-logo" src="../assets/imgs/message_logo.png" alt="logo" onclick="closeoptionspanel()">
-                    </div>
-                </div>
-                <div class="content-wrapper">
-                    <div class="sidebar">
-                        <div id="buttons_options_container">
-                            <p class="section-title">Ajustes de usuario</p>
-                            <div class="options_container">
-                                <button id="buttons-options-panel" class="buttons-options-panel" onclick="showprofileinfo()">Mi cuenta</button>
-                            </div>
-                        </div>
-                            <div class="divider"></div>
-                        <div id="buttons_options_container">
-                            <div class="options_container">
-                                <button id="buttons-options-panel" class="buttons-options-panel" onclick="window.location.href='../php/logout.php'">Cerrar sesión</button><br>
-                                <button id="buttons-options-panel" class="buttons-options-panel" onclick="closeoptionspanel()">Volver</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="main-content">
-                        <div>
-                            <div class="container_options_header" id="container_options_header">
-                                <h1 id="myaccount_text">Mi cuenta</h1>
-                                <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeoptionspanel()">
-                            </div>
-                            <div id="profileinfo" class="profile-info" hidden>
-                                <?php render_profile_header($pdo, $usuario)?>
-                                <div class="profile-details">
-                                    <p id="text_name">NOMBRE</p>
-
-                                    <div class="container">
-                                        <p><?php echo htmlspecialchars($usuario, ENT_QUOTES, 'UTF-8'); ?></p>
-                                        <button class="change_button" id="edit_name" onclick="openeditname()">Editar</button>
-                                    </div>
-                                    
-                                    <p id="text_username">NOMBRE DE USUARIO</p>
-
-                                    <div class="container">
-                                        <p><?php echo htmlspecialchars($usuario, ENT_QUOTES, 'UTF-8'); ?></p>
-                                        <button class="change_button" id="edit_username" onclick="openeditusername()">Editar</button>
-                                    </div>
-
-                                    <p id="text_email">CORREO ELECTRONICO</p>
-
-                                    <div class="container">
-                                        <p>
-                                            <?php
-                                                $stmt = $pdo->prepare("SELECT email FROM usuarios WHERE id_user = ?"); //se realiza una consulta para obtener el email del usuario
-                                                $stmt->execute([$id_usuario_actual]);
-                                                $emailData = $stmt->fetch(PDO::FETCH_ASSOC); //se obtiene el email del usuario
-                                                echo htmlspecialchars($emailData['email'], ENT_QUOTES, 'UTF-8'); //se muestra el email del usuario 
-                                            ?>
-                                        </p>
-                                        <button class="change_button" id="edit_email" onclick="openeditemail()">Editar</button>
-                                    </div>
+                    <div id="options" hidden>                        
+                        <div class="options-left-panel">
+                            <div id="buttons_options_container">
+                                <h1 class="section-title">Ajustes</h1>
+                                <div class="options_container">
+                                    <button id="buttons-options-panel" class="buttons-options-panel" onclick="showprofileinfo()">Mi cuenta</button>
+                                    <button id="buttons-options-panel" class="buttons-options-panel" onclick="window.location.href='../php/logout.php'">Cerrar sesión</button><br>
+                                    <button id="buttons-options-panel" class="buttons-options-panel" onclick="closeoptionspanel()">Volver</button>
                                 </div>
                             </div>
-                            <div class="password_autentication" id="password_autentication">
-                                <p style="font-size: 20px; font-weight: 400;">Contraseña y autentificacion</p>
-                                <button class="change_password" onclick="openchangepassword()">Cambiar contraseña</button>
+                        </div>
+                        <div class="main-content">
+                            <div>
+                                <div class="container_options_header" id="container_options_header">
+                                    <h1 id="myaccount_text">Mi cuenta</h1>
+                                    <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeoptionspanel()">
+                                </div>
+                                <div id="profileinfo" class="profile-info" hidden>
+                                    <?php render_profile_header($pdo, $usuario)?>
+                                    <div class="profile-details">
+                                        <p id="text_name">NOMBRE</p>
 
-                                <p id="text_disabled_account">Suspension de cuenta</p>
-                                <p id="text2_disabled_account">Puedes recuperar la cuenta en cualquier momento despues de deshabilitarla.</p>
+                                        <div class="container">
+                                            <p><?php echo htmlspecialchars($usuario, ENT_QUOTES, 'UTF-8'); ?></p>
+                                            <button class="change_button" id="edit_name" onclick="openeditname()">Editar</button>
+                                        </div>
+                                        
+                                        <p id="text_username">NOMBRE DE USUARIO</p>
 
-                                <div class="container_account">
-                                    <button id="delete_acount" onclick="eliminar_cuenta()">Eliminar cuenta</button>
+                                        <div class="container">
+                                            <p><?php echo htmlspecialchars($usuario, ENT_QUOTES, 'UTF-8'); ?></p>
+                                            <button class="change_button" id="edit_username" onclick="openeditusername()">Editar</button>
+                                        </div>
+
+                                        <p id="text_email">CORREO ELECTRONICO</p>
+
+                                        <div class="container">
+                                            <p>
+                                                <?php
+                                                    $stmt = $pdo->prepare("SELECT email FROM usuarios WHERE id_user = ?"); //se realiza una consulta para obtener el email del usuario
+                                                    $stmt->execute([$id_usuario_actual]);
+                                                    $emailData = $stmt->fetch(PDO::FETCH_ASSOC); //se obtiene el email del usuario
+                                                    echo htmlspecialchars($emailData['email'], ENT_QUOTES, 'UTF-8'); //se muestra el email del usuario 
+                                                ?>
+                                            </p>
+                                            <button class="change_button" id="edit_email" onclick="openeditemail()">Editar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="password_autentication" id="password_autentication">
+                                    <p style="font-size: 20px; font-weight: 400; color: #fb9a4f;">Contraseña y autentificacion</p>
+                                    <button id="change_password" class="accept-button" onclick="openchangepassword()">Cambiar contraseña</button>
+
+                                    <p id="text_disabled_account">Suspension de cuenta</p>
+                                    <p id="text2_disabled_account">Puedes recuperar la cuenta en cualquier momento despues de deshabilitarla.</p>
+
+                                    <div class="container_account">
+                                        <button id="delete_acount" class="reject-button" onclick="eliminar_cuenta()">Eliminar cuenta</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div id="call-ui" style="display:none;"> <!-- Contenedor de llamada -->
+                    <div class="videos">
+                        <video id="localVideo" playsinline autoplay muted></video>
+                        <video id="remoteVideo" playsinline autoplay></video>
+                        <audio id="remoteAudio" autoplay controls style="display:none;"></audio>
+                    </div>
+                    <div class="controles">
+                        <button onclick="colgar()">❌ Colgar</button>
+                        <button onclick="toggleMute()">🎤 Mute</button>
+                        <button onclick="toggleDeafen()">🔇 Ensordecer</button>
+                        <button onclick="toggleCamera()">📷 Cámara On/Off</button>
+                        <button onclick="compartirPantalla()">🖥 Compartir pantalla</button>
+                    </div>
+                    <div class="dispositivos">
+                        <select id="audioSelect"></select>
+                        <button onclick="changeAudioDevice()">Cambiar micrófono</button>
+                        <select id="videoSelect"></select>
+                        <button onclick="changeVideoDevice()">Cambiar cámara</button>
+                        <label>
+                            <input id="cameraToggle" type="checkbox" checked>Cámara habilitada
+                        </label>
+                    </div>
+                </div>
+                <div id="popup-llamada" style="display:none;"></div> <!-- Popup entrante -->
             </div>
         </div>
+
         <script defer src="../javascript/api.js"></script>
         <script src="../javascript/tenor_api.js"></script>
         <script defer src="../javascript/group.js"></script>
@@ -430,7 +433,5 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
         <script defer src="../javascript/js_chatterly.js"></script>
         <script>var id_usuario_actual = <?php echo $id_usuario_actual; ?>;</script> <!-- se guarda el id del usuario en una variable de javascript -->
-
-
     </body>
 </html>

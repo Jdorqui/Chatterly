@@ -14,15 +14,18 @@ document.getElementById("container_options_header").style.display = "none";
 
 function showoptionspanel()
 {
-    optionsPanel.style.display = "block";
-    normalPanel.style.display = "none";
+    optionsPanel.style.display = "flex";
+    document.getElementById('barra2').style.display = "none";
+    document.getElementById('initialpanel').style.display = "none";
+    document.getElementById('chatcontainer').style.display = "none";
     document.getElementById('container-group').style.display = "none";
 }
 
 function closeoptionspanel()
 {
-    normalPanel.style.display = "block";
     optionsPanel.style.display = "none";
+    document.getElementById('barra2').style.display = "flex";
+    document.getElementById('initialpanel').style.display = "flex";
     document.getElementById("profileinfo").style.display = "none";
     document.getElementById('container-group').style.display = "none";
     document.getElementById("openonlinemenu").style.display = "none";
@@ -107,7 +110,7 @@ function closeeditusername()
 
 function openeditemail()
 {
-    document.getElementById("change_email_container").style.display = "block";
+    document.getElementById("change_email_container").style.display = "flex";
 }
 
 function closeeditemail()
