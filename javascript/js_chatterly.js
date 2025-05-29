@@ -223,7 +223,7 @@ async function cargarMensajes() //carga los mensajes
                     {
                         const fileName = mensaje.contenido.split('/').pop(); // obtiene el nombre del archivo
                         const fileExtension = fileName.split('.').pop().toLowerCase(); // obtiene la extensión del archivo
-                        let downloadLink = `<a id='link' style="text-align: center;" href="${mensaje.contenido}" download>Descargar [${fileName}]</a>`; // crea un enlace de descarga
+                        let downloadLink = `<a id='link' style="text-align: center; margin-top: 5px;" href="${mensaje.contenido}" download>Descargar [${fileName}]</a>`; // crea un enlace de descarga
 
                         // Muestra la imagen del archivo adjunto y el enlace de descarga debajo 
                         if (['png', 'jpg', 'jpeg', 'webp', 'gif'].includes(fileExtension)) 
@@ -434,7 +434,7 @@ for (let category in emojis) //recorre las categorías de emojis
     emojiList.appendChild(emojiContainer); //añade el contenedor al emojiList
     
     const divisor = document.createElement('div'); //crea un divisor
-    divisor.style = "height: 1px; background-color: #444; margin: 15px 0;";
+    divisor.style = "height: 1px; background-color: #123b5c; margin: 15px 0;";
     emojiList.appendChild(divisor); //añade el divisor al emojiList
 }
 

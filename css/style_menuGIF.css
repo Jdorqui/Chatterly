@@ -1,19 +1,20 @@
 #gifPickerContainer /* contenedor principal */
 {
-  position: fixed !important;
-  right: 10px !important;
-  bottom: 0 !important;
-  top: 370px !important;
-  margin: auto;
+  position: absolute;
+  right: 10px;
+  bottom: 60px;
+  width: 350px;
+  overflow-y: auto;
+  background: linear-gradient(180deg, #23233b 0%, #191929 100%);
+  border: 1.5px solid #353765;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
   width: 520px !important;
   height: 500px !important;
-  background: #2b2d31;
-  border: 1px solid #444;
-  border-radius: 8px;
-  display: flex;
   flex-direction: column;
   overflow: hidden;
-  z-index: 999999;
 }
 
 /* mostrar/ocultar secciones */
@@ -26,7 +27,7 @@
   display: flex;
   align-items: center;
   margin-bottom: -6px;
-  background: #2b2d31;
+  background: #2b2d3100;
 }
 
 #gifPickerContainer .header .back-btn 
@@ -45,15 +46,25 @@
 {
   flex: 1;
   margin: 10px;
-  background: #222;
+  border: 1.5px solid #353765;
+  background: linear-gradient(90deg, #262844 0%, #23253a 100%);
   width: 100%;
-  border: 1px solid #444;
   border-radius: 5px;
   padding: 7px 8px;
   color: #fff;
   font-size: 0.9rem;
 }
 
+#gifPickerContainer .header input:focus
+{
+  border-color: #726cfb;
+  box-shadow: 0 0 0 2px #726cfb33;
+}
+
+#gifPickerContainer .header input::placeholder
+{
+  color: #8d92b8;
+}
 
 #gifPickerContainer .cats /* categorias */ 
 {
@@ -62,7 +73,7 @@
   grid-auto-rows: 143px;
   gap: 8px;
   padding: 7px 10px;
-  background: #2b2d31;
+  background: rgba(0, 0, 0, 0);
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
@@ -121,10 +132,9 @@
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
   column-width: 180px;
   column-gap: 4px;
-  background: #2b2d31;
+  background: #2b2d3100;
 }
 
 .gif-item 

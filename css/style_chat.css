@@ -87,8 +87,8 @@
 
 .message-input 
 {
-    border-color: #383a40 !important;
-    background-color: #383a40 !important;
+    border: 1.5px solid #353765;
+    background: linear-gradient(90deg, #262844 0%, #23253a 100%);
     width: 100% !important;
     box-sizing: border-box !important;
     height: 45px !important;
@@ -96,6 +96,17 @@
     position: relative !important;
     color: white !important;
     padding-right: 140px !important;
+}
+
+.message-input:focus
+{
+    border-color: #726cfb;
+    box-shadow: 0 0 0 2px #726cfb33;
+}
+
+.message-input::placeholder
+{
+    color: #8d92b8;
 }
 
 .upload-icon 
@@ -155,9 +166,8 @@
     width: 350px;
     max-height: 400px;
     overflow-y: auto;
-    background: #2b2d31;
-    border-color: #383a3f;
-    border-style: solid;
+    background: linear-gradient(180deg, #23233b 0%, #191929 100%);
+    border: 1.5px solid #353765;
     border-radius: 10px;
     padding: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -193,7 +203,7 @@
 
 #chat-messages div:hover 
 {
-    background-color: #2e3035; 
+    background: linear-gradient(180deg, #1a1a2b 0%, #171727 100%); 
     border-radius: 5px; 
 }
 

@@ -8,9 +8,14 @@
     </head>
     <body id="body">
         
-        <div id="start" onclick="closeStart()">
+        <div id="start" onclick="playIntroVideo()">
             <h1>Pulsa para comenzar</h1>
         </div> 
+
+        <div id="video" style="display:none; position:fixed; inset:0; width:100vw; height:100vh; background:black; z-index:1000;">
+            <video id="introVideo" src="../assets/video/intro-chatterly.mp4" muted style="width:100vw; height:100vh; object-fit:cover; display:block;"></video>
+        </div>
+
         <div id="page"> 
             <div id="main-content">
                 <header id="header">
@@ -23,7 +28,6 @@
                                 <ul>
                                     <li><a id="link" href="../html/login.html">Iniciar Sesión</a></li>
                                     <li> <a id="link" href="javascript:void(0)" onclick="mostrarRegistroWeb()">Registrarse</a></li>
-                                    <li><a id="link" href="">Acceder</a></li>
                                 </ul>
                             </nav>
                         </div>

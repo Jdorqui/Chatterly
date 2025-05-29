@@ -123,6 +123,28 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
             </div>
         </div>
 
+        <div id="call-ui" style="display:none;"> <!-- ui llamada -->
+            <div class="videos">
+                <video id="localVideo" playsinline autoplay></video>
+                <video id="remoteVideo" playsinline autoplay></video>
+                <audio id="remoteAudio" autoplay controls style="display:none;"></audio>
+            </div>
+            <div class="controles">
+                <button onclick="colgar()">❌ Colgar</button>
+                <button onclick="toggleMute()">🎤 Mute</button>
+                <button onclick="toggleDeafen()">🔇 Ensordecer</button>
+                <button onclick="toggleCamera()">📷 Cámara On/Off</button>
+                <button onclick="compartirPantalla()">🖥 Compartir pantalla</button>
+            </div>
+            <div class="dispositivos">
+                <select id="audioSelect"></select>
+                <button onclick="changeAudioDevice()">Cambiar micrófono</button>
+                <select id="videoSelect"></select>
+                <button onclick="changeVideoDevice()">Cambiar cámara</button>
+            </div>
+        </div>
+        <div id="popup-llamada" style="display:none;"></div> <!-- popup llamada -->
+
         <div id="chatterly">
             <div id="chatterly-container">
                 <div id="barra-superior"> <!-- barra superior -->
@@ -150,7 +172,7 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                         <div id="barra2-content-container">
                             <div id="direct_message_containter"> <!-- mensaje directo -->
                                 <p style="text-align: center;">¿Con quién vas a hablar hoy?</p>
-                                    <?php get_direct_messages($pdo, $usuario); ?>
+                                <?php get_direct_messages($pdo, $usuario); ?>
                             </div>
 
                             <div id="userpanel"> <!-- userpanel -->
@@ -173,7 +195,6 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                                             <img id="groupimage">
                                             <h1 id="groupname" style="padding-left: 5px;"></h1>
                                         </div>
-                                        
                                     </button>
                                     <button class="add_member_button" id="group-button">
                                         <img id="add_member_image" src="../assets/imgs/add_member_icon.png">
@@ -301,10 +322,10 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                             <input type="file" id="fileInput" class="hidden-file-input">
                             <img src="../assets/imgs/emojis.png" onclick="showEmojis()" class="emoji-icon">
                             <img src="../assets/imgs/gif_button.png" id="gifButton" class="gifButton">
-                            <div id="gifPickerContainer"></div>
                             <button id="enviarMensaje" class="send-button">Enviar</button>
                         </div>
-
+                        <div id="gifPickerContainer"></div>
+                        
                         <div class="emoji-container">
                             <div id="emojisDiv" class="emoji-div">
                                 <div id="emojiList" class="emoji-list"></div>
@@ -405,31 +426,6 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                         </div>
                     </div>
                 </div>
-
-                <div id="call-ui" style="display:none;"> <!-- Contenedor de llamada -->
-                    <div class="videos">
-                        <video id="localVideo" playsinline autoplay muted></video>
-                        <video id="remoteVideo" playsinline autoplay></video>
-                        <audio id="remoteAudio" autoplay controls style="display:none;"></audio>
-                    </div>
-                    <div class="controles">
-                        <button onclick="colgar()">❌ Colgar</button>
-                        <button onclick="toggleMute()">🎤 Mute</button>
-                        <button onclick="toggleDeafen()">🔇 Ensordecer</button>
-                        <button onclick="toggleCamera()">📷 Cámara On/Off</button>
-                        <button onclick="compartirPantalla()">🖥 Compartir pantalla</button>
-                    </div>
-                    <div class="dispositivos">
-                        <select id="audioSelect"></select>
-                        <button onclick="changeAudioDevice()">Cambiar micrófono</button>
-                        <select id="videoSelect"></select>
-                        <button onclick="changeVideoDevice()">Cambiar cámara</button>
-                        <label>
-                            <input id="cameraToggle" type="checkbox" checked>Cámara habilitada
-                        </label>
-                    </div>
-                </div>
-                <div id="popup-llamada" style="display:none;"></div> <!-- Popup entrante -->
             </div>
         </div>
 

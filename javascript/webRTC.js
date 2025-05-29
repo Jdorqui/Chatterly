@@ -96,8 +96,8 @@ function mostrarPopupLlamada(alias,idEmisor){
   pop.innerHTML = `
     <div class="popup">
       📞 Llamada entrante de <strong>${alias}</strong><br>
-      <button onclick="aceptarLlamada(${idEmisor})">Aceptar</button>
-      <button onclick="rechazarLlamada(${idEmisor})">Rechazar</button>
+      <button class="accept-button" onclick="aceptarLlamada(${idEmisor})">Aceptar</button>
+      <button class="reject-button" onclick="rechazarLlamada(${idEmisor})">Rechazar</button>
     </div>`;
   pop.style.display='block';
 }

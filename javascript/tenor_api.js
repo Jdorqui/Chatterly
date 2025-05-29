@@ -56,7 +56,6 @@ const CATEGORIES = [
   {label: 'loco', key: 'loco'},
   {label: 'loquesea', key: 'loquesea'},
   {label: 'sonrisa', key: 'sonrisa'},
-  {label: 'locura', key: 'locura'},
 ];
 
 let favorites = JSON.parse(localStorage.getItem(FAVORITES_KEY) || '[]'); // array de favoritos

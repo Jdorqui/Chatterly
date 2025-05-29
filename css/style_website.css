@@ -159,7 +159,6 @@ p
     justify-content: center;
 }
 
-
 #footer
 {
     position: relative;
@@ -240,6 +239,23 @@ p
     align-items: center;
     padding: 15px 5%;
 }
+
+/* ==== video ==== */
+
+#video 
+{
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+}
+
+#video.visible 
+{
+    opacity: 1;
+    pointer-events: all;
+}
+
+
 
 /* ==== links y scrollbar ==== */
 
@@ -323,3 +339,4 @@ p
         gap: 0px;
     }
 }
+

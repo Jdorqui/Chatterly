@@ -88,11 +88,11 @@ async function registrarUsuario()
     {
         const data = await registrarUsuarioApi();
 
-        if (data.status === "success") // Registro OK: volvemos al login
+        if (data.status === "success") // si consigue registrarse vuelve al login
         {
             mostrarLogin(); 
         } 
-        else // Error de validación o servidor: mostramos mensaje en rojo
+        else // errores capturados en data.message
         {
             err.textContent = data.message;
             err.classList.add("error");
@@ -103,7 +103,7 @@ async function registrarUsuario()
     catch (e) 
     {
         console.error("Error en registro:", e);
-        err.textContent = "Error de conexión. Intenta nuevamente.";
+        err.textContent = "error de conexion vuelve a intentarlo.";
         err.classList.add("error");
         err.style.color = "#f7767a";
         err.style.display = "block";
@@ -120,7 +120,7 @@ async function login()
     err.textContent = '';
     err.style.color = '';
 
-    if (!user || !pass) // Validación mínima
+    if (!user || !pass) // si no introduce ni usuario o contraseña
     {
         err.textContent = 'Introduce usuario y contraseña.';
         err.style.color = "#f7767a";
@@ -146,8 +146,8 @@ async function login()
     catch (e) 
     {
         console.error('Login error:', e);
-        err.textContent   = 'Error de conexión. Intenta de nuevo.';
-        err.style.color   = "#f7767a";
+        err.textContent = 'error de conexion.';
+        err.style.color = "#f7767a";
         err.style.display = 'block';
     }
 }
@@ -159,15 +159,14 @@ function forgotPassword()
     out.style.color = '';
     out.classList.remove('success','error');
 
-    forgotPassword_Api()
-    .then(data => {
+    forgotPassword_Api().then(data => {
         out.textContent = data.message;
 
-        if (data.success) // Éxito
+        if (data.success) // se consigue cambiar la contraseña
         {
             out.style.color = '#7af776'; // verde claro
         }
-        else // Error
+        else // error al cambiarla
         {
             out.style.color = '#f7767a';
         }
@@ -179,9 +178,10 @@ function forgotPassword()
     });
 }
 
-  document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('mode') === 'register') {
-      mostrarRegistro();
+    if (params.get('mode') === 'register') 
+    {
+        mostrarRegistro();
     }
-  });
+});

@@ -363,6 +363,7 @@ button.active
     padding: 20px; 
     padding-left: 10px;
     width: 100%; 
+    margin-bottom: 15px;
 }
 
 #button_name:hover
@@ -540,6 +541,7 @@ button.active
     border-radius: 5px;
     background: linear-gradient(90deg, #262844 0%, #23253a 100%);
     border: 1.5px solid #353765;
+    margin-bottom: 15px;
 }
 /* ==== opciones ==== */
 
