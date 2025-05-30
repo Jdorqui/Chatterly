@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'conexion.php';
+require 'conexion.php'; 
 require 'functions.php';
 
 if (!isset($_SESSION['usuario']) || !isset($_SESSION['password']))  //si el usuario no ha iniciado sesion
@@ -25,33 +25,11 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
         <link rel="stylesheet" href="../css/style_options.css">
         <link rel="stylesheet" href="../css/style_chatterly.css">
         <link rel="stylesheet" href="../css/style_chat.css">
-        <link rel="stylesheet" href="../css/style_groups.css">
         <link rel="stylesheet" href="../css/style_menuGIF.css">
         <link rel="stylesheet" href="../css/style_call.css">
         <link rel="icon" href="../assets/imgs/logo_bg.ico">
     </head>
     <body>
-        <div id="container-group" style="display: none;">
-            <button id="group-exit"></button>
-            <div id="create-group">
-                <h1>Personaliza tu servidor</h1>
-                <a>Dale una personalidad propia a tu nuevo servidor con un nombre y un icono. Siempre puedes cambiarlo más tarde.</a>
-                <img id="selectImageGroup" src="../assets/imgs/uploadPhoto.png" onclick="uploadGroupImage()"><br>
-                <input type="file" id="file-input" style="display: none;">
-                <label id="nombreServidor-text">Nombre del servidor</label>
-                <input type="text" id="nombreServidor" placeholder="Nombre del servidor" required>
-                <label id="descripcionServidor-text">Descripcion del servidor</label>
-                <input type="text" id="descripcionServidor" placeholder="Descripcion del servidor" required>
-                <p>Al crear un servidor, aceptas las <link><a id="link" href="../html/comunity.html">Directivas de la comunidad</a></link> de Chatterly.</p>
-
-                <div id="button-container">
-                    <button id="btn-group1" class="accept-button" onclick="openandclosecreategroup()">Atras</button>
-                    <button id="btn-group2" class="reject-button" onclick="crearGrupo()">Crear</button>
-                </div>
-            </div>  
-            <div id="bg-create-group" style="display: none;" class="background"></div>  
-        </div>
-        
         <div id="change_name_container" class="container-panels" style="display: none;">
             <div class="change_username" id="change_username">
                 <div class="change_name">
@@ -149,7 +127,7 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
             <div id="chatterly-container">
                 <div id="barra-superior"> <!-- barra superior -->
                     <div id="barra-superior-buttons"> 
-                        <img id="message-logo" src="../assets/imgs/message_logo.png" alt="logo" onclick="closegroup()">
+                        <img id="message-logo" src="../assets/imgs/message_logo.png" alt="logo">
                         <p id="top-separator">|</p>
                         <button class="friend-tab-button" onclick="openaddfriendmenu()"><p id="link-top">Añadir amigo</p></button>
                         <p id="top-separator">|</p>
@@ -162,12 +140,7 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                 </div>
 
                 <div id="barra1-container">
-                    <div id="barra1"> <!-- barra1 -->
-                        <div>
-                            <?php get_group($pdo, $usuario); ?>
-                            <img id="message" src="../assets/imgs/newServer_logo.png" alt="logo" onclick="openandclosecreategroup()"><br>
-                        </div>
-                    </div>
+                    <div id="barra1"></div> <!-- barra1 -->
                     <div id="barra2"> <!-- barra2 -->
                         <div id="barra2-content-container">
                             <div id="direct_message_containter"> <!-- mensaje directo -->
@@ -177,72 +150,6 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
 
                             <div id="userpanel"> <!-- userpanel -->
                                 <?php render_user_panel_button($pdo, $usuario)?> 
-                                <div> <!-- icono -->
-                                    <div id="options_button_gear">
-                                        <img src="../assets/imgs/options_icon.png" alt="options" id="options_icon" onclick="showoptionspanel()">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="barra2_group"> <!-- barra2_group -->
-                        <div id="group_info">
-                            <div id="serverthings" style="padding: 10px;">
-                                <div class="container">
-                                    <button class="groupname_buton" id="group-button">
-                                        <div class="container">
-                                            <img id="groupimage">
-                                            <h1 id="groupname" style="padding-left: 5px;"></h1>
-                                        </div>
-                                    </button>
-                                    <button class="add_member_button" id="group-button">
-                                        <img id="add_member_image" src="../assets/imgs/add_member_icon.png">
-                                    </button>
-                                </div>
-                                
-                                <div style="background-color: #393e42; height: 2px; margin-bottom: 5px;"></div>
-                                
-                                <button id="group-button">
-                                    <div class="container" style="padding: 0; margin: 0;">
-                                        <img src="../assets/imgs/members_icon.png" style="width: 30px; height: 30px;">
-                                        <p style="margin-right: 100000px;">Miembros</p>
-                                    </div>
-                                </button>
-                                
-                                <div style="background-color: #393e42; height: 2px; margin-bottom: 5px; margin-top: 5px;"></div>
-
-                                <div id="canales">
-                                    <div id="acordeon-texto" class="accordion"> <!-- texto -->
-                                        <div id="header-texto" class="accordion-header" onclick="toggleAccordion('contenido-texto')">
-                                            <span>📝 Canales de Texto</span>
-                                            <span id="icono-texto">▸</span>
-                                            <button id="add_text_channel" onclick="crearCanalTexto()">+</button>
-                                        </div>
-                                        <div id="contenido-texto" class="accordion-content">
-                                            <ul class="channel-list" id="lista-texto">
-                                                <!-- Aquí puedes inyectar tus <li> con canales -->
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <div id="acordeon-voz" class="accordion"> <!-- voz -->
-                                        <div id="header-voz" class="accordion-header" onclick="toggleAccordion('contenido-voz')">
-                                            <span>🔊 Canales de Voz</span>
-                                            <span id="icono-voz">▸</span>
-                                            <button id="add_voice_channel" onclick="crearCanalVoz()">+</button>
-                                        </div>
-                                        <div id="contenido-voz" class="accordion-content">
-                                            <ul class="channel-list" id="lista-voz">
-                                                <!-- Aquí puedes inyectar tus <li> con canales -->
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="userpanel_group"> <!-- userpanel -->
-                                 <?php render_user_panel_button($pdo, $usuario)?> 
                                 <div> <!-- icono -->
                                     <div id="options_button_gear">
                                         <img src="../assets/imgs/options_icon.png" alt="options" id="options_icon" onclick="showoptionspanel()">
@@ -333,35 +240,6 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                         </div>
                     </div>
 
-                    <div id="initialpanel_group"></div> <!-- initialpanel_group -->
-
-                    <div id="chatcontainer_group">
-                        <div class="chat-header-group">
-                            <div class="chat-header-content-group">
-                                <span id="nombre-canal-grupo"></span>
-                            </div>
-                        </div>
-                        <div id="chat-separator-group"></div>
-
-                        <div id="chat-messages-group" class="chat-messages"></div>
-
-                        <div class="chat-input-group">
-                            <input type="text" id="mensaje-grupo" class="message-input" placeholder="Escribe un mensaje...">
-                            <img src="../assets/imgs/upload.png" id="uploadfile" alt="Upload" class="upload-icon">
-                            <input type="file" id="fileInput" class="hidden-file-input">
-                            <img src="../assets/imgs/emojis.png" onclick="showEmojis()" class="emoji-icon">
-                            <img src="../assets/imgs/gif_button.png" id="gifButton" class="gifButton">
-                            <div id="gifPickerContainer"></div>
-                            <button id="enviarMensaje" class="send-button">Enviar</button>
-                        </div>
-
-                        <div class="emoji-container">
-                            <div id="emojisDiv" class="emoji-div">
-                                <div id="emojiList" class="emoji-list"></div>
-                            </div>
-                        </div>
-                   </div>
-
                     <div id="options" hidden>                        
                         <div class="options-left-panel">
                             <div id="buttons_options_container">
@@ -431,7 +309,6 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
 
         <script defer src="../javascript/api.js"></script>
         <script src="../javascript/tenor_api.js"></script>
-        <script defer src="../javascript/group.js"></script>
         <script defer src="../javascript/webRTC.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
         <script defer src="../javascript/js_chatterly.js"></script>

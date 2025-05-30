@@ -4,17 +4,21 @@ session_start();
 require __DIR__ . '/conexion.php';
 header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+{
   $data = json_decode(file_get_contents("php://input"), true);
   $id_emisor   = $data['id_emisor']   ?? null;
   $id_receptor = $data['id_receptor'] ?? null;
   $type        = $data['type']        ?? null;
   $payload     = $data['data']        ?? null;
-  if (!$id_emisor || !$id_receptor || !$type || !$payload) {
+
+  if (!$id_emisor || !$id_receptor || !$type || !$payload) 
+  {
     echo json_encode(["error"=>"Faltan parámetros"]); exit;
   }
 
-  if ($type === 'ice') {
+  if ($type === 'ice') 
+  {
     // leer existentes
     $stmt = $pdo->prepare("SELECT ice FROM llamadas WHERE id_emisor=? AND id_receptor=?");
     $stmt->execute([$id_emisor, $id_receptor]);
@@ -37,7 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // GET => obtener datos
-if ($_GET['modo'] === 'obtener') {
+if ($_GET['modo'] === 'obtener') 
+{
   $type        = $_GET['type']        ?? null;
   $id_emisor   = $_GET['id_emisor']   ?? null;
   $id_receptor = $_GET['id_receptor'] ?? null;
@@ -50,9 +55,12 @@ if ($_GET['modo'] === 'obtener') {
   $row = $stmt->fetchColumn();
 
   // para ICE devolvemos array, para offer/answer el objeto
-  if ($type === 'ice') {
+  if ($type === 'ice') 
+  {
     $data = json_decode($row, true) ?: [];
-  } else {
+  }
+  else 
+  {
     $data = json_decode($row);
   }
   echo json_encode(["data"=>$data]);

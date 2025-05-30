@@ -4,7 +4,8 @@ require __DIR__ . '/conexion.php';
 
 $id = $_GET['id'] ?? null;
 
-if (!$id) {
+if (!$id) 
+{
   echo json_encode(["status" => "error", "msg" => "Falta ID"]);
   exit;
 }
@@ -20,12 +21,15 @@ $stmt = $pdo->prepare("
 $stmt->execute([$id]);
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($row) {
+if ($row) 
+{
   echo json_encode([
     "status" => "llamada",
     "id_emisor" => $row['id_emisor'],
     "alias" => $row['alias']
   ]);
-} else {
+} 
+else 
+{
   echo json_encode(["status" => "libre"]);
 }

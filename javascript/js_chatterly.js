@@ -18,7 +18,6 @@ function showoptionspanel()
     document.getElementById('barra2').style.display = "none";
     document.getElementById('initialpanel').style.display = "none";
     document.getElementById('chatcontainer').style.display = "none";
-    document.getElementById('container-group').style.display = "none";
 }
 
 function closeoptionspanel()
@@ -27,7 +26,6 @@ function closeoptionspanel()
     document.getElementById('barra2').style.display = "";
     document.getElementById('initialpanel').style.display = "flex";
     document.getElementById("profileinfo").style.display = "none";
-    document.getElementById('container-group').style.display = "none";
     document.getElementById("openonlinemenu").style.display = "none";
     document.getElementById("password_autentication").style.display = "none";
     document.getElementById("container_options_header").style.display = "none";
@@ -46,10 +44,7 @@ function openaddfriendmenu()
     document.getElementById('barra2').style.display = "";
     document.getElementById("addfriendmenu").style.display = "block";
     document.getElementById("openonlinemenu").style.display = "none";
-    document.getElementById('container-group').style.display = "none";
     document.getElementById("allfriends").style.display = "none";
-    document.getElementById("initialpanel_group").style.display = "none";
-    document.getElementById("chatcontainer_group").style.display = "none";
     closechat();
 }
 
@@ -60,10 +55,7 @@ function openpendingmenu()
     document.getElementById('barra2').style.display = "";
     document.getElementById("addfriendmenu").style.display = "none";
     document.getElementById("openonlinemenu").style.display = "none";
-    document.getElementById('container-group').style.display = "none";
     document.getElementById("allfriends").style.display = "none";
-    document.getElementById("initialpanel_group").style.display = "none";
-    document.getElementById("chatcontainer_group").style.display = "none";
     closechat();
 }
 
@@ -75,10 +67,7 @@ function openonlinemenu()
     document.getElementById("openonlinemenu").style.display = "block";
     document.getElementById("addfriendmenu").style.display = "none";
     document.getElementById("profileinfo").style.display = "none";
-    document.getElementById('container-group').style.display = "none";
     document.getElementById("allfriends").style.display = "none";
-    document.getElementById("initialpanel_group").style.display = "none";
-    document.getElementById("chatcontainer_group").style.display = "none";
     closechat();
 }
 
@@ -90,10 +79,7 @@ function openallfriends()
     document.getElementById("openonlinemenu").style.display = "none";
     document.getElementById("addfriendmenu").style.display = "none";
     document.getElementById("profileinfo").style.display = "none";
-    document.getElementById('container-group').style.display = "none";
-    document.getElementById("initialpanel_group").style.display = "none";
     document.getElementById("allfriends").style.display = "block";
-    document.getElementById("chatcontainer_group").style.display = "none";
     closechat();
 }
 

@@ -1,23 +1,24 @@
-// webRTC.js
-
-// —————————————————————
-// Globals
-// —————————————————————
-// Este ID lo inyectas en chatterly.php:
-// <script>var id_usuario_actual = <?= $_SESSION['user_id'] ?>;</script>
-let callerId   = null;
-let calleeId   = null;
+//variables globales
+let callerId = null;
+let calleeId = null;
 let pc;
 let localStream;
-let remoteStream    = new MediaStream();
-let videoTransceiver;  // <— Aquí el transceiver fijo de vídeo
+let remoteStream = new MediaStream();
+let videoTransceiver;
 
 // —————————————————————
 // 1) Init dispositivos & check llamadas
 // —————————————————————
-async function initDeviceSelection() {
-  try { await navigator.mediaDevices.getUserMedia({ audio: true }); }
-  catch(e){/* permiso audio denegado */}
+async function initDeviceSelection() 
+{
+  try 
+  { 
+    await navigator.mediaDevices.getUserMedia({ audio: true }); 
+  }
+  catch(e)
+  {
+    /* permiso audio denegado */
+  }
 
   const devices = await navigator.mediaDevices.enumerateDevices();
   const as = document.getElementById('audioSelect');
@@ -27,17 +28,17 @@ async function initDeviceSelection() {
     if (d.kind === 'audioinput')
       as.add(new Option(d.label||'Micrófono', d.deviceId));
     if (d.kind === 'videoinput')
-      vs.add(new Option(d.label||'Cámara',    d.deviceId));
+      vs.add(new Option(d.label||'Cámara', d.deviceId));
   });
 
   document.getElementById('remoteAudio').style.display = 'none';
-
-  // Cada 2s revisa llamadas entrantes
-  setInterval(checkIncoming, 2000);
+  
+  setInterval(checkIncoming, 2000); //cada 2s revisa llamadas
 }
-window.addEventListener('load', initDeviceSelection);
+window.addEventListener('load', initDeviceSelection); //al cargar te pide permisos
 
-async function checkIncoming(){
+async function checkIncoming()
+{
   try {
     const res = await fetch(`../php/check_llamadas.php?id=${id_usuario_actual}`);
     const j   = await res.json();
@@ -52,7 +53,8 @@ async function checkIncoming(){
 // —————————————————————
 // 2) UI de llamada
 // —————————————————————
-async function llamarAmigo(idReceptor){
+async function llamarAmigo(idReceptor)
+{
   callerId = id_usuario_actual;
   calleeId = idReceptor;
   const resp = await fetch('../php/iniciar_llamada.php',{
@@ -64,7 +66,8 @@ async function llamarAmigo(idReceptor){
   await iniciarLlamada(true);
 }
 
-async function aceptarLlamada(idEmisor){
+async function aceptarLlamada(idEmisor)
+{
   callerId = idEmisor;
   calleeId = id_usuario_actual;
   document.getElementById('popup-llamada').style.display='none';
@@ -79,7 +82,8 @@ async function aceptarLlamada(idEmisor){
   await iniciarLlamada(false);
 }
 
-function rechazarLlamada(idEmisor){
+function rechazarLlamada(idEmisor)
+{
   fetch('../php/responder_llamada.php',{
     method:'POST', headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
@@ -91,7 +95,8 @@ function rechazarLlamada(idEmisor){
   document.getElementById('popup-llamada').style.display='none';
 }
 
-function mostrarPopupLlamada(alias,idEmisor){
+function mostrarPopupLlamada(alias,idEmisor) //construccion del div popup + mostrarlo
+{
   const pop = document.getElementById('popup-llamada');
   pop.innerHTML = `
     <div class="popup">
@@ -102,7 +107,8 @@ function mostrarPopupLlamada(alias,idEmisor){
   pop.style.display='block';
 }
 
-function colgar(){
+function colgar()
+{
   if(pc) pc.close();
   document.getElementById('call-ui').style.display='none';
   fetch('../php/responder_llamada.php',{
@@ -118,14 +124,24 @@ function colgar(){
 // —————————————————————
 // 3) Mute / cámara / dispositivos
 // —————————————————————
-function toggleMute()   { localStream.getAudioTracks().forEach(t=>t.enabled=!t.enabled) }
-function toggleDeafen(){ remoteStream.getAudioTracks().forEach(t=>t.enabled=!t.enabled) }
-function toggleCamera(){
+function toggleMute()
+{ 
+  localStream.getAudioTracks().forEach(t=>t.enabled=!t.enabled) 
+}
+
+function toggleDeafen()
+{ 
+  remoteStream.getAudioTracks().forEach(t=>t.enabled=!t.enabled) 
+}
+
+function toggleCamera()
+{
   const t = localStream.getVideoTracks()[0];
   if(t) t.enabled = !t.enabled;
 }
 
-async function changeAudioDevice(){
+async function changeAudioDevice()
+{
   const deviceId = document.getElementById('audioSelect').value;
   const s = await navigator.mediaDevices.getUserMedia({ audio:{deviceId} });
   const nt= s.getAudioTracks()[0];
@@ -135,7 +151,8 @@ async function changeAudioDevice(){
   localStream.addTrack(nt);
 }
 
-async function changeVideoDevice(){
+async function changeVideoDevice()
+{
   const deviceId = document.getElementById('videoSelect').value;
   const s = await navigator.mediaDevices.getUserMedia({ video:{deviceId} });
   const nt= s.getVideoTracks()[0];
@@ -147,17 +164,24 @@ async function changeVideoDevice(){
 }
 
 // —————————————————————
-// 4) Compartir pantalla sin renegociar
+// 4) Compartir pantalla
 // —————————————————————
-async function compartirPantalla(){
-  if(!navigator.mediaDevices.getDisplayMedia){
+async function compartirPantalla()
+{
+  if(!navigator.mediaDevices.getDisplayMedia)
+  {
     return alert('Compartir pantalla no soportado');
   }
+
   const sender = videoTransceiver?.sender;
-  if(!sender){
+
+  if(!sender)
+  {
     return alert('No hay sender de vídeo para reemplazar');
   }
-  try {
+
+  try 
+  {
     const screen = await navigator.mediaDevices.getDisplayMedia({video:true});
     const st = screen.getVideoTracks()[0];
     await sender.replaceTrack(st);
@@ -169,7 +193,9 @@ async function compartirPantalla(){
         document.getElementById('localVideo').srcObject = localStream;
       }
     };
-  } catch(e){
+  } 
+  catch(e)
+  {
     console.error('Error compartiendo pantalla:', e);
     alert('No se pudo compartir pantalla');
   }
@@ -221,10 +247,10 @@ async function iniciarLlamada(isCaller){
     localStream = await navigator.mediaDevices.getUserMedia({ audio:true });
   }
   const lv = document.getElementById('localVideo');
-  lv.srcObject    = localStream;
-  lv.autoplay     = true;
-  lv.playsInline  = true;
-  lv.muted        = true;
+  lv.srcObject = localStream;
+  lv.autoplay = true;
+  lv.playsInline = true;
+  lv.muted = true;
 
   // Añadir audio
   localStream.getAudioTracks().forEach(t=>pc.addTrack(t, localStream));
@@ -309,14 +335,14 @@ async function iniciarLlamada(isCaller){
 // —————————————————————
 // 6) Exportar global
 // —————————————————————
-window.llamarAmigo         = llamarAmigo;
-window.aceptarLlamada      = aceptarLlamada;
-window.rechazarLlamada     = rechazarLlamada;
+window.llamarAmigo = llamarAmigo;
+window.aceptarLlamada = aceptarLlamada;
+window.rechazarLlamada = rechazarLlamada;
 window.mostrarPopupLlamada = mostrarPopupLlamada;
-window.colgar              = colgar;
-window.toggleMute          = toggleMute;
-window.toggleDeafen        = toggleDeafen;
-window.toggleCamera        = toggleCamera;
-window.changeAudioDevice   = changeAudioDevice;
-window.changeVideoDevice   = changeVideoDevice;
-window.compartirPantalla   = compartirPantalla;
+window.colgar = colgar;
+window.toggleMute = toggleMute;
+window.toggleDeafen = toggleDeafen;
+window.toggleCamera = toggleCamera;
+window.changeAudioDevice = changeAudioDevice;
+window.changeVideoDevice = changeVideoDevice;
+window.compartirPantalla = compartirPantalla;

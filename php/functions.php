@@ -7,26 +7,6 @@ function get_id_user(PDO $pdo, string $usuario) //esta funcion obtiene el id del
 
     return (int) $usuarioData['id_user'];
 }
-function get_group(PDO $pdo, string $usuario) //esta funcion obtiene los grupos de los usuarios
-{
-    $sql = "SELECT g.id_grupo, g.nombre, g.imagen FROM grupos g JOIN usuarios u ON g.id_creador = u.id_user WHERE u.username = ? ORDER BY g.fecha_creacion DESC";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$usuario]);
-    $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    foreach ($groups as $group):
-        $groupName = htmlspecialchars($group['nombre'], ENT_QUOTES, 'UTF-8');
-        $groupId = (int)$group['id_grupo'];
-        $imageName = urlencode($group['imagen']);
-        $userDir = urlencode($usuario);
-        $imagePath = "../assets/users/{$userDir}/groups/{$groupId}/img_profile/{$imageName}";
-        $imageAlt = $groupName;
-    ?>
-        <div class="sidebar-item server-icon" data-group-id="<?= $groupId ?>" data-group-name="<?= $groupName ?>" onclick="opengroup(this)" title="<?= $groupName ?>">
-            <img src="<?= $imagePath ?>" alt="<?= $groupName ?>" width="40" height="40">
-        </div>
-    <?php endforeach;
-}
 
 function mostrarSolicitudesPendientes(PDO $pdo, string $usuario): void {
     $miId = get_id_user($pdo, $usuario); //obtiene el id del usario
