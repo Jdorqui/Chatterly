@@ -5,6 +5,8 @@ let pc;
 let localStream;
 let remoteStream = new MediaStream();
 let videoTransceiver;
+const notification_audio = new Audio('../assets/audio/call.wav');
+notification_audio.volume = 0.3;
 
 // —————————————————————
 // 1) Init dispositivos & check llamadas
@@ -15,6 +17,7 @@ async function initDeviceSelection()
   { 
     await navigator.mediaDevices.getUserMedia({ audio: true }); 
   }
+
   catch(e)
   {
     /* permiso audio denegado */
@@ -26,26 +29,35 @@ async function initDeviceSelection()
 
   devices.forEach(d => {
     if (d.kind === 'audioinput')
+    {
       as.add(new Option(d.label||'Micrófono', d.deviceId));
+    }
+      
     if (d.kind === 'videoinput')
+    {
       vs.add(new Option(d.label||'Cámara', d.deviceId));
+    }
   });
 
   document.getElementById('remoteAudio').style.display = 'none';
-  
   setInterval(checkIncoming, 2000); //cada 2s revisa llamadas
 }
 window.addEventListener('load', initDeviceSelection); //al cargar te pide permisos
 
 async function checkIncoming()
 {
-  try {
+  try 
+  {
     const res = await fetch(`../php/check_llamadas.php?id=${id_usuario_actual}`);
     const j   = await res.json();
-    if (j.status === 'llamada') {
+    if (j.status === 'llamada') 
+    {
+      notification_audio.play();
       mostrarPopupLlamada(j.alias, j.id_emisor);
     }
-  } catch(e){
+  } 
+  catch(e)
+  {
     console.warn('checkIncoming fallo:', e);
   }
 }
@@ -70,6 +82,8 @@ async function aceptarLlamada(idEmisor)
 {
   callerId = idEmisor;
   calleeId = id_usuario_actual;
+  notification_audio.pause();
+  notification_audio.currentTime = 0;
   document.getElementById('popup-llamada').style.display='none';
   await fetch('../php/responder_llamada.php',{
     method:'POST', headers:{'Content-Type':'application/json'},
@@ -92,6 +106,8 @@ function rechazarLlamada(idEmisor)
       respuesta:'rechazada'
     })
   });
+  notification_audio.pause();
+  notification_audio.currentTime = 0;
   document.getElementById('popup-llamada').style.display='none';
 }
 
@@ -126,12 +142,12 @@ function colgar()
 // —————————————————————
 function toggleMute()
 { 
-  localStream.getAudioTracks().forEach(t=>t.enabled=!t.enabled) 
+  localStream.getAudioTracks().forEach(t => t.enabled =! t.enabled) 
 }
 
 function toggleDeafen()
 { 
-  remoteStream.getAudioTracks().forEach(t=>t.enabled=!t.enabled) 
+  remoteStream.getAudioTracks().forEach(t => t.enabled =! t.enabled) 
 }
 
 function toggleCamera()
@@ -145,7 +161,7 @@ async function changeAudioDevice()
   const deviceId = document.getElementById('audioSelect').value;
   const s = await navigator.mediaDevices.getUserMedia({ audio:{deviceId} });
   const nt= s.getAudioTracks()[0];
-  const sender = pc.getSenders().find(s=>s.track.kind==='audio');
+  const sender = pc.getSenders().find(s => s.track.kind === 'audio');
   await sender.replaceTrack(nt);
   localStream.removeTrack(localStream.getAudioTracks()[0]);
   localStream.addTrack(nt);
@@ -156,7 +172,7 @@ async function changeVideoDevice()
   const deviceId = document.getElementById('videoSelect').value;
   const s = await navigator.mediaDevices.getUserMedia({ video:{deviceId} });
   const nt= s.getVideoTracks()[0];
-  const sender = pc.getSenders().find(s=>s.track.kind==='video');
+  const sender = pc.getSenders().find(s => s.track.kind === 'video');
   await sender.replaceTrack(nt);
   localStream.removeTrack(localStream.getVideoTracks()[0]);
   localStream.addTrack(nt);
@@ -186,9 +202,10 @@ async function compartirPantalla()
     const st = screen.getVideoTracks()[0];
     await sender.replaceTrack(st);
     document.getElementById('localVideo').srcObject = screen;
-    st.onended = async ()=>{
+    st.onended = async () => {
       const cam = localStream.getVideoTracks()[0]||null;
-      if(cam){
+      if(cam)
+      {
         await sender.replaceTrack(cam);
         document.getElementById('localVideo').srcObject = localStream;
       }
@@ -204,7 +221,8 @@ async function compartirPantalla()
 // —————————————————————
 // 5) Core WebRTC + signaling
 // —————————————————————
-async function iniciarLlamada(isCaller){
+async function iniciarLlamada(isCaller)
+{
   document.getElementById('call-ui').style.display='flex';
 
   pc = new RTCPeerConnection({ iceServers:[{urls:'stun:stun.l.google.com:19302'}] });
@@ -224,7 +242,7 @@ async function iniciarLlamada(isCaller){
   };
 
   // Recibir tracks
-  pc.ontrack = ev=>{
+  pc.ontrack = ev => {
     remoteStream.addTrack(ev.track);
     const rv = document.getElementById('remoteVideo');
     rv.srcObject    = remoteStream;
@@ -240,9 +258,12 @@ async function iniciarLlamada(isCaller){
   };
 
   // Obtener media local
-  try {
+  try 
+  {
     localStream = await navigator.mediaDevices.getUserMedia({ audio:true, video:true });
-  } catch(e){
+  } 
+  catch(e)
+  {
     console.warn('Sin vídeo:', e);
     localStream = await navigator.mediaDevices.getUserMedia({ audio:true });
   }
@@ -259,12 +280,14 @@ async function iniciarLlamada(isCaller){
   videoTransceiver = pc.addTransceiver('video',{ direction:'sendrecv' });
   // si tengo pista de cámara, la reemplazo:
   const cam = localStream.getVideoTracks()[0]||null;
-  if(cam){
+  if(cam)
+  {
     await videoTransceiver.sender.replaceTrack(cam);
   }
 
   // Offer / Answer inicial
-  if(isCaller){
+  if(isCaller)
+  {
     const off = await pc.createOffer();
     await pc.setLocalDescription(off);
     await fetch('../php/signaling.php',{
@@ -288,17 +311,23 @@ async function iniciarLlamada(isCaller){
       if(!ans) await new Promise(r=>setTimeout(r,300));
     }
     await pc.setRemoteDescription(new RTCSessionDescription(ans));
-  } else {
+  } 
+  else 
+  {
     // receptor espera offer
-    let of=null;
-    while(!of){
+    let of = null;
+    while(!of)
+    {
       const res = await fetch(
         `../php/signaling.php?modo=obtener&type=offer`+
         `&id_emisor=${callerId}`+
         `&id_receptor=${calleeId}`
       );
       of=(await res.json()).data;
-      if(!of) await new Promise(r=>setTimeout(r,300));
+      if(!of)
+      { 
+        await new Promise(r=>setTimeout(r,300));
+      } 
     }
     await pc.setRemoteDescription(new RTCSessionDescription(of));
 
@@ -317,7 +346,7 @@ async function iniciarLlamada(isCaller){
   }
 
   // Polling ICE remoto (misma fila)
-  setInterval(async ()=>{
+  setInterval(async () => {
     const res = await fetch(
       `../php/signaling.php?modo=obtener&type=ice`+
       `&id_emisor=${callerId}`+
@@ -325,7 +354,8 @@ async function iniciarLlamada(isCaller){
     );
     const arr = (await res.json()).data || [];
     const list=Array.isArray(arr)?arr:[arr];
-    for(const c of list){
+    for(const c of list)
+    {
       try{ await pc.addIceCandidate(new RTCIceCandidate(c)); }
       catch(e){}
     }

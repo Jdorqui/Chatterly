@@ -231,7 +231,7 @@ function get_all_friends(PDO $pdo, string $usuario): void
     }
 }
 
-function render_profile_header(PDO $pdo, string $usuario): void
+function render_profile_header(PDO $pdo, string $usuario): void //renderiza el header en opciones (foto y nombre)
 {
     // Carpeta de imágenes de perfil
     $baseDir       = "../assets/users/{$usuario}/img_profile/";
@@ -256,7 +256,7 @@ function render_profile_header(PDO $pdo, string $usuario): void
       <form id='uploadForm' method='POST' enctype='multipart/form-data' class='upload-form'>
         <input type='file' id='fotoProfile' name='profile_picture' accept='.png, .jpg, .jpeg' class='file-input'>
         <img id='profileImg' src='{$fotoEsc}' alt='profile' class='profile-img'>
-        <span class='profile-username'>{$usuarioEsc}</span>
+        <span id='user-username' class='profile-username'>{$usuarioEsc}</span>
       </form>
     </div>";
 }

@@ -80,6 +80,7 @@ function mostrarForgotPassword() //animacion
 async function registrarUsuario()
 {
     const err = document.getElementById("error-message-registro");
+    const bgRegistro  = document.getElementById('bg-registro');
     err.textContent = "";
     err.style.display = "none";
     err.classList.remove("success","error");
@@ -98,6 +99,7 @@ async function registrarUsuario()
             err.classList.add("error");
             err.style.color = "#f7767a";
             err.style.display = "block";
+            bgRegistro.style.height = '720px';
         }
     } 
     catch (e) 
@@ -107,6 +109,7 @@ async function registrarUsuario()
         err.classList.add("error");
         err.style.color = "#f7767a";
         err.style.display = "block";
+        bgRegistro.style.height = '720px';
     }
 }
 
@@ -115,7 +118,8 @@ async function login()
     const user = document.getElementById('usuario-login').value.trim();
     const pass = document.getElementById('password-login').value.trim();
     const err  = document.getElementById('error-message');
-
+    const bglogin  = document.getElementById('bg-login');
+    
     err.style.display = 'none';
     err.textContent = '';
     err.style.color = '';
@@ -125,6 +129,7 @@ async function login()
         err.textContent = 'Introduce usuario y contraseña.';
         err.style.color = "#f7767a";
         err.style.display = 'block';
+        bglogin.style.height = '425px';
         return;
     }
 
@@ -138,10 +143,11 @@ async function login()
         } 
         else // Mostrar mensaje de error
         {
-            err.textContent   = data.message;
-            err.style.color   = "#f7767a";
+            err.textContent = data.message;
+            err.style.color = "#f7767a";
             err.style.display = 'block';
-        }   
+            bglogin.style.height = '425px';   
+        }
     } 
     catch (e) 
     {
@@ -155,6 +161,7 @@ async function login()
 function forgotPassword() 
 {
     const out = document.getElementById('mensaje');
+    const bgForgot = document.getElementById('bg-forgot');
     out.textContent = '';
     out.style.color = '';
     out.classList.remove('success','error');
@@ -165,16 +172,19 @@ function forgotPassword()
         if (data.success) // se consigue cambiar la contraseña
         {
             out.style.color = '#7af776'; // verde claro
+            bgForgot.style.height = '408px';
         }
         else // error al cambiarla
         {
             out.style.color = '#f7767a';
+            bgForgot.style.height = '408px';
         }
     })
     .catch(err => {
         console.error('forgotPassword error:', err);
         out.textContent = 'Error de conexion. Intenta más tarde.';
         out.style.color = '#f7767a';
+        bgForgot.style.height = '408px';
     });
 }
 

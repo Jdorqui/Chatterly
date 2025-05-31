@@ -7,7 +7,6 @@ const inputMensaje = document.getElementById('mensaje');
 const botonEnviar = document.getElementById('enviarMensaje');
 const emojiList = document.getElementById('emojiList');
 const mensajeInput = document.getElementById('mensaje');
-const notification_audio = new Audio('../assets/sounds/notification.mp3');
 let destinatario = null;
 
 document.getElementById("container_options_header").style.display = "none";
@@ -29,6 +28,7 @@ function closeoptionspanel()
     document.getElementById("openonlinemenu").style.display = "none";
     document.getElementById("password_autentication").style.display = "none";
     document.getElementById("container_options_header").style.display = "none";
+    document.getElementById("chatcontainer").style.display = "none";
 }
 
 function closechat()
@@ -123,6 +123,17 @@ function closechangepassword()
     document.getElementById("change_password_container").style.display = "none";
 }
 
+function opendeleteaccount()
+{
+    document.getElementById("delete_account_container").style.display = "block";
+}
+
+function closecdeleteaccount()
+{
+    document.getElementById("delete_account_container").style.display = "none";
+}
+
+
 //amigos
 function selectFriend(nombre, foto, destinatario) 
 {
@@ -183,7 +194,6 @@ async function cargarMensajes() //carga los mensajes
             let mensajes = await cargarMensajes_Api(id_usuario_actual, destinatario); //carga los mensajes
             if(mensajes.length > count || mensajes.length == 0) //si hay mensajes nuevos
             {
-                //notification_audio.play();
                 count = mensajes.length; //actualiza el contador de mensajes
                 $('#chat-messages').empty(); //limpia los mensajes
                 
@@ -457,14 +467,18 @@ fileProfile.addEventListener('change', async () => {
     } 
 });
 
-
-//modificar perfil
+//opciones modificar perfil
 async function cambiar_alias() 
 {
     const nuevo = document.getElementById('new_name').value.trim();
+    const change_name_texterror = document.getElementById('change_name_texterror');
+    
     if (!nuevo)
     {
-        return alert('Ingresa un nombre.');
+        change_name_texterror.textContent = 'Ingresa un nombre.';
+        change_name_texterror.style.display = 'block';
+        change_name_texterror.style.marginTop = '5px';
+        return;
     } 
 
     const res = await fetch('../php/cambiar_nombre_usuario.php', {
@@ -479,24 +493,27 @@ async function cambiar_alias()
     const { success, message } = await res.json();
     if (success)
     {
-        return alert(message || 'Nombre cambiado');
+        change_name_texterror.textContent = 'Nombre cambiado.';
+        change_name_texterror.style.marginTop = '5px';
+        document.getElementById('user-alias').textContent = nuevo;
     } 
 
     if (!success)
     {
-        return alert(message || 'Error');
+        change_name_texterror.textContent = 'Error.';
+        change_name_texterror.style.marginTop = '5px';
     } 
-
-  //document.getElementById('user_alias_display').textContent = nuevo;
-  //closeeditname();
 }
-  
+
 async function cambiar_username() 
 {
     const nuevo = document.getElementById('new_username').value.trim();
+    const change_username_texterror = document.getElementById('change_username_texterror');
     if (!nuevo)
     {
-        return alert('Ingresa un nombre de usuario.');
+        change_username_texterror.textContent = 'Ingresa un nombre de usuario.';
+        change_username_texterror.style.display = 'block';
+        change_username_texterror.style.marginTop = '5px';
     } 
 
     const res = await fetch('../php/cambiar_username.php', {
@@ -511,24 +528,28 @@ async function cambiar_username()
     const { success, message } = await res.json();
     if (success)
     {
-        return alert(message || 'Nombre cambiado');
+        change_username_texterror.textContent = 'Nombre de usuario cambiado.';
+        document.getElementById('user-alias').textContent = nuevo;
+        change_username_texterror.style.marginTop = '5px';
+        window.location.href='../html/login.html';
     } 
 
     if (!success)
     {
-        return alert(message || 'Error al cambiar username');
-    } 
-
-  // Actualiza en pantalla si tienes un <span id="user_username_display">
-  //const userElem = document.getElementById('user_username_display');
-  //if (userElem) userElem.textContent = nuevo;
-  //closeeditusername();
+        change_username_texterror.textContent = 'Error al cambiar nombre de usuario.';
+    }
 }
 
 async function cambiar_email() 
 {
     const nuevo = document.getElementById('new_email').value.trim();
-    if (!nuevo) return alert('Ingresa un correo válido.');
+    const change_email_texterror = document.getElementById('change_email_texterror');
+    if (!nuevo)
+    {
+        change_email_texterror.textContent = 'Ingresa un correo válido.';
+        change_email_texterror.style.display = 'block';
+        change_email_texterror.style.marginTop = '5px';
+    } 
   
     const res = await fetch('../php/cambiar_correo.php', {
       method: 'POST',
@@ -540,45 +561,58 @@ async function cambiar_email()
     });
   
     const { success, message } = await res.json();
-    if (success) return alert(message || 'Correo cambiado');
-    if (!success) return alert(message || 'Error al cambiar correo');
+    if (success)
+    {
+        change_email_texterror.textContent = 'Correo cambiado.';
+        change_email_texterror.style.marginTop = '5px';
+        document.getElementById('user-email').textContent = nuevo;
+    }
+
+    if (!success)
+    {
+        change_email_texterror.textContent = 'Error al cambiar correo.';
+        change_email_texterror.style.marginTop = '5px';
+    } 
 }
 
-function changePassword() {
-  const out        = document.getElementById('mensajeChange');
-  const oldPwd     = document.getElementById('old_password').value.trim();
-  const newPwd     = document.getElementById('new_password').value.trim();
-  const confirmNew = document.getElementById('confirm_new_password').value.trim();
+function changePassword() 
+{
+    const out = document.getElementById('mensajeChange');
+    const oldPwd = document.getElementById('old_password').value.trim();
+    const newPwd = document.getElementById('new_password').value.trim();
+    const confirmNew = document.getElementById('confirm_new_password').value.trim();
 
-  // limpiamos mensaje previo
-  out.textContent = '';
-  out.classList.remove('success','error');
+    // limpiamos mensaje previo
+    out.textContent = '';
+    out.classList.remove('success','error');
 
-  console.log('[changePassword] Iniciando flujo de cambio de contraseña');
+    console.log('[changePassword] Iniciando flujo de cambio de contraseña');
 
-  // 1) Validaciones locales
-  if (!oldPwd || !newPwd || !confirmNew) {
-    console.log('[changePassword] Falta algún campo');
-    out.textContent = 'Completa todos los campos.';
-    out.classList.add('error');
-    return;
-  }
-  if (newPwd !== confirmNew) {
-    console.log('[changePassword] Las nuevas contraseñas no coinciden');
-    out.textContent = 'Las nuevas contraseñas no coinciden.';
-    out.classList.add('error');
-    return;
-  }
+    // 1) Validaciones locales
+    if (!oldPwd || !newPwd || !confirmNew) 
+    {
+        console.log('[changePassword] Falta algún campo');
+        out.textContent = 'Completa todos los campos.';
+        out.classList.add('error');
+        return;
+    }
 
-  // 2) Llamamos al API
-  changePassword_Api()
-    .then(data => {
-      console.log('[changePassword] Respuesta del servidor:', data);
+    if (newPwd !== confirmNew) 
+    {
+        console.log('[changePassword] Las nuevas contraseñas no coinciden');
+        out.textContent = 'Las nuevas contraseñas no coinciden.';
+        out.classList.add('error');
+        return;
+    }
+
+    // 2) Llamamos al API
+    changePassword_Api().then(data => {
+      //console.log('[changePassword] Respuesta del servidor:', data);
       out.textContent = data.message;
       out.classList.add(data.success ? 'success' : 'error');
     })
     .catch(err => {
-      console.error('[changePassword] Error de red o excepción:', err);
+      //console.error('[changePassword] Error de red o excepción:', err);
       out.textContent = 'Error de conexión. Intenta más tarde.';
       out.classList.add('error');
     });
@@ -586,40 +620,37 @@ function changePassword() {
 
 async function eliminar_cuenta() 
 {
-    if (!confirm('¿Seguro que quieres borrar tu cuenta? Esta acción no se puede deshacer.')) {
-      return;
-    }
-  
+    const delete_account_texterror = document.getElementById('delete_account_texterror');
+    delete_account_texterror.style.marginTop = '5px';
+    delete_account_texterror.textContent = 'Eliminando cuenta...';
+
     const res = await fetch('../php/eliminar_cuenta.php', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id_user: id_usuario_actual })
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id_user: id_usuario_actual })
     });
-  
-    const { success, message } = await res.json();
-    if (!success) {
-      return alert(message || 'Error al eliminar cuenta');
-    }
-  
-    alert(message || 'Cuenta eliminada. Hasta luego.');
-    window.location.href = '../html/index.html';
+
+    //espera 2 segundos y redirige al index
+    setTimeout(() => {
+        window.location.href = '../html/index.html';
+    }, 2000);
 }
 
 //listener para los top-links
 document.addEventListener('click', e => { //evento al hacer clic en cualquier parte del documento
   
-  const isLinkTop = e.target.matches('[id="link-top"]'); //guarda si el elemento clicado es un link-top
-  const isButton  = e.target.matches('button'); //guarda si el elemento clicado es un boton
+    const isLinkTop = e.target.matches('[id="link-top"]'); //guarda si el elemento clicado es un link-top
+    const isButton  = e.target.matches('button'); //guarda si el elemento clicado es un boton
 
-  if (isLinkTop || isButton) //si el elemento clicado es un link-top o un boton
-  {
-    document.querySelectorAll('[id="link-top"]').forEach(link => { //se recorre todos los links-top para quitarles la clase .active
-      link.classList.remove('active'); //quita la clase .active
-    });
-
-    if (isLinkTop) //si el elemento clicado es un link-top
+    if (isLinkTop || isButton) //si el elemento clicado es un link-top o un boton
     {
-      e.target.classList.add('active'); //se le añade la clase .active al link clicado
-    } 
-  }
+        document.querySelectorAll('[id="link-top"]').forEach(link => { //se recorre todos los links-top para quitarles la clase .active
+            link.classList.remove('active'); //quita la clase .active
+        });
+
+        if (isLinkTop) //si el elemento clicado es un link-top
+        {
+            e.target.classList.add('active'); //se le añade la clase .active al link clicado
+        } 
+    }
 });

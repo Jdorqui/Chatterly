@@ -204,7 +204,7 @@ button.active
 
 /* ==== barra 1 ==== */
 
-#barra1-container
+#barras-container
 {
     display: flex; 
     flex: 1;

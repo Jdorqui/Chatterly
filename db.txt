@@ -31,7 +31,7 @@ CREATE OR REPLACE TABLE amigos (
     FOREIGN KEY (id_user2) REFERENCES usuarios(id_user)
 );
 
--- 3. Tabla mensajes (privados entre usuarios)
+-- 3. Tabla mensajes
 CREATE OR REPLACE TABLE mensajes (
     id_mensaje INT PRIMARY KEY AUTO_INCREMENT,
     id_emisor INT,

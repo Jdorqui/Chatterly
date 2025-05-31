@@ -157,7 +157,7 @@
 #delete_account_background
 {
     width: 435px;
-    height: 615px;
+    height: 325px;
     background: linear-gradient(180deg, #1c1c2f 0%, #11111c 100%);
     padding-top: 5px;
     padding-left: 80px;
@@ -381,7 +381,7 @@
     width: 200px;;
 }
 
-#change_name_container, #change_username_container, #change_email_container, #change_password_container
+#change_name_container, #change_username_container, #change_email_container, #change_password_container, #delete_account_container
 {
     position: fixed;
     display: flex;
@@ -394,7 +394,7 @@
     z-index: 9999;
 }
 
-.change_name, .change_username, .change_email
+.change_name, .change_username, .change_email, .delete_account
 {
     position: fixed;
     top: 50%;
@@ -406,6 +406,11 @@
     padding: 30px;
     border-radius: 10px;
     z-index: 9998;
+}
+
+.delete_account
+{
+    height: 215px !important;
 }
 
 .change_oldpassword

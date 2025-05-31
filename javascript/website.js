@@ -36,7 +36,7 @@ function playIntroVideo()
     }
   }
 
-  setTimeout(handleFadeOut, 5000);//se llama al fade en 5segundos
+  setTimeout(handleFadeOut, 7000);//se llama al fade en 7 segundos
   vid.onended = handleFadeOut;//se llama al fade si el video acaba
 }
 

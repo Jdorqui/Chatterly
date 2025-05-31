@@ -314,29 +314,3 @@ p
     background-color: #1a1b1e; 
     border-radius: 10px; 
 }
-
-/* ==== modificacion para movil ==== */
-
-@media screen and (max-width: 768px) 
-{
-    #section1
-    {
-        flex-direction: column;
-        margin-top: 50px;
-        margin-bottom: 50px;
-    }
-
-    #section2
-    {
-        flex-direction: column;
-        margin-bottom: 50px;
-    }
-
-    .container 
-    {
-        flex-direction: column;
-        align-items: center;
-        gap: 0px;
-    }
-}
-

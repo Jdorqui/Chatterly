@@ -30,7 +30,7 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
         <link rel="icon" href="../assets/imgs/logo_bg.ico">
     </head>
     <body>
-        <div id="change_name_container" class="container-panels" style="display: none;">
+        <div id="change_name_container" class="container-panels" style="display: none;"> <!-- change_name_container -->
             <div class="change_username" id="change_username">
                 <div class="change_name">
                     <div class="container">
@@ -39,12 +39,13 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                     </div>
                     <input type="text" name="new_name" id="new_name" placeholder="Nuevo nombre" required>
                     <button type="submit" class="accept-button" onclick="cambiar_alias()">Cambiar nombre</button>
+                    <div id="change_name_texterror"></div>
                 </div>
             </div>
             <div id="change_name_container_background"></div>  
         </div>
         
-        <div id="change_username_container" class="container-panels" style="display: none;">
+        <div id="change_username_container" class="container-panels" style="display: none;"> <!-- change_username_container -->
             <div class="change_username" id="change_username">
                 <div class="change_username_container">
                     <div class="change_username">
@@ -54,14 +55,15 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                         </div>
                         <input type="text" name="new_username" id="new_username" placeholder="Nuevo nombre de usuario" required>
                         <button type="submit" class="accept-button" onclick="cambiar_username()">Cambiar nombre de usuario</button>
+                        <div id="change_username_texterror"></div>
                     </div>
                 </div>
             </div>
             <div id="change_username_container_background"></div>  
         </div>
 
-        <div id="change_email_container" class="container-panels" style="display: none;"> 
-            <div class="change_email" id="change_email">
+        <div id="change_email_container" class="container-panels" style="display: none;"> <!-- change_email_container -->
+            <div class="change_email" id="change_email"> 
                 <div class="change_email">
                     <div class="container">
                         <p id="text_change_email">Cambiar correo electronico</p>
@@ -69,17 +71,18 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                     </div>
                     <input type="email" name="new_email" id="new_email" placeholder="Nuevo correo electronico" required>
                     <button type="submit" class="accept-button" onclick="cambiar_email()">Cambiar correo electronico</button>
+                    <div id="change_email_texterror"></div>
                 </div>
             </div>
             <div id="change_email_container_background"></div>  
         </div>
         
-        <div id="change_password_container" class="container-panels" style="display: none;"> 
+        <div id="change_password_container" class="container-panels" style="display: none;"> <!-- change_password_container -->
             <div class="change_password" id="change_password">
                 <div class="change_oldpassword">
                     <div class="container">
                         <p id="text_change_password">Cambiar contraseña</p>
-                        <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closechangepassword()">
+                        <img id="exit_button_image" src="../assets/imgs/exit_button.png" onclick="closechangepassword()">
                     </div>
                     <input type="password" name="old_password" id="old_password" placeholder="Contraseña actual" required>
                     <input type="password" name="new_password" id="new_password" placeholder="Nueva contraseña" required>
@@ -91,14 +94,20 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
             <div id="change_password_container_background"></div>
         </div>
         
-        <div class="delete_account" class="container-panels" id="delete_account" hidden>
-            <div class="delete_account_container">
-                <p id="text_delete_account">Eliminar cuenta</p>
-                <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closedeleteaccount()">
+        <div id="delete_account_container" class="container-panels" style="display: none;"> <!-- delete_account -->
+            <div id="delete_account" class="delete_account">
+                <div class="container">
+                    <p id="text_delete_account">Eliminar cuenta</p>
+                    <img id="exit_button_image" src="../assets/imgs/exit_button.png" onclick="closecdeleteaccount()">
+                </div>
                 <p id="text_delete_account2">¿Estas seguro de que deseas eliminar tu cuenta? Esta accion no se puede deshacer.</p>
-                <button type="submit">Eliminar cuenta</button>
-                <div id="delete_account_background"></div>
+                <div class="container">
+                    <button type="button" class="reject-button" id="btn-confirmar-eliminar" onclick="eliminar_cuenta()">Eliminar cuenta</button>
+                    <button type="button" class="accept-button" id="btn-confirmar-eliminar" onclick="closecdeleteaccount()">Volver</button>
+                </div>
+                <div id="delete_account_texterror"></div>
             </div>
+            <div id="delete_account_background"></div>
         </div>
 
         <div id="call-ui" style="display:none;"> <!-- ui llamada -->
@@ -123,11 +132,11 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
         </div>
         <div id="popup-llamada" style="display:none;"></div> <!-- popup llamada -->
 
-        <div id="chatterly">
+        <div id="chatterly"> <!-- Chatterly main-content -->
             <div id="chatterly-container">
                 <div id="barra-superior"> <!-- barra superior -->
                     <div id="barra-superior-buttons"> 
-                        <img id="message-logo" src="../assets/imgs/message_logo.png" alt="logo">
+                        <img id="message-logo" src="../assets/imgs/message_logo.png" onclick="closeoptionspanel()" alt="logo">
                         <p id="top-separator">|</p>
                         <button class="friend-tab-button" onclick="openaddfriendmenu()"><p id="link-top">Añadir amigo</p></button>
                         <p id="top-separator">|</p>
@@ -139,7 +148,7 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                     </div>
                 </div>
 
-                <div id="barra1-container">
+                <div id="barras-container">
                     <div id="barra1"></div> <!-- barra1 -->
                     <div id="barra2"> <!-- barra2 -->
                         <div id="barra2-content-container">
@@ -260,24 +269,24 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                                 <div id="profileinfo" class="profile-info" hidden>
                                     <?php render_profile_header($pdo, $usuario)?>
                                     <div class="profile-details">
-                                        <p id="text_name">NOMBRE</p>
+                                        <p id="text_name">ALIAS</p>
 
                                         <div class="container">
-                                            <p><?php echo htmlspecialchars($usuario, ENT_QUOTES, 'UTF-8'); ?></p>
+                                            <p id="user-alias"><?php echo htmlspecialchars($usuario, ENT_QUOTES, 'UTF-8'); ?></p>
                                             <button class="change_button" id="edit_name" onclick="openeditname()">Editar</button>
                                         </div>
                                         
                                         <p id="text_username">NOMBRE DE USUARIO</p>
 
                                         <div class="container">
-                                            <p><?php echo htmlspecialchars($usuario, ENT_QUOTES, 'UTF-8'); ?></p>
+                                            <p id="user-username"><?php echo htmlspecialchars($usuario, ENT_QUOTES, 'UTF-8'); ?></p>
                                             <button class="change_button" id="edit_username" onclick="openeditusername()">Editar</button>
                                         </div>
 
                                         <p id="text_email">CORREO ELECTRONICO</p>
 
                                         <div class="container">
-                                            <p>
+                                            <p id="user-email">
                                                 <?php
                                                     $stmt = $pdo->prepare("SELECT email FROM usuarios WHERE id_user = ?"); //se realiza una consulta para obtener el email del usuario
                                                     $stmt->execute([$id_usuario_actual]);
@@ -294,10 +303,10 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                                     <button id="change_password" class="accept-button" onclick="openchangepassword()">Cambiar contraseña</button>
 
                                     <p id="text_disabled_account">Suspension de cuenta</p>
-                                    <p id="text2_disabled_account">Puedes recuperar la cuenta en cualquier momento despues de deshabilitarla.</p>
+                                    <p id="text2_disabled_account">No podras recuperar la cuenta despues de eliminarla.</p>
 
                                     <div class="container_account">
-                                        <button id="delete_acount" class="reject-button" onclick="eliminar_cuenta()">Eliminar cuenta</button>
+                                        <button id="delete_acount" class="reject-button" onclick="opendeleteaccount()">Eliminar cuenta</button>
                                     </div>
                                 </div>
                             </div>
