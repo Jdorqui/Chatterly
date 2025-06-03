@@ -79,46 +79,65 @@
 
 .chat-input 
 {
-    padding: 10px;
-    display: flex;
-    position: relative;
-    overflow: hidden;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  gap: 10px;
+  background: none;
 }
 
 .message-input 
 {
-    border: 1.5px solid #353765;
-    background: linear-gradient(90deg, #262844 0%, #23253a 100%);
-    width: 100% !important;
-    box-sizing: border-box !important;
-    height: 45px !important;
-    padding-left: 10px !important;
-    position: relative !important;
-    color: white !important;
-    padding-right: 140px !important;
+  border: 1.5px solid #353765;
+  background: linear-gradient(90deg, #262844 0%, #23253a 100%);
+  color: white;
+  box-sizing: border-box;
+  height: 45px;
+  padding-left: 12px;
+  padding-right: 12px;
+  flex: 1;
+  font-size: 17px;
+  border-radius: 12px;
 }
 
-.message-input:focus
+.message-input:focus 
 {
-    border-color: #726cfb;
-    box-shadow: 0 0 0 2px #726cfb33;
+  border-color: #726cfb;
+  box-shadow: 0 0 0 2px #726cfb33;
 }
 
 .message-input::placeholder
 {
-    color: #8d92b8;
+  color: #8d92b8;
 }
 
-.upload-icon 
+.chat-actions 
 {
-    width: 35px;
-    position: absolute;
-    right: 5px;
-    top: 15px;
-    height: 35px;
-    cursor: pointer;
-    padding: 0 15px;
-    border: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 8px;
+  height: 45px;
+}
+
+.action-icon, .upload-icon, .emoji-icon, .gifButton 
+{
+  width: 35px;
+  height: 35px;
+  object-fit: contain;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0 2px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.action-icon:hover 
+{
+  background: #26284444;
 }
 
 .hidden-file-input 
@@ -126,30 +145,10 @@
     display: none;
 }
 
-.emoji-icon 
-{
-    width: 40px;
-    position: absolute;
-    right: 43px;
-    top: 12px;
-    height: 40px;
-    cursor: pointer;
-    padding: 0 15px;
-    border: none;
-}
-
 .send-button 
 {
-    width: 100px;
     position: absolute;
     right: 800%;
-    top: 15px;
-    height: 20px;
-    background-color: #5865F2;
-    cursor: pointer;
-    padding: 0 15px;
-    border: none;
-    color: white;
 }
 
 .emoji-container 
@@ -179,18 +178,6 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-}
-
-.gifButton 
-{
-    width: 45px;
-    position: absolute;
-    right: 85px;
-    top: 12px;
-    height: 40px;
-    cursor: pointer;
-    padding: 0 15px;
-    border: none;
 }
 
 #chat-messages div 

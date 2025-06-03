@@ -133,18 +133,27 @@ function closecdeleteaccount()
     document.getElementById("delete_account_container").style.display = "none";
 }
 
-
 //amigos
-function selectFriend(nombre, foto, destinatario) 
+function selectFriend(nombre, foto, destinatarioID) 
 {
-    const nombreAmigo = document.getElementById('nombre-amigo'); //recoge el nombre del amigo
-    const fotoAmigo = document.getElementById('foto-amigo'); //recoge la foto del amigo
+    destinatario = destinatarioID;
+    count = 0;
+    chat.style.display = "block";
+    pendingMenu.hidden = true;
+    document.getElementById("addfriendmenu").style.display = "none";
+    initialpanel.style.display = "none";
 
-    nombreAmigo.textContent = nombre; //muestra el nombre del amigo
-    fotoAmigo.src = foto; //muestra la foto del amigo
-    
-    openchat(destinatario); //abre el chat con el amigo seleccionado
+    // ACTUALIZA CABECERA
+    document.getElementById('foto-amigo').src = foto;
+    document.getElementById('nombre-amigo').textContent = nombre;
+
+    // Guarda la foto en variable global para cargar mensajes
+    window.fotoAmigoActual = foto;
+    window.nombreAmigoActual = nombre;
+
+    cargarMensajes();
 }
+
 
 //chat
 function openchat(destinatarioID) //abre el chat con el destinatario seleccionado
@@ -185,11 +194,11 @@ count = 0;
 async function cargarMensajes() //carga los mensajes
 {
     if (destinatario === null) return; //verifica si hay un destinatario seleccionado
-    
-    const imgProfileUrl = document.getElementById("profileImg2").src; //obtiene la imagen de perfil
-    const fotoFriendUrl = document.getElementById("fotoFriend").src; //obtiene la imagen del amigo
 
-        try 
+    const imgProfileUrl = document.getElementById("profileImg2").src; //obtiene la imagen de perfil
+    const fotoFriendUrl = window.fotoAmigoActual; // << Esta es la foto correcta del amigo
+
+        try
         {
             let mensajes = await cargarMensajes_Api(id_usuario_actual, destinatario); //carga los mensajes
             if(mensajes.length > count || mensajes.length == 0) //si hay mensajes nuevos
@@ -199,22 +208,40 @@ async function cargarMensajes() //carga los mensajes
                 
                 mensajes.forEach(function(mensaje) //recorre los mensajes y los muestra
                 {
-                    let fechaEnvio = mensaje.fecha_envio ? new Date(mensaje.fecha_envio).toLocaleString() : "Fecha no disponible"; //obtiene la fecha de envio 
-                    let imgUrl = (mensaje.id_emisor == id_usuario_actual) ? imgProfileUrl : fotoFriendUrl; //obtiene la imagen del emisor 
+                    let fechaEnvio;
+                    let imgUrl;
+
+                    if (mensaje.id_emisor == id_usuario_actual) // obtiene la imagen del emisor 
+                    {
+                        imgUrl = imgProfileUrl;
+                    }
+                    else 
+                    {
+                        imgUrl = fotoFriendUrl;
+                    }
+
+                    if (mensaje.fecha_envio)
+                    {
+                        fechaEnvio = new Date(mensaje.fecha_envio).toLocaleString();
+                    }
+                    else 
+                    {
+                        fechaEnvio = "Fecha no disponible";
+                    }
 
                     let mensajeHtml = `<div style="padding-left: 10px; padding-top: 10px; margin-top: 5px; display: flex; align-items: flex-start;">`; // crea un div para el mensaje
                     mensajeHtml += `<img src="${imgUrl}" alt="Imagen de perfil" style="width: 30px; height: 30px; border-radius: 50%; ">`; // muestra la imagen de perfil
 
-                    // Contenedor del mensaje
+                    // contenedor del mensaje
                     mensajeHtml += `<div style="display: flex; flex-direction: column; justify-content: flex-start;">`;
 
-                    // Fecha y nombre (Nombre arriba, fecha al lado)
+                    // fecha y nombre (Nombre arriba, fecha al lado)
                     mensajeHtml += `<div style="display: flex; align-items: center;">`;
-                    mensajeHtml += `<strong style="padding-left: 8px; padding-right: 8px; padding-bottom: 5px; font-size: 1.2em; ">${mensaje.alias}</strong>`;
+                    mensajeHtml += `<strong style="padding-left: 8px; padding-right: 8px; padding-bottom: 5px; font-size: 1.2em; ">${mensaje.username}</strong>`;
                     mensajeHtml += `<div style="font-size: 0.8em;  color: #888;">${fechaEnvio}</div>`;
                     mensajeHtml += `</div>`;
 
-                    // Mensaje o archivo
+                    // mensaje o archivo
                     if (mensaje.tipo === 'archivo') 
                     {
                         const fileName = mensaje.contenido.split('/').pop(); // obtiene el nombre del archivo
@@ -277,7 +304,7 @@ async function cargarMensajes() //carga los mensajes
                             mensajeHtml += downloadLink;
                             mensajeHtml += `</div>`;
                         }
-                    } 
+                    }
                     else //si el mensaje es de texto
                     { 
                         let contenido = mensaje.contenido;
@@ -400,8 +427,17 @@ const emojis = {
 
 function showEmojis() //muestra los emojis
 {
+    document.getElementById("gifPickerContainer").style.display = 'none';
+
     const emojisDiv = document.getElementById('emojisDiv');
-    emojisDiv.style.display = emojisDiv.style.display === 'none' ? 'block' : 'none'; //alterna la visibilidad del emojisDiv
+    if (emojisDiv.style.display === 'none') 
+    {
+        emojisDiv.style.display = 'block';
+    } 
+    else 
+    {
+        emojisDiv.style.display = 'none';
+    }
 }
 
 for (let category in emojis) //recorre las categorías de emojis
@@ -475,13 +511,13 @@ async function cambiar_alias()
     
     if (!nuevo)
     {
-        change_name_texterror.textContent = 'Ingresa un nombre.';
+        change_name_texterror.textContent = 'Introduce un nombre valido.';
         change_name_texterror.style.display = 'block';
         change_name_texterror.style.marginTop = '5px';
         return;
     } 
 
-    const res = await fetch('../php/cambiar_nombre_usuario.php', {
+    const res = await fetch('../php/cambiar_alias.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -497,21 +533,16 @@ async function cambiar_alias()
         change_name_texterror.style.marginTop = '5px';
         document.getElementById('user-alias').textContent = nuevo;
     } 
-
-    if (!success)
-    {
-        change_name_texterror.textContent = 'Error.';
-        change_name_texterror.style.marginTop = '5px';
-    } 
 }
 
 async function cambiar_username() 
 {
     const nuevo = document.getElementById('new_username').value.trim();
     const change_username_texterror = document.getElementById('change_username_texterror');
+
     if (!nuevo)
     {
-        change_username_texterror.textContent = 'Ingresa un nombre de usuario.';
+        change_username_texterror.textContent = 'Introduce un nombre de usuario valido.';
         change_username_texterror.style.display = 'block';
         change_username_texterror.style.marginTop = '5px';
     } 
@@ -529,24 +560,20 @@ async function cambiar_username()
     if (success)
     {
         change_username_texterror.textContent = 'Nombre de usuario cambiado.';
-        document.getElementById('user-alias').textContent = nuevo;
+        document.getElementById('user-username').textContent = nuevo;
         change_username_texterror.style.marginTop = '5px';
         window.location.href='../html/login.html';
     } 
-
-    if (!success)
-    {
-        change_username_texterror.textContent = 'Error al cambiar nombre de usuario.';
-    }
 }
 
 async function cambiar_email() 
 {
     const nuevo = document.getElementById('new_email').value.trim();
     const change_email_texterror = document.getElementById('change_email_texterror');
+    
     if (!nuevo)
     {
-        change_email_texterror.textContent = 'Ingresa un correo válido.';
+        change_email_texterror.textContent = 'Introduce un correo valido.';
         change_email_texterror.style.display = 'block';
         change_email_texterror.style.marginTop = '5px';
     } 
@@ -567,12 +594,6 @@ async function cambiar_email()
         change_email_texterror.style.marginTop = '5px';
         document.getElementById('user-email').textContent = nuevo;
     }
-
-    if (!success)
-    {
-        change_email_texterror.textContent = 'Error al cambiar correo.';
-        change_email_texterror.style.marginTop = '5px';
-    } 
 }
 
 function changePassword() 
@@ -586,10 +607,7 @@ function changePassword()
     out.textContent = '';
     out.classList.remove('success','error');
 
-    console.log('[changePassword] Iniciando flujo de cambio de contraseña');
-
-    // 1) Validaciones locales
-    if (!oldPwd || !newPwd || !confirmNew) 
+    if (!oldPwd || !newPwd || !confirmNew) // validaciones
     {
         console.log('[changePassword] Falta algún campo');
         out.textContent = 'Completa todos los campos.';
@@ -599,22 +617,26 @@ function changePassword()
 
     if (newPwd !== confirmNew) 
     {
-        console.log('[changePassword] Las nuevas contraseñas no coinciden');
         out.textContent = 'Las nuevas contraseñas no coinciden.';
         out.classList.add('error');
         return;
     }
 
-    // 2) Llamamos al API
+    // se llama a la api
     changePassword_Api().then(data => {
-      //console.log('[changePassword] Respuesta del servidor:', data);
-      out.textContent = data.message;
-      out.classList.add(data.success ? 'success' : 'error');
+        out.textContent = data.message;
+        if (data.success) 
+        {
+            out.classList.add('success');
+        } 
+        else 
+        {
+            out.classList.add('error');
+        }
     })
     .catch(err => {
-      //console.error('[changePassword] Error de red o excepción:', err);
-      out.textContent = 'Error de conexión. Intenta más tarde.';
-      out.classList.add('error');
+        out.textContent = 'Error de conexión. Intenta más tarde.';
+        out.classList.add('error');
     });
 }
 
@@ -640,7 +662,7 @@ async function eliminar_cuenta()
 document.addEventListener('click', e => { //evento al hacer clic en cualquier parte del documento
   
     const isLinkTop = e.target.matches('[id="link-top"]'); //guarda si el elemento clicado es un link-top
-    const isButton  = e.target.matches('button'); //guarda si el elemento clicado es un boton
+    const isButton = e.target.matches('button'); //guarda si el elemento clicado es un boton
 
     if (isLinkTop || isButton) //si el elemento clicado es un link-top o un boton
     {

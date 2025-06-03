@@ -12,11 +12,50 @@ if (!is_array($data))
 }
 
 // Campos potenciales
-$email = isset($data['email']) ? trim($data['email']) : '';
-$new_password = $data['new_password'] ?? '';
-$confirm_password = $data['confirm_password'] ?? '';
-$id_user = isset($data['id_user']) ? intval($data['id_user']) : 0;
-$old_password = $data['old_password'] ?? '';
+if (isset($data['email'])) 
+{
+    $email = trim($data['email']);
+} 
+else 
+{
+    $email = '';
+}
+
+if (isset($data['new_password'])) 
+{
+    $new_password = $data['new_password'];
+} 
+else 
+{
+    $new_password = '';
+}
+
+if (isset($data['confirm_password'])) 
+{
+    $confirm_password = $data['confirm_password'];
+} 
+else 
+{
+    $confirm_password = '';
+}
+
+if (isset($data['id_user'])) 
+{
+    $id_user = intval($data['id_user']);
+}
+else 
+{
+    $id_user = 0;
+}
+
+if (isset($data['old_password'])) 
+{
+    $old_password = $data['old_password'];
+} 
+else 
+{
+    $old_password = '';
+}
 
 function respuesta($success, $message) 
 {
@@ -24,8 +63,8 @@ function respuesta($success, $message)
     exit;
 }
 
-// 2) Flujo de recuperación por email
-if ($email !== '') 
+
+if ($email !== '') // recuperacion por email
 {
     if (!$new_password || !$confirm_password) 
     {
@@ -56,19 +95,21 @@ if ($email !== '')
     respuesta(true, 'Contraseña restablecida.');
 }
 
-// 3) Flujo de cambio logueado
-if ($id_user > 0 && $old_password !== '' && $new_password !== '') 
+
+if ($id_user > 0 && $old_password !== '' && $new_password !== '')  //Flujo de cambio logueado
 {
     // Comprobar antigua
     $stmt = $pdo->prepare("SELECT password FROM usuarios WHERE id_user = ?");
     $stmt->execute([$id_user]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    if (!$row || !password_verify($old_password, $row['password'])) {
+    if (!$row || !password_verify($old_password, $row['password'])) 
+    {
         respuesta(false, 'Contraseña actual incorrecta.');
     }
 
     // Validar nueva
-    if (!preg_match('/^(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{5,}$/', $new_password)) {
+    if (!preg_match('/^(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{5,}$/', $new_password)) 
+    {
         respuesta(false, 'La contraseña debe tener al menos 5 caracteres, una mayuscula y un caracter especial.');
     }
 

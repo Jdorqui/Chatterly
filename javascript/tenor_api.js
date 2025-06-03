@@ -132,6 +132,8 @@ function initGifPicker()
             }
         }, 300);
     });
+
+    // Listener al buscar un gif
     input.addEventListener('keydown', function(ev)
     {
         if (ev.key === 'Enter')
@@ -205,8 +207,11 @@ function applyBackground(key, url)
 
 function showGif()
 {
-    const p  = document.getElementById('gifPickerContainer'),
-          st = getComputedStyle(p);
+    document.getElementById("emojisDiv").style.display = 'none';
+
+    const p  = document.getElementById('gifPickerContainer');
+    const st = getComputedStyle(p);
+    
     if (st.display !== 'none')
     {
         p.style.display = 'none';
@@ -412,9 +417,4 @@ async function sendSelectedGif(url)
 document.addEventListener('DOMContentLoaded', function()
 {
     initGifPicker();
-    document.getElementById('gifButton').addEventListener('click', function(ev)
-    {
-        ev.stopPropagation();
-        showGif();
-    });
 });

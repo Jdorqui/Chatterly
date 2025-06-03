@@ -30,7 +30,7 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
         <link rel="icon" href="../assets/imgs/logo_bg.ico">
     </head>
     <body>
-        <div id="change_name_container" class="container-panels" style="display: none;"> <!-- change_name_container -->
+        <div id="change_name_container" class="container-panels" style="display: none;"> <!-- change_alias_container -->
             <div class="change_username" id="change_username">
                 <div class="change_name">
                     <div class="container">
@@ -114,23 +114,37 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
             <div class="videos">
                 <video id="localVideo" playsinline autoplay></video>
                 <video id="remoteVideo" playsinline autoplay></video>
-                <audio id="remoteAudio" autoplay controls style="display:none;"></audio>
+                <audio id="remoteAudio" autoplay controls style="display: none;"></audio>
             </div>
-            <div class="controles">
-                <button onclick="colgar()">❌ Colgar</button>
-                <button onclick="toggleMute()">🎤 Mute</button>
-                <button onclick="toggleDeafen()">🔇 Ensordecer</button>
-                <button onclick="toggleCamera()">📷 Cámara On/Off</button>
-                <button onclick="compartirPantalla()">🖥 Compartir pantalla</button>
+            <div class="controles, container">
+                <button class="call-button" id="colgar" onclick="colgar()">
+                    <img id="colgar-img-button" src="../assets/imgs/colgar.png">
+                </button>
+
+                <button class="call-button" id="mute" onclick="toggleMute()">
+                    <img id="mute-img-button" src="../assets/imgs/desmuteado.png">
+                </button>
+
+                <button class="call-button" id="ensordecer" onclick="toggleDeafen()">
+                    <img id="ensordecer-img-button" src="../assets/imgs/desensordecido.png">
+                </button>
+
+                <button class="call-button" id="camara-on/off" onclick="toggleCamera()">
+                    <img id="camara-img-button" src="../assets/imgs/camaraon.png">
+                </button>
+
+                <button class="call-button" id="compartir-pantalla" onclick="compartirPantalla()">
+                    <img id="compartir-pantalla-img-button" src="../assets/imgs/compartir-pantalla.png">
+                </button>
             </div>
             <div class="dispositivos">
                 <select id="audioSelect"></select>
-                <button onclick="changeAudioDevice()">Cambiar micrófono</button>
+                <button class="call-button-change" onclick="changeAudioDevice()">Cambiar micrófono</button>
                 <select id="videoSelect"></select>
-                <button onclick="changeVideoDevice()">Cambiar cámara</button>
+                <button class="call-button-change" onclick="changeVideoDevice()">Cambiar cámara</button>
             </div>
         </div>
-        <div id="popup-llamada" style="display:none;"></div> <!-- popup llamada -->
+        <div id="popup-llamada" style="display: none;"></div> <!-- popup llamada -->
 
         <div id="chatterly"> <!-- Chatterly main-content -->
             <div id="chatterly-container">
@@ -224,21 +238,21 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                                 <div id="call_button" style="height: 30px; width: 100%; justify-content: flex-end; margin-right: 10px; display: flex; text-align: left;">
                                     <img src="../assets/imgs/call_button.svg" style="width: 30px; height: 30px; cursor: pointer;" onclick="if (typeof destinatario !== 'undefined') llamarAmigo(destinatario); else alert('Selecciona un amigo primero.');">
                                 </div>
-                                
                             </div>
                         </div>
-
+                        
                         <div id="chat-separator"></div>
-
                         <div id="chat-messages" class="chat-messages"></div>
 
-                        <div class="chat-input">
+                       <div class="chat-input">
                             <input type="text" id="mensaje" class="message-input" placeholder="Escribe un mensaje..." />
-                            <img src="../assets/imgs/upload.png" id="uploadfile" alt="Upload" class="upload-icon">
-                            <input type="file" id="fileInput" class="hidden-file-input">
-                            <img src="../assets/imgs/emojis.png" onclick="showEmojis()" class="emoji-icon">
-                            <img src="../assets/imgs/gif_button.png" id="gifButton" class="gifButton">
-                            <button id="enviarMensaje" class="send-button">Enviar</button>
+                            <div class="chat-actions">
+                                <img src="../assets/imgs/upload.png" id="uploadfile" alt="Upload" class="action-icon upload-icon">
+                                <input type="file" id="fileInput" class="hidden-file-input">
+                                <img src="../assets/imgs/gif_button.png" onclick="showGif();" id="gifButton" class="action-icon">
+                                <img src="../assets/imgs/emojis.png" onclick="showEmojis()" class="action-icon emoji-icon">
+                                <button id="enviarMensaje" class="send-button">Enviar</button>
+                            </div>
                         </div>
                         <div id="gifPickerContainer"></div>
                         
@@ -272,7 +286,7 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                                         <p id="text_name">ALIAS</p>
 
                                         <div class="container">
-                                            <p id="user-alias"><?php echo htmlspecialchars($usuario, ENT_QUOTES, 'UTF-8'); ?></p>
+                                            <p id="user-alias"><?php echo htmlspecialchars(obtenerAlias($pdo, $id_usuario_actual), ENT_QUOTES, 'UTF-8'); ?></p>
                                             <button class="change_button" id="edit_name" onclick="openeditname()">Editar</button>
                                         </div>
                                         
@@ -288,10 +302,18 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                                         <div class="container">
                                             <p id="user-email">
                                                 <?php
-                                                    $stmt = $pdo->prepare("SELECT email FROM usuarios WHERE id_user = ?"); //se realiza una consulta para obtener el email del usuario
+                                                    $stmt = $pdo->prepare("SELECT email FROM usuarios WHERE id_user = ?"); // obtiene el email del usuario
                                                     $stmt->execute([$id_usuario_actual]);
                                                     $emailData = $stmt->fetch(PDO::FETCH_ASSOC); //se obtiene el email del usuario
-                                                    echo htmlspecialchars($emailData['email'], ENT_QUOTES, 'UTF-8'); //se muestra el email del usuario 
+
+                                                    if ($emailData && isset($emailData['email'])) 
+                                                    {
+                                                        echo htmlspecialchars($emailData['email'], ENT_QUOTES, 'UTF-8'); //se muestra el email del usuario
+                                                    } 
+                                                    else 
+                                                    {
+                                                        echo 'Correo no disponible';
+                                                    }
                                                 ?>
                                             </p>
                                             <button class="change_button" id="edit_email" onclick="openeditemail()">Editar</button>

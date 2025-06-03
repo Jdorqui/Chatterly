@@ -23,9 +23,8 @@ if (isset($_POST['alias_amigo']))
 {
     $alias_amigo = $_POST['alias_amigo']; //alias del amigo
 }
-else 
+else  // no se ha proporcionado el alias del amigo.
 {
-    //No se ha proporcionado el alias del amigo.
     header("Location: chatterly.php");
     exit();
 }
@@ -35,9 +34,8 @@ $stmt = $pdo->prepare("SELECT id_user FROM usuarios WHERE alias = ?");
 $stmt->execute([$alias_amigo]);
 $amigoData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$amigoData) 
+if (!$amigoData) // el amigo no existe en la base de datos.
 {
-    //El amigo no existe en la base de datos.
     header("Location: chatterly.php");
     exit();
 }

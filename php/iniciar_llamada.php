@@ -1,8 +1,8 @@
 <?php
-// iniciar_llamada.php
 session_start();
-require 'conexion.php';
 header('Content-Type: application/json');
+require 'conexion.php';
+
 
 $d = json_decode(file_get_contents("php://input"), true);
 $e = $d['id_emisor']   ?? null;

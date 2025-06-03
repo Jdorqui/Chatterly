@@ -118,7 +118,7 @@ async function login()
     const user = document.getElementById('usuario-login').value.trim();
     const pass = document.getElementById('password-login').value.trim();
     const err  = document.getElementById('error-message');
-    const bglogin  = document.getElementById('bg-login');
+    const bglogin = document.getElementById('bg-login');
     
     err.style.display = 'none';
     err.textContent = '';

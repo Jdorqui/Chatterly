@@ -11,6 +11,15 @@ if (!filter_var($data['new_email'], FILTER_VALIDATE_EMAIL))
   exit();
 }
 
-// Ejecuta el UPDATE directo
-$pdo ->prepare("UPDATE usuarios SET email = ? WHERE id_user = ?") ->execute([$data['new_email'], $data['id_user']]);
-echo json_encode(['success' => true,'message' => 'Correo actualizado']);
+//ejecuta el update del correo si se ha verificado bien
+$stmt = $pdo->prepare("UPDATE usuarios SET email = ? WHERE id_user = ?");
+$result = $stmt->execute([$data['new_email'], $data['id_user']]);
+
+if ($result) 
+{
+  echo json_encode(['success' => true, 'message' => 'Correo actualizado']);
+} 
+else 
+{
+  echo json_encode(['success' => false, 'message' => 'Error al actualizar el correo']);
+}

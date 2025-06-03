@@ -25,23 +25,14 @@
   margin-top: 8px;
 }
 
-#call-ui button 
-{
-  padding: 10px 20px;
-  font-size: 16px;
-  background: #ff5722;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  margin: 5px;
-  cursor: pointer;
-}
-
 #call-ui select, #call-ui label 
 {
   margin: 5px;
   font-size: 14px;
   color: white;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  margin-left: 0;
 }
 
 #call-ui select
@@ -92,4 +83,61 @@
 .btn-call:hover 
 {
   opacity: 1;
+}
+
+.call-button 
+{
+  background: linear-gradient(90deg, #262844 0%, #23253a 100%);
+  border: 1.5px solid #353765;
+  border-radius: 15px;
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px;
+  transition: border 0.2s, background 0.2s, filter 0.2s;
+  cursor: pointer;
+  box-shadow: none;
+  outline: none;
+  padding: 0;
+}
+
+.call-button img 
+{
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  pointer-events: none; /* para que el click sea en el botón */
+  user-select: none;
+}
+
+.call-button:active 
+{
+  filter: brightness(0.92);
+  border-color: #404269;
+}
+
+.call-button:focus 
+{
+  outline: none;
+  border-color: #5263ff;
+}
+
+.call-button:hover 
+{
+  border-color: #5263ff;
+  filter: brightness(1.03);
+}
+
+.call-button-change
+{
+  background: linear-gradient(90deg, #262844 0%, #23253a 100%);
+  border: 1.5px solid #353765;
+}
+
+.call-button-change:hover
+{
+  border-color: #5263ff;
+  filter: brightness(1.03);
 }
