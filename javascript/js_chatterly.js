@@ -151,6 +151,7 @@ function selectFriend(nombre, foto, destinatarioID)
     window.fotoAmigoActual = foto;
     window.nombreAmigoActual = nombre;
 
+    openchat(destinatarioID)
     cargarMensajes();
 }
 

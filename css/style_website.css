@@ -172,7 +172,6 @@ p
     align-items: center;
     height: 100vh;
     max-height: 200px;
-
 }
 
 #footer-container 
@@ -199,13 +198,13 @@ p
 
 /* ==== animacion ==== */
 
-.fade-element /* Estado inicial antes del fade-in */
+.fade-element /* estado inicial antes del fade-in */
 {
     opacity: 0;
     transform: translateY(15px);
 }
 
-@keyframes fadeInUp /* Animación de aparición */
+@keyframes fadeInUp /* keyframes de aparicion */
 {
   to 
   {
@@ -214,7 +213,7 @@ p
   }
 }
 
-.fade-in 
+.fade-in /* aparicion de items */
 {
     animation-name: fadeInUp;
     animation-duration: 0.4s;
@@ -247,6 +246,12 @@ p
     opacity: 0;
     transition: opacity 0.2s;
     pointer-events: none;
+    position: fixed; 
+    inset: 0; 
+    width: 100vw; 
+    height: 100vh; 
+    background: black; 
+    z-index: 1000;
 }
 
 #video.visible 
@@ -255,7 +260,13 @@ p
     pointer-events: all;
 }
 
-
+#introVideo
+{
+    width: 100vw;
+    height: 100vh; 
+    object-fit: cover; 
+    display: block;
+}
 
 /* ==== links y scrollbar ==== */
 
