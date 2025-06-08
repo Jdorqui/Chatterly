@@ -150,7 +150,8 @@ function selectFriend(nombre, foto, destinatarioID)
     // Guarda la foto en variable global para cargar mensajes
     window.fotoAmigoActual = foto;
     window.nombreAmigoActual = nombre;
-
+    console.log('destinatario' + destinatarioID);
+    console.log('actual' + id_usuario_actual);
     openchat(destinatarioID)
     cargarMensajes();
 }

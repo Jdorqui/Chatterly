@@ -112,6 +112,11 @@
   user-select: none;
 }
 
+#call-image
+{
+  cursor: pointer;
+}
+
 .call-button:active 
 {
   filter: brightness(0.92);

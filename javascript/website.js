@@ -23,7 +23,8 @@ function playIntroVideo()
   });
 
  let fadeOutDone = false; //para que no se haga 2 veces
- function handleFadeOut() {
+ function handleFadeOut()
+  {
     if (!fadeOutDone) 
     {
       fadeOutDone = true;
@@ -45,7 +46,7 @@ function closeStart() //fade in de los elementos poco a poco
   const sectionAnimationKickoffMs = 175
   const sectionStaggerStepMs = 200;
 
-  const sectionIds = [
+  const sectionIds = [  //añade las secciones de la web a el array sectionsIds
     "header",
     "section1",
     "section2",
@@ -53,14 +54,15 @@ function closeStart() //fade in de los elementos poco a poco
     "footer-bg"
   ];
 
-  setTimeout(() => {
-    const sectionElements = sectionIds.map(id => {
+  setTimeout(() => { //muestra las secciones con un delay entre ellas
+    const sectionElements = sectionIds.map(id => { //añade muestra las secciones y añade la clase css fade-element
       const el = document.getElementById(id);
       el.style.display = "";
       el.classList.add("fade-element");
       return el;
     });
 
+    //aplica las caracteristicas de la primera
     sectionElements[0].style.animationDelay = "0ms";
     sectionElements[0].classList.add("fade-in");
 

@@ -236,7 +236,7 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                                 <img id="foto-amigo" src="../assets/imgs/default_profile.png" alt="Foto del amigo" class="friend-photo">
                                 <span id="nombre-amigo" class="friend-name"></span>
                                 <div id="call_button" style="height: 30px; width: 100%; justify-content: flex-end; margin-right: 10px; display: flex; text-align: left;">
-                                    <img src="../assets/imgs/call_button.svg" style="width: 30px; height: 30px; cursor: pointer;" onclick="if (typeof destinatario !== 'undefined') llamarAmigo(destinatario); else alert('Selecciona un amigo primero.');">
+                                    <img id="call-image" src="../assets/imgs/call_button.svg" onclick="if (typeof destinatario !== 'undefined') llamarAmigo(destinatario);">
                                 </div>
                             </div>
                         </div>
@@ -275,61 +275,59 @@ $id_usuario_actual = get_id_user($pdo, $usuario)
                             </div>
                         </div>
                         <div class="main-content">
-                            <div>
-                                <div class="container_options_header" id="container_options_header">
-                                    <h1 id="myaccount_text">Mi cuenta</h1>
-                                    <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeoptionspanel()">
-                                </div>
-                                <div id="profileinfo" class="profile-info" hidden>
-                                    <?php render_profile_header($pdo, $usuario)?>
-                                    <div class="profile-details">
-                                        <p id="text_name">ALIAS</p>
+                            <div class="container_options_header" id="container_options_header">
+                                <h1 id="myaccount_text">Mi cuenta</h1>
+                                <img id="exit_button_image" src="../assets/imgs/exit_button.png" alt="" onclick="closeoptionspanel()">
+                            </div>
+                            <div id="profileinfo" class="profile-info" hidden>
+                                <?php render_profile_header($pdo, $usuario)?>
+                                <div class="profile-details">
+                                    <p id="text_name">ALIAS</p>
 
-                                        <div class="container">
-                                            <p id="user-alias"><?php echo htmlspecialchars(obtenerAlias($pdo, $id_usuario_actual), ENT_QUOTES, 'UTF-8'); ?></p>
-                                            <button class="change_button" id="edit_name" onclick="openeditname()">Editar</button>
-                                        </div>
-                                        
-                                        <p id="text_username">NOMBRE DE USUARIO</p>
+                                    <div class="container">
+                                        <p id="user-alias"><?php echo htmlspecialchars(obtenerAlias($pdo, $id_usuario_actual), ENT_QUOTES, 'UTF-8'); ?></p>
+                                        <button class="change_button" id="edit_name" onclick="openeditname()">Editar</button>
+                                    </div>
+                                    
+                                    <p id="text_username">NOMBRE DE USUARIO</p>
 
-                                        <div class="container">
-                                            <p id="user-username"><?php echo htmlspecialchars($usuario, ENT_QUOTES, 'UTF-8'); ?></p>
-                                            <button class="change_button" id="edit_username" onclick="openeditusername()">Editar</button>
-                                        </div>
+                                    <div class="container">
+                                        <p id="user-username"><?php echo htmlspecialchars($usuario, ENT_QUOTES, 'UTF-8'); ?></p>
+                                        <button class="change_button" id="edit_username" onclick="openeditusername()">Editar</button>
+                                    </div>
 
-                                        <p id="text_email">CORREO ELECTRONICO</p>
+                                    <p id="text_email">CORREO ELECTRONICO</p>
 
-                                        <div class="container">
-                                            <p id="user-email">
-                                                <?php
-                                                    $stmt = $pdo->prepare("SELECT email FROM usuarios WHERE id_user = ?"); // obtiene el email del usuario
-                                                    $stmt->execute([$id_usuario_actual]);
-                                                    $emailData = $stmt->fetch(PDO::FETCH_ASSOC); //se obtiene el email del usuario
+                                    <div class="container">
+                                        <p id="user-email">
+                                            <?php
+                                                $stmt = $pdo->prepare("SELECT email FROM usuarios WHERE id_user = ?"); // obtiene el email del usuario
+                                                $stmt->execute([$id_usuario_actual]);
+                                                $emailData = $stmt->fetch(PDO::FETCH_ASSOC); //se obtiene el email del usuario
 
-                                                    if ($emailData && isset($emailData['email'])) 
-                                                    {
-                                                        echo htmlspecialchars($emailData['email'], ENT_QUOTES, 'UTF-8'); //se muestra el email del usuario
-                                                    } 
-                                                    else 
-                                                    {
-                                                        echo 'Correo no disponible';
-                                                    }
-                                                ?>
-                                            </p>
-                                            <button class="change_button" id="edit_email" onclick="openeditemail()">Editar</button>
-                                        </div>
+                                                if ($emailData && isset($emailData['email'])) 
+                                                {
+                                                    echo htmlspecialchars($emailData['email'], ENT_QUOTES, 'UTF-8'); //se muestra el email del usuario
+                                                } 
+                                                else 
+                                                {
+                                                    echo 'Correo no disponible';
+                                                }
+                                            ?>
+                                        </p>
+                                        <button class="change_button" id="edit_email" onclick="openeditemail()">Editar</button>
                                     </div>
                                 </div>
-                                <div class="password_autentication" id="password_autentication">
-                                    <p style="font-size: 20px; font-weight: 400; color: #fb9a4f;">Contraseña y autentificacion</p>
-                                    <button id="change_password" class="accept-button" onclick="openchangepassword()">Cambiar contraseña</button>
+                            </div>
+                            <div class="password_autentication" id="password_autentication">
+                                <p style="font-size: 20px; font-weight: 400; color: #fb9a4f;">Contraseña y autentificacion</p>
+                                <button id="change_password" class="accept-button" onclick="openchangepassword()">Cambiar contraseña</button>
 
-                                    <p id="text_disabled_account">Suspension de cuenta</p>
-                                    <p id="text2_disabled_account">No podras recuperar la cuenta despues de eliminarla.</p>
+                                <p id="text_disabled_account">Suspension de cuenta</p>
+                                <p id="text2_disabled_account">No podras recuperar la cuenta despues de eliminarla.</p>
 
-                                    <div class="container_account">
-                                        <button id="delete_acount" class="reject-button" onclick="opendeleteaccount()">Eliminar cuenta</button>
-                                    </div>
+                                <div class="container_account">
+                                    <button id="delete_acount" class="reject-button" onclick="opendeleteaccount()">Eliminar cuenta</button>
                                 </div>
                             </div>
                         </div>

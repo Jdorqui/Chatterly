@@ -28,6 +28,17 @@ async function enviarMensajes_Api(usuario, destinatario, mensaje)
   });
 }
 
+async function cargarMensajes_Api(usuario, destinatario) 
+{
+  let fetchData = await fetch("../php/chat.php",{
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `usuario=${encodeURIComponent(usuario)}&destinatario=${encodeURIComponent(destinatario)}`
+  });
+  let data = await fetchData.json();
+  return data; //devuelve un array con los mensajes en formato json
+}
+
 async function enviarArchivos_Api(usuario, destinatario, file)
 {
   const formData = new FormData();
@@ -40,17 +51,6 @@ async function enviarArchivos_Api(usuario, destinatario, file)
     body: formData,
   })
   return await fetchData.json();
-}
-
-async function cargarMensajes_Api(usuario, destinatario) 
-{
-  let fetchData = await fetch("../php/chat.php",{
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `usuario=${encodeURIComponent(usuario)}&destinatario=${encodeURIComponent(destinatario)}`
-  });
-  let data = await fetchData.json();
-  return data; //devuelve un array con los mensajes en formato json
 }
 
 async function usuarioNumero_Api(usuario) 
@@ -88,7 +88,7 @@ async function cambiarFotoPerfil_Api() //sube la imagen al servidor
 function forgotPassword_Api()  //con correo
 {
   const form = document.getElementById('form-forgotPassword');
-  const body = new URLSearchParams(new FormData(form)).toString();
+  const body = new URLSearchParams(new FormData(form)).toString(); //formulario login contraseña (recoge los campos)
 
   return fetch('../php/forgotPassword.php', {
     method: 'POST',

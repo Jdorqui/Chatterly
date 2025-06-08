@@ -9,9 +9,8 @@ $stmt = $pdo->prepare("SELECT id_user FROM usuarios WHERE username = ?");
 $stmt->execute([$usuario]);
 $usuarioData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$usuarioData) 
+if (!$usuarioData) //el usuario no existe en la base de datos.
 {
-    //El usuario no existe en la base de datos.
     header("Location: chatterly.php");
     exit();
 }

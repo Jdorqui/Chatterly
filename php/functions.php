@@ -16,7 +16,6 @@ function obtenerAlias(PDO $pdo, int $id_user): string
     return $row ? $row['alias'] : '';
 }
 
-
 function mostrarSolicitudesPendientes(PDO $pdo, string $usuario): void 
 {
     $miId = get_id_user($pdo, $usuario); //obtiene el id del usario
@@ -223,9 +222,9 @@ function get_all_friends(PDO $pdo, string $usuario): void
 
 function get_direct_messages(PDO $pdo, string $usuario): void
 {
-    // 1. Obtener el id_user del usuario a partir del nombre de usuario
+    // 1. Obtener el id_user del usuario actual
     $userQuery = $pdo->prepare("SELECT id_user FROM usuarios WHERE username = ?");
-    $userQuery->execute(array($usuario));
+    $userQuery->execute([$usuario]);
     $userRow = $userQuery->fetch(PDO::FETCH_ASSOC);
 
     if (!$userRow) 
@@ -236,10 +235,11 @@ function get_direct_messages(PDO $pdo, string $usuario): void
 
     $id_usuario_actual = (int)$userRow['id_user'];
 
-    // 2. Recuperar la lista de amigos aceptados
+    // 2. Recuperar la lista de amigos aceptados (AS id_amigo)
     $friendsQuery = $pdo->prepare("
         SELECT 
             u.username,
+            u.id_user,
             a.id_user1,
             a.id_user2
         FROM amigos a
@@ -249,11 +249,11 @@ function get_direct_messages(PDO $pdo, string $usuario): void
             AND a.estado = 'aceptado'
             AND u.id_user != :me
     ");
-    $friendsQuery->execute(array('me' => $id_usuario_actual));
+    $friendsQuery->execute(['me' => $id_usuario_actual]);
     $friendsList = $friendsQuery->fetchAll(PDO::FETCH_ASSOC);
 
     // 3. Recorrer y mostrar los amigos como botones
-    if (count($friendsList) > 0)
+    if ($friendsList && count($friendsList) > 0) 
     {
         foreach ($friendsList as $friend) 
         {
@@ -265,11 +265,6 @@ function get_direct_messages(PDO $pdo, string $usuario): void
             $pattern = $friendDir . '*.{jpg,jpeg,png}';
             $imageFiles = glob($pattern, GLOB_BRACE);
 
-            if ($imageFiles === false || empty($imageFiles))
-            {
-                $imageFiles = array();
-            }
-
             // Seleccionar la foto más reciente o la imagen por defecto
             if (!empty($imageFiles)) 
             {
@@ -278,27 +273,27 @@ function get_direct_messages(PDO $pdo, string $usuario): void
                     return filemtime($b) - filemtime($a);
                 });
                 $profilePhoto = $imageFiles[0];
-            }
+            } 
             else 
             {
                 $profilePhoto = $defaultImage;
             }
 
             // Determinar el id del destinatario (el amigo, no el usuario actual)
-            if ($friend['id_user1'] === $id_usuario_actual) 
+            if ($friend['id_user1'] == $id_usuario_actual) 
             {
-                $destinatario = $friend['id_user2'];
+                $destinatario = (int)$friend['id_user2'];
             } 
             else 
             {
-                $destinatario = $friend['id_user1'];
+                $destinatario = (int)$friend['id_user1'];
             }
 
             // Escapar los valores para el HTML
             $friendNameEscaped = htmlspecialchars($friend['username'], ENT_QUOTES, 'UTF-8');
             $profilePhotoEscaped = htmlspecialchars($profilePhoto, ENT_QUOTES, 'UTF-8');
 
-            // Imprimir el botón de chat directo
+            // Imprimir el botón de chat directo (tu botón original)
             echo "
             <button 
                 onclick=\"selectFriend('".$friendNameEscaped."', '".$profilePhotoEscaped."', ".$destinatario.")\" 
@@ -308,7 +303,7 @@ function get_direct_messages(PDO $pdo, string $usuario): void
                 <span id='nombreboton'>".$friendNameEscaped."</span>
             </button>";
         }
-    }
+    } 
     else 
     {
         // Si no tiene amigos, mostrar mensaje

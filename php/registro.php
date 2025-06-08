@@ -62,16 +62,16 @@ if ($terminos_aceptados === 0)
     exit();
 }
 
-try 
+try     
 {
-    //verifica si el alias ya esta registrado
-    $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE alias = :alias");
-    $stmt->bindParam(':alias', $alias, PDO::PARAM_STR);
+    //verifica si el usuario ya esta registrado
+    $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE username = :username");
+    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
     $stmt->execute();
     
     if ($stmt->rowCount() > 0) 
     {
-        echo json_encode(["status" => "error", "message" => "El nombre de usuario ya está registrado."]);
+        echo json_encode(["status" => "error", "message" => "El usuario ya esta registrado."]);
         exit();
     }
 

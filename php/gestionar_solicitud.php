@@ -12,8 +12,9 @@ try
 {
     $usuario = $_SESSION['usuario'];
     $password = $_SESSION['password'];
-
-    $stmt = $pdo->prepare("SELECT id_user, password FROM usuarios WHERE username = :usuario"); //selecciona el id_user y la contraseña de la tabla usuarios donde el usuario sea igual al usuario que se obtiene de la sesion
+    
+    //selecciona el id_user y la contraseña de la tabla usuarios donde el usuario sea igual al usuario que se obtiene de la sesion
+    $stmt = $pdo->prepare("SELECT id_user, password FROM usuarios WHERE username = :usuario"); 
     $stmt->bindParam(':usuario', $usuario, PDO::PARAM_STR);
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC); //se obtiene el usuario de la base de datos y se guarda en $row 
