@@ -12,7 +12,7 @@ async function initDeviceSelection() //inicializa los dispositvos
 {
   try //intenta acceder a dispositivos multimedia
   { 
-    await navigator.mediaDevices.getUserMedia({ audio: true }); 
+    await navigator.mediaDevices.getUserMedia({ audio: true }); //pide permiso para acceder al microfono
   }
 
   catch(e) //si audio no es true
@@ -28,12 +28,12 @@ async function initDeviceSelection() //inicializa los dispositvos
   devices.forEach(d => {
     if (d.kind === 'audioinput') //si es un dispositivo de audio
     {
-      as.add(new Option(d.label||'Micrófono', d.deviceId)); //lo añade una nueva opcion de audio
+      as.add(new Option(d.label || 'Micrófono', d.deviceId)); //lo añade una nueva opcion de audio
     }
       
     if (d.kind === 'videoinput') //si es un dispositivo de video
     {
-      vs.add(new Option(d.label||'Cámara', d.deviceId)); //lo añade como opcion de video
+      vs.add(new Option(d.label || 'Cámara', d.deviceId)); //lo añade como opcion de video
     }
   });
 
@@ -140,7 +140,7 @@ function mostrarPopupLlamada(username, idEmisor) //construccion del div popup + 
 
 function colgar() //cuelga la llamada
 {
-  if(pc)
+  if(pc) //si hay una conexion activa
   {
     pc.close();
   }
@@ -211,14 +211,14 @@ function toggleCamera() //alterna activar o desactivar la camara.
 
 async function changeAudioDevice() //cambia el dispositivo de audio
 {
-  const deviceId = document.getElementById('audioSelect').value;
-  const s = await navigator.mediaDevices.getUserMedia({ audio:{deviceId} });
-  const nt = s.getAudioTracks()[0];
-  const sender = pc.getSenders().find(s => s.track.kind === 'audio');
-  await sender.replaceTrack(nt);
+  const deviceId = document.getElementById('audioSelect').value; // obtiene el id del dispositivo de audio seleccionado
+  const s = await navigator.mediaDevices.getUserMedia({ audio:{deviceId} }); // solicita el nuevo dispositivo de audio
+  const nt = s.getAudioTracks()[0]; // obtiene la nueva pista de audio
+  const sender = pc.getSenders().find(s => s.track.kind === 'audio'); // busca el sender de audio en la conexion RTC
+  await sender.replaceTrack(nt); // reemplaza la pista de audio actual con la nueva pista
 
-  localStream.removeTrack(localStream.getAudioTracks()[0]);
-  localStream.addTrack(nt);
+  localStream.removeTrack(localStream.getAudioTracks()[0]); // elimina la pista de audio actual del stream local
+  localStream.addTrack(nt); // añade la nueva pista de audio al stream local
 }
 
 async function changeVideoDevice() //cambia el dispositivo de video
@@ -231,7 +231,7 @@ async function changeVideoDevice() //cambia el dispositivo de video
 
   localStream.removeTrack(localStream.getVideoTracks()[0]);
   localStream.addTrack(nt);
-  document.getElementById('localVideo').srcObject = localStream;
+  document.getElementById('localVideo').srcObject = localStream; //actualiza el video local con la nueva pista de video
 }
 
 async function compartirPantalla() //funcion asincrona para compartir pantalla
@@ -286,10 +286,10 @@ async function iniciarLlamada(isCaller)
 {
   document.getElementById('call-ui').style.display = 'flex';
 
-  pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
-  remoteStream = new MediaStream();
+  pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] }); //crea una nueva conexion RTC con un servidor STUN de Google
+  remoteStream = new MediaStream(); // crea un nuevo MediaStream para el video remoto
 
-  pc.onicecandidate = ev => {
+  pc.onicecandidate = ev => { //maneja los candidatos ICE
     if (ev.candidate) {
       fetch('../php/signaling.php', {
         method: 'POST',
@@ -304,7 +304,7 @@ async function iniciarLlamada(isCaller)
     }
   };
 
-  pc.ontrack = ev => {
+  pc.ontrack = ev => { //maneja los tracks entrantes (video y audio)
     if (ev.track.kind === 'video') {
       remoteStream.getVideoTracks().forEach(track => remoteStream.removeTrack(track));
       remoteStream.addTrack(ev.track);
@@ -314,6 +314,7 @@ async function iniciarLlamada(isCaller)
       rv.playsInline = true;
       rv.muted = false;
     }
+    
     if (ev.track.kind === 'audio') {
       remoteStream.getAudioTracks().forEach(track => remoteStream.removeTrack(track));
       remoteStream.addTrack(ev.track);
@@ -428,20 +429,20 @@ async function iniciarLlamada(isCaller)
     });
   }
 
-  // Polling ICE remoto
+  // Polling ICE remoto significa que se añaden candidatos ICE remotos cada segundo hasta que se complete la conexión.
+  // Esto es necesario porque los candidatos ICE pueden llegar en cualquier momento.
   setInterval(async () => {
-    const res = await fetch(
-      `../php/signaling.php?modo=obtener&type=ice` +
-      `&id_emisor=${callerId}` +
-      `&id_receptor=${calleeId}`
+    //se hace un fetch a signaling.php para obtener los candidatos ICE
+    const res = await fetch( 
+      `../php/signaling.php?modo=obtener&type=ice` + `&id_emisor=${callerId}` + `&id_receptor=${calleeId}`
     );
-    const arr = (await res.json()).data || [];
-    const list = Array.isArray(arr) ? arr : [arr];
-    for (const c of list) 
+    const arr = (await res.json()).data || []; // obtiene los candidatos ICE del servidor
+    const list = Array.isArray(arr) ? arr : [arr]; // asegura que sea un array
+    for (const c of list)  // recorre los candidatos ICE
     {
       try 
       { 
-        await pc.addIceCandidate(new RTCIceCandidate(c)); 
+        await pc.addIceCandidate(new RTCIceCandidate(c)); // añade el candidato ICE a la conexión
       }
       catch (e) { }
     }

@@ -39,7 +39,7 @@
         $fileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         $targetFile = $targetDir . $fileName; //se crea el nombre del archivo
 
-        if ($_FILES['archivo']['size'] > 50485760) //tamaño maximo del archivo
+        if ($_FILES['archivo']['size'] > 10485760) //tamaño maximo del archivo
         {
             echo json_encode(['success' => false, 'error' => 'El archivo excede el tamaño máximo permitido (10 MB).']);
             exit();

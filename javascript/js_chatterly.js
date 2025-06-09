@@ -366,7 +366,11 @@ document.getElementById('fileInput').addEventListener('change', async function(e
         const fileExtension = file.name.split('.').pop().toLowerCase(); //obtiene la extensión del archivo
         if (allowedExtensions.includes(fileExtension)) //comprueba si la extensión del archivo es válida
         {
-            await enviarArchivos_Api(await numeroUsuario_Api(id_usuario_actual), destinatario, file);
+            const resp = await enviarArchivos_Api(await numeroUsuario_Api(id_usuario_actual), destinatario, file);
+            if (!resp.success) 
+            {
+                alert(resp.error);
+            }
         } 
         else 
         {

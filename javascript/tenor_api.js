@@ -1,5 +1,5 @@
-const PROXY_URL = '../php/tenor_proxy.php';
-const FAVORITES_KEY = 'gifFavorites';
+const PROXY_URL = '../php/tenor_proxy.php'; // URL del proxy para evitar CORS al hacer peticiones a la API de Tenor
+const FAVORITES_KEY = 'gifFavorites'; // Clave para almacenar los favoritos en localStorage
 const CATEGORIES = [
   {label: 'Favoritos', key: 'favorites'},
   {label: 'incómodo', key: 'incómodo'},
@@ -72,12 +72,12 @@ let backgroundsLoaded = false;
 // Para debounce en búsqueda
 let searchDebounce;
 
-function initGifPicker()
+function initGifPicker() //inicializa el gif picker
 {
-    // Contenedor principal
+    //construccion del contenido de gifPickerContainer
     var container = document.getElementById('gifPickerContainer');
 
-    // --- Cabecera ---
+    //cabecera del gif picker
     var header = document.createElement('div');
     header.className = 'header';
 
@@ -93,7 +93,7 @@ function initGifPicker()
     header.append(input);
     container.append(header);
 
-    // --- Categorías (solo botones, sin fetch aún) ---
+    //categorias (solo botones, sin fetch)
     var cats = document.createElement('div');
     cats.className = 'cats';
 
@@ -114,12 +114,17 @@ function initGifPicker()
 
     container.append(cats);
 
-    // --- Resultados ---
+    //resultados
     var results = document.createElement('div');
     results.className = 'results';
     container.append(results);
 
-    // --- Debounce en búsqueda ---
+    //listeners:
+
+    //debounce es una tecnica para evitar que se llame a una funcion demasiadas veces en un corto periodo de tiempo
+    //esta permite que la busqueda no se haga hasta que el usuario deje de escribir por un tiempo
+    //permitiendo que no se hagan demasiadas peticiones a la api de tenor
+    //consiguiendo que la busqueda sea mas rapida y eficiente
     input.addEventListener('input', function(ev)
     {
         clearTimeout(searchDebounce);
@@ -133,8 +138,8 @@ function initGifPicker()
         }, 300);
     });
 
-    // Listener al buscar un gif
-    input.addEventListener('keydown', function(ev)
+    // permite buscar gifs al presionar enter
+    input.addEventListener('keydown', function(ev) 
     {
         if (ev.key === 'Enter')
         {
@@ -147,8 +152,8 @@ function initGifPicker()
         }
     });
 
-    // --- Cerrar al clicar fuera ---
-    document.addEventListener('click', function(ev)
+    //al hacer click fuera se cierra el gif picker
+    document.addEventListener('click', function(ev) 
     {
         if (!container.contains(ev.target) && ev.target.id !== 'gifButton')
         {
@@ -157,32 +162,29 @@ function initGifPicker()
     });
 }
 
-function loadCategoryBackgrounds()
+function loadCategoryBackgrounds() //precarga un fondo por categoria
 {
-    // Precarga un fondo por categoría (si no está en cache)
-    for (var i = 0; i < CATEGORIES.length; i++)
+    for (var i = 0; i < CATEGORIES.length; i++) //recorremos las categorias
     {
-        (function(cat)
+        (function(cat) //funcion para cada categoria
         {
-            if (backgroundCache[cat.key])
+            if (backgroundCache[cat.key]) //si ya hay un fondo en el cache, lo aplicamos directamente
             {
                 applyBackground(cat.key, backgroundCache[cat.key]);
                 return;
             }
-            var url = PROXY_URL + '?action=search&q=' + encodeURIComponent(cat.key) + '&limit=1';
-            fetch(url, { cache: 'no-store' })
-                .then(function(response)
+            var url = PROXY_URL + '?action=search&q=' + encodeURIComponent(cat.key) + '&limit=1'; //se busca un gif por categoria mediante la api de tenor
+            fetch(url, { cache: 'no-store' }) //se hace la peticion a la api
+                .then(function(response) //verificamos que la respuesta sea correcta
                 {
                     return response.json();
                 })
-                .then(function(json)
+                .then(function(json) //procesamos la respuesta
                 {
-                    var imgUrl = json.results &&
-                                 json.results[0] &&
-                                 json.results[0].media_formats &&
-                                 json.results[0].media_formats.tinygif &&
-                                 json.results[0].media_formats.tinygif.url;
-                    if (imgUrl)
+                    //obtenemos la url del gif mediante el formato tinygif con el que se va a mostrar en el fondo
+                    var imgUrl = json.results && json.results[0] && json.results[0].media_formats && json.results[0].media_formats.tinygif && json.results[0].media_formats.tinygif.url; 
+                                
+                    if (imgUrl) //si hay un gif, lo guardamos en el cache y lo aplicamos
                     {
                         backgroundCache[cat.key] = imgUrl;
                         applyBackground(cat.key, imgUrl);
@@ -196,215 +198,220 @@ function loadCategoryBackgrounds()
     }
 }
 
-function applyBackground(key, url)
+function applyBackground(key, url) //aplica el fondo a la categoria
 {
-    var btn = document.querySelector('.cats button[data-key="' + key + '"]');
-    if (btn)
+    var btn = document.querySelector('.cats button[data-key="' + key + '"]'); // buscamos el boton de la categoria 
+    if (btn) //si existe el boton
     {
-        btn.style.backgroundImage = 'url(' + url + ')';
+        btn.style.backgroundImage = 'url(' + url + ')'; //aplicamos el fondo al boton
     }
 }
 
-function showGif()
+function showGif() //muestra el gif picker
 {
-    document.getElementById("emojisDiv").style.display = 'none';
+    document.getElementById("emojisDiv").style.display = 'none'; //oculta el div de emojis
 
     const p  = document.getElementById('gifPickerContainer');
     const st = getComputedStyle(p);
     
-    if (st.display !== 'none')
+    if (st.display !== 'none') //si el gif picker ya esta visible
     {
-        p.style.display = 'none';
+        p.style.display = 'none'; //lo ocultamos
     }
-    else
+    else // si no esta visible
     {
-        // Lazy-load de fondos solo la primera vez
-        if (!backgroundsLoaded)
+        if (!backgroundsLoaded) //si los fondos no han sido cargados
         {
-            loadCategoryBackgrounds();
+            loadCategoryBackgrounds(); // cargamos los fondos de las categorias
             backgroundsLoaded = true;
         }
         p.style.display = 'flex';
         p.classList.remove('show-gifs');
-        clearResults();
-        currentCategory = null;
-        highlightActiveCategory();
+        clearResults(); //limpiamos los resultados
+        currentCategory = null; //reiniciamos la categoria actual
+        highlightActiveCategory(); // resalta la categoria activa
     }
 }
 
-function hideGif()
+function hideGif() //oculta el gif picker
 {
     document.getElementById('gifPickerContainer').style.display = 'none';
 }
 
-function showCategories()
+function showCategories() //muestra las categorias de gifs
 {
     document.getElementById('gifPickerContainer').classList.remove('show-gifs');
 }
 
-function selectCategory(key, q = '')
+function selectCategory(key, q = '') //selecciona una categoria de gifs
 {
-    currentCategory = key;
-    highlightActiveCategory();
+    currentCategory = key; //establece la categoria actual
+    highlightActiveCategory(); //resalta la categoria activa
     const p = document.getElementById('gifPickerContainer');
     p.classList.add('show-gifs');
 
-    if (key === 'favorites')
+    if (key === 'favorites') //si la categoria es favoritos
     {
-        renderFavorites();
+        renderFavorites(); //renderiza los favoritos
     }
-    else if (key === 'search')
+    else if (key === 'search') //si la categoria es busqueda
     {
-        loadGifs('search', q);
+        loadGifs('search', q); //carga los gifs de la busqueda
     }
-    else
+    else //si la categoria es otra
     {
-        loadGifs('search', key);
+        loadGifs('search', key); //carga los gifs de la categoria
     }
 }
 
-async function loadGifs(action, q)
+async function loadGifs(action, q) //carga los gifs de la api de tenor
 {
-    if (typeof q !== 'string')
+    if (typeof q !== 'string') //verifica que q sea un string
     {
-        q = '';
+        q = ''; //si no lo es, lo convierte a string vacio
     }
 
     var url;
-    if (action === 'search')
+    if (action === 'search') //si la accion es busqueda
     {
-        url = PROXY_URL + '?action=search';
+        url = PROXY_URL + '?action=search'; //establece la url de busqueda
     }
-    else
+    else if (action === 'trending') //si la accion es tendencia
     {
-        url = PROXY_URL + '?action=trending';
-    }
-
-    if (action === 'search' && q.length > 0)
-    {
-        url = url + '&q=' + encodeURIComponent(q);
+        url = PROXY_URL + '?action=trending'; //establece la url de tendencias
     }
 
-    try
+    if (action === 'search' && q.length > 0) //si la accion es busqueda y q tiene contenido
+    {
+        url = url + '&q=' + encodeURIComponent(q); //agrega el parametro de busqueda a la url
+    }
+
+    try //intenta hacer la peticion a la api de tenor
     {
         var response = await fetch(url, { cache: 'no-store' });
-        if (!response.ok)
+        if (!response.ok) //verifica que la respuesta sea correcta
         {
-            throw new Error('Respuesta no OK: ' + response.status);
+            throw new Error('Respuesta no OK: ' + response.status); //lanza un error si la respuesta no es correcta
         }
         var data = await response.json();
-        renderGifs(data.results || []);
+        renderGifs(data.results || []); //renderiza los gifs obtenidos de la respuesta, si no hay resultados, renderiza un array vacio
     }
-    catch (error)
+    catch (error) //maneja el error al hacer la peticion
     {
         console.error('Error cargando GIFs:', error);
         clearResults();
     }
 }
 
-function renderFavorites()
+function renderFavorites() //renderiza los gifs favoritos
 {
     renderGifs(favorites);
 }
 
-function renderGifs(arr)
+function renderGifs(arr) //renderiza los gifs en el contenedor de resultados arr es un array de objetos que contienen los gifs
 {
     var results = document.querySelector('#gifPickerContainer .results');
     results.innerHTML = '';
 
-    arr.forEach(function(item)
+    arr.forEach(function(item) //recorre cada item del array y crea un elemento div con la clase gif-item
     {
-        var thumb = item.media_formats.tinygif.url;
-        var full  = item.media_formats.gif.url;
+        var thumb = item.media_formats.tinygif.url; // obtiene la url del gif en miniatura
+        var full  = item.media_formats.gif.url; // obtiene la url del gif completo
 
-        var wrap = document.createElement('div');
-        wrap.className = 'gif-item';
+        var wrap = document.createElement('div'); //crea un div para envolver el gif
+        wrap.className = 'gif-item'; // establece la clase del div envolvente
 
-        var img = document.createElement('img');
-        img.src = thumb;
-        wrap.appendChild(img);
+        var img = document.createElement('img'); //crea un elemento img para mostrar el gif
+        img.src = thumb; // establece la url del gif en miniatura
+        wrap.appendChild(img); // agrega el gif al div envolvente
 
-        var star = document.createElement('div');
+        var star = document.createElement('div'); //crea un div para la estrella de favoritos
         star.className = 'star';
 
-        var isFav = favorites.some(function(f) 
+        //gestion de favoritos
+        var isFav = favorites.some(function(f) // verifica si el gif ya esta en favoritos
         {
-            return f.media_formats.gif.url === full;
+            return f.media_formats.gif.url === full; // compara la url del gif completo con los favoritos
         });
-        star.innerHTML = isFav ? SVG_FILLED : SVG_OUTLINE;
+        star.innerHTML = isFav ? SVG_FILLED : SVG_OUTLINE; // establece el svg de la estrella dependiendo si es favorito o no
 
-        star.onclick = function(ev)
+        star.onclick = function(ev) //maneja el evento de click en la estrella
         {
-            ev.stopPropagation();
-            var idx = favorites.findIndex(function(f) 
+            ev.stopPropagation(); // evita que el click se propague al div envolvente es decir que no se envíe el gif al destinatario debido a que se hizo click en la estrella
+
+            var idx = favorites.findIndex(function(f) // verifica si el gif ya esta en favoritos
+            {
+                return f.media_formats.gif.url === full; // compara la url del gif completo con los favoritos 
+            });
+            if (idx >= 0) // si el gif ya esta en favoritos
+            {
+                favorites.splice(idx, 1); // lo elimina del array de favoritos
+            }
+
+            else // si el gif no esta en favoritos
+            {
+                favorites.push(item); // lo agrega al array de favoritos
+            }
+
+            localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites)); // guarda el array de favoritos en el localStorage
+            if (currentCategory === 'favorites') // si la categoria actual es favoritos
+            {
+                renderFavorites(); // vuelve a renderizar los favoritos para actualizar la lista
+            }
+
+            var nowFav = favorites.some(function(f) // verifica si el gif ahora es favorito
             {
                 return f.media_formats.gif.url === full;
             });
-            if (idx >= 0)
-            {
-                favorites.splice(idx, 1);
-            }
-            else
-            {
-                favorites.push(item);
-            }
-            localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
-            if (currentCategory === 'favorites')
-            {
-                renderFavorites();
-            }
-            var nowFav = favorites.some(function(f) 
-            {
-                return f.media_formats.gif.url === full;
-            });
-            star.innerHTML = nowFav ? SVG_FILLED : SVG_OUTLINE;
+            star.innerHTML = nowFav ? SVG_FILLED : SVG_OUTLINE; // actualiza el svg de la estrella
         };
         wrap.appendChild(star);
 
-        wrap.onclick = function()
+        //llama a enviar gif seleccionado
+        wrap.onclick = function() //maneja el evento de click en el div envolvente
         {
-            sendSelectedGif(full)
-            .then(function()
+            sendSelectedGif(full) //envia el gif seleccionado al destinatario
+            .then(function() //cuando se envia el gif
             {
-                hideGif();
+                hideGif(); //oculta el gif picker
             })
-            .catch(function(err)
+            .catch(function(err) //maneja el error al enviar el gif
             {
                 console.error('Error enviando GIF:', err);
             });
         };
 
-        results.appendChild(wrap);
+        results.appendChild(wrap); // agrega el div envolvente al contenedor de resultados
     });
 }
 
-function clearResults()
+function clearResults() //limpia los resultados del gif picker
 {
-    document.querySelector('#gifPickerContainer .results').innerHTML = '';
+    document.querySelector('#gifPickerContainer .results').innerHTML = ''; // limpia el contenedor de resultados
 }
 
-function highlightActiveCategory()
+function highlightActiveCategory() //resalta la categoria activa
 {
-    document.querySelectorAll('#gifPickerContainer .cats button')
-    .forEach(function(b)
+    document.querySelectorAll('#gifPickerContainer .cats button') // selecciona todos los botones de las categorias
+    .forEach(function(b) // recorre cada boton
     {
-        b.classList.toggle('active', b.dataset.key === currentCategory);
+        b.classList.toggle('active', b.dataset.key === currentCategory); // si el dataset key del boton es igual a la categoria actual, le agrega la clase active
     });
 }
 
-async function urlToFile(url, name)
+async function urlToFile(url, name) //convierte una url a un archivo para poder enviarlo
 {
-    const r    = await fetch(url, { cache:'no-store' });
-    const blob = await r.blob();
-    return new File([blob], name, { type: blob.type });
+    const r = await fetch(url, { cache:'no-store' }); // hacemos la peticion a la url
+    const blob = await r.blob();  // obtenemos el blob de la respuesta
+    return new File([blob], name, { type: blob.type }); // creamos un archivo a partir del blob
 }
 
-async function sendSelectedGif(url)
+async function sendSelectedGif(url) //envia el gif seleccionado al destinatario
 {
     try
     {
         const file = await urlToFile(url, `sticker_${Date.now()}.gif`);
-        const me   = await numeroUsuario_Api(id_usuario_actual);
+        const me = await numeroUsuario_Api(id_usuario_actual);
         await enviarArchivos_Api(me, destinatario, file);
     } 
     catch(e)
@@ -413,7 +420,7 @@ async function sendSelectedGif(url)
     }
 }
 
-// Inicializamos al cargar la página
+//inicializamos el menu de los gif al cargar la pagina
 document.addEventListener('DOMContentLoaded', function()
 {
     initGifPicker();
